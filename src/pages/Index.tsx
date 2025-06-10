@@ -52,14 +52,25 @@ const Index = () => {
           </div>
         </div>
 
-        {/* Debug overlay */}
+        {/* Debug overlay - HIGHEST Z-INDEX */}
         {showDebug && (
-          <div className="absolute inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center z-60 p-4">
-            <div className="bg-white rounded-lg max-w-4xl w-full max-h-[90vh] overflow-auto">
+          <div 
+            className="fixed inset-0 bg-black/90 backdrop-blur-sm flex items-center justify-center p-4"
+            style={{ zIndex: 9999 }}
+          >
+            <div 
+              className="bg-white rounded-lg max-w-4xl w-full max-h-[90vh] overflow-auto shadow-2xl"
+              style={{ zIndex: 10000 }}
+            >
               <div className="p-4">
-                <div className="flex justify-between items-center mb-4">
+                <div className="flex justify-between items-center mb-4 sticky top-0 bg-white border-b pb-4">
                   <h2 className="text-xl font-bold">Debug Information</h2>
-                  <Button onClick={() => setShowDebug(false)} variant="outline" size="sm">
+                  <Button 
+                    onClick={() => setShowDebug(false)} 
+                    variant="outline" 
+                    size="sm"
+                    className="hover:bg-gray-100"
+                  >
                     Close
                   </Button>
                 </div>
@@ -73,7 +84,51 @@ const Index = () => {
   }
 
   // User is authenticated, show the full experience
-  return <TravelSpinner />;
+  return (
+    <div className="relative">
+      <TravelSpinner />
+      
+      {/* Debug toggle for authenticated users - floating button */}
+      <div className="fixed top-4 right-4 z-50">
+        <Button 
+          onClick={() => setShowDebug(!showDebug)} 
+          variant="outline" 
+          size="sm"
+          className="bg-white/10 border-white/30 text-white hover:bg-white/20 backdrop-blur-sm"
+        >
+          {showDebug ? 'Hide' : 'Show'} Debug
+        </Button>
+      </div>
+
+      {/* Debug overlay for authenticated users - HIGHEST Z-INDEX */}
+      {showDebug && (
+        <div 
+          className="fixed inset-0 bg-black/90 backdrop-blur-sm flex items-center justify-center p-4"
+          style={{ zIndex: 9999 }}
+        >
+          <div 
+            className="bg-white rounded-lg max-w-4xl w-full max-h-[90vh] overflow-auto shadow-2xl"
+            style={{ zIndex: 10000 }}
+          >
+            <div className="p-4">
+              <div className="flex justify-between items-center mb-4 sticky top-0 bg-white border-b pb-4">
+                <h2 className="text-xl font-bold">Debug Information</h2>
+                <Button 
+                  onClick={() => setShowDebug(false)} 
+                  variant="outline" 
+                  size="sm"
+                  className="hover:bg-gray-100"
+                >
+                  Close
+                </Button>
+              </div>
+              <AuthDebug />
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
 };
 
 export default Index;
