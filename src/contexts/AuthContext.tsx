@@ -57,13 +57,13 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const signInWithGoogle = async () => {
     try {
-      // Get the current URL origin for proper redirect
-      const currentOrigin = window.location.origin;
+      // Use the correct deployed URL
+      const redirectUrl = 'https://wanderlust-spinner.netlify.app/';
       
       const { error } = await supabase.auth.signInWithOAuth({
         provider: 'google',
         options: {
-          redirectTo: `${currentOrigin}/`,
+          redirectTo: redirectUrl,
           queryParams: {
             access_type: 'offline',
             prompt: 'consent',
