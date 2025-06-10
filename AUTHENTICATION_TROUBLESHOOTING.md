@@ -1,126 +1,91 @@
 # Authentication Troubleshooting Guide
 
-## Current Issue: Google Authentication Not Working
+## URGENT FIX: Incorrect Supabase URL
 
-### Step 1: Check Supabase Configuration
+### The Problem
+Your Supabase URL is incorrect in the environment variables:
+- **Current (Wrong)**: `https://lpxknltghrlinkjngjhs.supabase.co`
+- **Correct**: `https://lpxknltghrlinkjngjhs.supabase.com`
 
-1. **Verify Environment Variables**
-   - Go to your Netlify dashboard
-   - Navigate to: Site settings → Environment variables
-   - Ensure these variables are set:
-     ```
-     VITE_SUPABASE_URL=https://lpxknltghrlinkjngjhs.supabase.co
-     VITE_SUPABASE_ANON_KEY=[your-anon-key]
-     ```
+### Step 1: Fix Netlify Environment Variables
 
-2. **Check Supabase Project Settings**
-   - Go to: https://supabase.com/dashboard/project/vmrwthjeyyxvkjrielwx
-   - Navigate to: Authentication → URL Configuration
-   - Set **Site URL**: `https://wanderlust-spinner.netlify.app`
-   - Add **Redirect URLs**:
-     - `https://wanderlust-spinner.netlify.app`
-     - `https://wanderlust-spinner.netlify.app/**`
-     - `https://wanderlust-spinner.netlify.app/auth/callback`
+1. **Go to your Netlify dashboard**
+2. **Navigate to**: Site settings → Environment variables
+3. **Update this variable**:
+   ```
+   VITE_SUPABASE_URL=https://lpxknltghrlinkjngjhs.supabase.com
+   ```
+   (Change `.co` to `.com`)
 
-### Step 2: Configure Google OAuth
+4. **Keep this variable as is**:
+   ```
+   VITE_SUPABASE_ANON_KEY=[your-anon-key]
+   ```
 
-1. **Google Cloud Console Setup**
+5. **Deploy the site** after making this change
+
+### Step 2: Update Supabase Configuration
+
+1. **Go to your Supabase dashboard**
+   - URL: https://supabase.com/dashboard/project/vmrwthjeyyxvkjrielwx
+
+2. **Navigate to**: Authentication → URL Configuration
+
+3. **Set Site URL**:
+   ```
+   https://wanderlust-spinner.netlify.app
+   ```
+
+4. **Add Redirect URLs**:
+   ```
+   https://wanderlust-spinner.netlify.app
+   https://wanderlust-spinner.netlify.app/**
+   https://wanderlust-spinner.netlify.app/auth/callback
+   ```
+
+### Step 3: Configure Google OAuth (if not done)
+
+1. **Google Cloud Console**
    - Go to: https://console.cloud.google.com/
    - Navigate to: APIs & Services → Credentials
    - Find your OAuth 2.0 Client ID
-   - Add **Authorized redirect URIs**:
-     - `https://lpxknltghrlinkjngjhs.supabase.co/auth/v1/callback`
 
-2. **Supabase Google Provider Setup**
-   - In Supabase dashboard: Authentication → Providers
+2. **Add Authorized redirect URIs**:
+   ```
+   https://lpxknltghrlinkjngjhs.supabase.com/auth/v1/callback
+   ```
+   (Note: Use `.com` not `.co`)
+
+3. **In Supabase Dashboard**
+   - Go to: Authentication → Providers
    - Enable Google provider
-   - Add your Google OAuth credentials:
-     - Client ID from Google Cloud Console
-     - Client Secret from Google Cloud Console
+   - Add your Google OAuth credentials
 
-### Step 3: Test the Configuration
+### Step 4: Test After Changes
 
-1. **Use the Debug Component**
-   - Click "Show Debug Info" on the login screen
-   - Check for any configuration issues
-   - Test Supabase connection
-   - Test Google OAuth flow
+1. **Clear browser cache and cookies**
+2. **Try Google login again**
+3. **Use the debug component** to verify the URL is correct
 
-2. **Check Browser Console**
-   - Open browser developer tools
-   - Look for any error messages
-   - Check Network tab for failed requests
+### Why This Happened
 
-### Step 4: Common Issues and Solutions
+Supabase URLs should end with `.com`, but somehow `.co` was used in the configuration. This is a common typo that causes authentication to fail because the OAuth provider can't reach the correct Supabase endpoint.
 
-#### Issue: "This site can't be reached"
-**Solution**: Check if Supabase URL is correct and accessible
-- Verify VITE_SUPABASE_URL in environment variables
-- Test URL directly in browser
+### Expected Result
 
-#### Issue: "Invalid redirect URL"
-**Solution**: Ensure all redirect URLs are properly configured
-- Check Supabase URL Configuration
-- Verify Google OAuth redirect URIs
+After fixing the URL, the Google OAuth flow should work:
+1. Click "Continue with Google"
+2. Redirect to Google login
+3. After Google authentication, redirect back to your app
+4. User should be logged in successfully
 
-#### Issue: "Provider not enabled"
-**Solution**: Enable Google provider in Supabase
-- Go to Authentication → Providers
-- Enable Google and add credentials
+### If Still Not Working
 
-#### Issue: "Invalid client configuration"
-**Solution**: Check Google OAuth setup
-- Verify Client ID and Secret in Supabase
-- Ensure OAuth consent screen is configured
+If you still have issues after fixing the URL:
 
-### Step 5: Manual Testing Steps
+1. **Check the debug component** for any remaining errors
+2. **Verify all URLs match** between Google Cloud Console and Supabase
+3. **Clear all browser data** and try again
+4. **Check browser console** for any error messages
 
-1. **Test Supabase Connection**
-   ```javascript
-   // Open browser console and run:
-   fetch('https://lpxknltghrlinkjngjhs.supabase.co/rest/v1/', {
-     headers: {
-       'apikey': 'your-anon-key',
-       'Authorization': 'Bearer your-anon-key'
-     }
-   }).then(r => r.json()).then(console.log)
-   ```
-
-2. **Test OAuth URL**
-   - Try accessing this URL directly:
-   ```
-   https://lpxknltghrlinkjngjhs.supabase.co/auth/v1/authorize?provider=google&redirect_to=https://wanderlust-spinner.netlify.app/
-   ```
-
-### Step 6: Alternative Solutions
-
-If Google OAuth continues to fail, consider these alternatives:
-
-1. **Email/Password Authentication**
-   - Implement email/password signup
-   - Add password reset functionality
-
-2. **Magic Link Authentication**
-   - Use Supabase magic links
-   - Simpler setup, no OAuth required
-
-3. **Different OAuth Provider**
-   - Try GitHub or Discord OAuth
-   - Often easier to configure
-
-### Debug Information to Collect
-
-When reporting issues, please provide:
-
-1. **Browser Console Errors**
-2. **Network Tab Requests/Responses**
-3. **Supabase Dashboard Screenshots**
-4. **Google Cloud Console Configuration**
-5. **Environment Variables (without sensitive data)**
-
-### Contact Support
-
-If issues persist:
-1. Check Supabase documentation: https://supabase.com/docs/guides/auth
-2. Supabase Discord: https://discord.supabase.com/
-3. Google OAuth documentation: https://developers.google.com/identity/protocols/oauth2
+The URL fix should resolve the "This site can't be reached" error you're seeing.
