@@ -2,6 +2,9 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Mapbox GL CSS import */
+@import 'mapbox-gl/dist/mapbox-gl.css';
+
 @layer base {
   :root {
     --background: 0 0% 100%;
@@ -97,5 +100,59 @@
 
   body {
     @apply bg-background text-foreground;
+  }
+}
+
+/* Custom styles for Mapbox Globe */
+.mapboxgl-canvas {
+  outline: none !important;
+}
+
+.mapboxgl-ctrl-attrib {
+  display: none !important;
+}
+
+.mapboxgl-ctrl-logo {
+  display: none !important;
+}
+
+/* Custom marker animations */
+@keyframes markerPulse {
+  0% { 
+    box-shadow: 0 0 0 0 rgba(255, 107, 107, 0.7);
+    transform: scale(1);
+  }
+  70% { 
+    box-shadow: 0 0 0 10px rgba(255, 107, 107, 0);
+    transform: scale(1.1);
+  }
+  100% { 
+    box-shadow: 0 0 0 0 rgba(255, 107, 107, 0);
+    transform: scale(1);
+  }
+}
+
+.destination-marker {
+  animation: markerPulse 2s infinite;
+}
+
+/* Custom popup styles */
+.mapboxgl-popup-content {
+  background: transparent !important;
+  box-shadow: none !important;
+  padding: 0 !important;
+}
+
+.destination-popup .mapboxgl-popup-content {
+  border-radius: 12px !important;
+  overflow: hidden !important;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .destination-marker {
+    width: 16px !important;
+    height: 16px !important;
+    border-width: 2px !important;
   }
 }
