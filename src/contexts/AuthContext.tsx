@@ -57,17 +57,22 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const signInWithGoogle = async () => {
     try {
-      // Always use the deployed URL for production
-      const redirectUrl = 'https://travel-next-bolt.netlify.app/';
+      // Get the current URL origin for proper redirect
+      const currentOrigin = window.location.origin;
       
       const { error } = await supabase.auth.signInWithOAuth({
         provider: 'google',
         options: {
-          redirectTo: redirectUrl,
+          redirectTo: `${currentOrigin}/`,
+          queryParams: {
+            access_type: 'offline',
+            prompt: 'consent',
+          },
         },
       });
 
       if (error) {
+        console.error('Google sign-in error:', error);
         toast({
           title: "Authentication Error",
           description: error.message,
