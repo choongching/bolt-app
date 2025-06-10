@@ -64,14 +64,18 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     try {
       setLoading(true);
       
-      // Get the current URL for redirect
+      // Get the current URL for redirect - handle both local and production
       const currentUrl = window.location.origin;
-      console.log('Current URL:', currentUrl);
+      const redirectUrl = currentUrl.includes('localhost') 
+        ? 'http://localhost:8080/' 
+        : 'https://wanderlust-spinner.netlify.app/';
+      
+      console.log('Attempting Google sign-in with redirect URL:', redirectUrl);
       
       const { data, error } = await supabase.auth.signInWithOAuth({
         provider: 'google',
         options: {
-          redirectTo: `${currentUrl}/`,
+          redirectTo: redirectUrl,
           queryParams: {
             access_type: 'offline',
             prompt: 'consent',
