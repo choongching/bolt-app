@@ -5,8 +5,8 @@ import { motion } from 'framer-motion';
 import { Destination, TravelerType } from '@/types/destination';
 import { getDestinationsByTravelerType, getRandomDestination } from '@/data/destinations';
 
-// Set your Mapbox access token here
-mapboxgl.accessToken = 'YOUR_ACTUAL_MAPBOX_TOKEN_HERE';
+// Set your Mapbox access token from environment variables
+mapboxgl.accessToken = import.meta.env.VITE_MAPBOX_ACCESS_TOKEN;
 
 interface MapboxGlobeProps {
   travelerType: TravelerType;
