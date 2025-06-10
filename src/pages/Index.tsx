@@ -1,10 +1,13 @@
-import React from 'react';
+import React, { useState } from 'react';
 import TravelSpinner from '@/components/TravelSpinner';
 import AuthContainer from '@/components/auth/AuthContainer';
+import AuthDebug from '@/components/auth/AuthDebug';
 import { useAuth } from '@/contexts/AuthContext';
+import { Button } from '@/components/ui/button';
 
 const Index = () => {
   const { user, loading } = useAuth();
+  const [showDebug, setShowDebug] = useState(false);
 
   if (loading) {
     return (
@@ -34,8 +37,37 @@ const Index = () => {
               <p className="text-white/80">Sign in to save your discoveries and create personalized travel plans</p>
             </div>
             <AuthContainer />
+            
+            {/* Debug toggle button */}
+            <div className="mt-6 text-center">
+              <Button 
+                onClick={() => setShowDebug(!showDebug)} 
+                variant="outline" 
+                size="sm"
+                className="bg-white/10 border-white/30 text-white hover:bg-white/20"
+              >
+                {showDebug ? 'Hide' : 'Show'} Debug Info
+              </Button>
+            </div>
           </div>
         </div>
+
+        {/* Debug overlay */}
+        {showDebug && (
+          <div className="absolute inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center z-60 p-4">
+            <div className="bg-white rounded-lg max-w-4xl w-full max-h-[90vh] overflow-auto">
+              <div className="p-4">
+                <div className="flex justify-between items-center mb-4">
+                  <h2 className="text-xl font-bold">Debug Information</h2>
+                  <Button onClick={() => setShowDebug(false)} variant="outline" size="sm">
+                    Close
+                  </Button>
+                </div>
+                <AuthDebug />
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     );
   }

@@ -42,6 +42,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
             description: `Signed in as ${session.user.email}`,
           });
         }
+
+        if (event === 'SIGNED_OUT') {
+          setUser(null);
+          setSession(null);
+        }
       }
     );
 
@@ -57,19 +62,24 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const signInWithGoogle = async () => {
     try {
-      // Use the correct deployed URL
-      const redirectUrl = 'https://wanderlust-spinner.netlify.app/';
+      setLoading(true);
       
-      const { error } = await supabase.auth.signInWithOAuth({
+      // Get the current URL for redirect
+      const currentUrl = window.location.origin;
+      console.log('Current URL:', currentUrl);
+      
+      const { data, error } = await supabase.auth.signInWithOAuth({
         provider: 'google',
         options: {
-          redirectTo: redirectUrl,
+          redirectTo: `${currentUrl}/`,
           queryParams: {
             access_type: 'offline',
             prompt: 'consent',
           },
         },
       });
+
+      console.log('OAuth response:', { data, error });
 
       if (error) {
         console.error('Google sign-in error:', error);
@@ -86,6 +96,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         description: "An unexpected error occurred during sign-in.",
         variant: "destructive",
       });
+    } finally {
+      setLoading(false);
     }
   };
 
