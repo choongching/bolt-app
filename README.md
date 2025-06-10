@@ -207,4 +207,4 @@ This project is built with:
 
 For more information, visit the [project repository](https://github.com/your-repo/travel-spinner).
 
-<!-- Force deploy trigger: Updated environment setup instructions -->
+<!-- Force deploy trigger: Updated with environment variables configuration -->
