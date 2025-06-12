@@ -6,7 +6,7 @@ import { Destination, TravelerType } from '@/types/destination';
 import { getDestinationsByTravelerType, getRandomDestination } from '@/data/destinations';
 
 // Set your Mapbox access token from environment variables
-mapboxgl.accessToken = import.meta.env.VITE_MAPBOX_ACCESS_TOKEN;
+const MAPBOX_TOKEN = import.meta.env.VITE_MAPBOX_ACCESS_TOKEN;
 
 interface MapboxGlobeProps {
   travelerType: TravelerType;
@@ -20,43 +20,103 @@ const MapboxGlobe: React.FC<MapboxGlobeProps> = ({ travelerType, onDestinationSe
   const [showText, setShowText] = useState(false);
   const [selectedDestination, setSelectedDestination] = useState<Destination | null>(null);
   const [spinPhase, setSpinPhase] = useState<'fast' | 'normal' | 'stopped'>('fast');
+  const [mapError, setMapError] = useState<string | null>(null);
   const spinningRef = useRef<number | null>(null);
   const userInteractingRef = useRef(false);
 
+  // Validate Mapbox token
+  const isValidMapboxToken = MAPBOX_TOKEN && 
+    MAPBOX_TOKEN !== 'YOUR_ACTUAL_MAPBOX_TOKEN_HERE' && 
+    MAPBOX_TOKEN.startsWith('pk.');
+
   useEffect(() => {
+    if (!isValidMapboxToken) {
+      // Fallback behavior without valid Mapbox token
+      const timer = setTimeout(() => {
+        setSpinPhase('normal');
+        setTimeout(() => {
+          setSpinPhase('stopped');
+          setIsSpinning(false);
+          setShowText(true);
+          
+          const availableDestinations = getDestinationsByTravelerType(travelerType);
+          const destination = availableDestinations.length > 0 
+            ? availableDestinations[Math.floor(Math.random() * availableDestinations.length)]
+            : getRandomDestination();
+          
+          setSelectedDestination(destination);
+          setTimeout(() => onDestinationSelected(destination), 1000);
+        }, 3000);
+      }, 4000);
+
+      return () => clearTimeout(timer);
+    }
+
     if (!mapContainer.current) return;
+
+    // Set Mapbox access token
+    mapboxgl.accessToken = MAPBOX_TOKEN;
 
     // Initialize the map with globe projection
     map.current = new mapboxgl.Map({
       container: mapContainer.current,
-      style: 'mapbox://styles/mapbox/satellite-streets-v12', // Beautiful satellite view
-      projection: 'globe', // Enable 3D globe
+      style: 'mapbox://styles/mapbox/satellite-streets-v12',
+      projection: 'globe',
       zoom: 1.5,
       center: [0, 20],
       pitch: 0,
       bearing: 0,
       antialias: true,
-      attributionControl: false, // Clean UI
+      attributionControl: false,
+    });
+
+    // Add error handling
+    map.current.on('error', (e) => {
+      console.error('Mapbox GL JS Error:', e);
+      setMapError('Failed to load map. Please check your internet connection.');
+      
+      // Fallback to non-map experience
+      setTimeout(() => {
+        setSpinPhase('normal');
+        setTimeout(() => {
+          stopSpinning();
+          selectRandomDestination();
+        }, 2000);
+      }, 1000);
     });
 
     // Configure globe settings for better visual appeal
     map.current.on('style.load', () => {
       if (!map.current) return;
 
-      // Set atmosphere for beautiful globe effect
-      map.current.setFog({
-        color: 'rgb(186, 210, 235)', // Light blue atmosphere
-        'high-color': 'rgb(36, 92, 223)', // Blue high altitude
-        'horizon-blend': 0.02,
-        'space-color': 'rgb(11, 11, 25)', // Dark space
-        'star-intensity': 0.6,
-      });
+      try {
+        // Set atmosphere for beautiful globe effect
+        map.current.setFog({
+          color: 'rgb(186, 210, 235)',
+          'high-color': 'rgb(36, 92, 223)',
+          'horizon-blend': 0.02,
+          'space-color': 'rgb(11, 11, 25)',
+          'star-intensity': 0.6,
+        });
 
-      // Add destinations as markers
-      addDestinationMarkers();
-      
-      // Start fast spinning immediately
-      startSpinning();
+        // Add destinations as markers
+        addDestinationMarkers();
+        
+        // Start fast spinning immediately
+        startSpinning();
+      } catch (error) {
+        console.error('Error setting up map:', error);
+        setMapError('Map setup failed. Using fallback experience.');
+        
+        // Fallback behavior
+        setTimeout(() => {
+          setSpinPhase('normal');
+          setTimeout(() => {
+            stopSpinning();
+            selectRandomDestination();
+          }, 2000);
+        }, 1000);
+      }
     });
 
     // Set up interaction listeners
@@ -84,7 +144,7 @@ const MapboxGlobe: React.FC<MapboxGlobeProps> = ({ travelerType, onDestinationSe
       setTimeout(() => {
         stopSpinning();
         selectRandomDestination();
-      }, 1000); // Brief normal speed before selection
+      }, 1000);
     }, 4000);
 
     return () => {
@@ -96,67 +156,71 @@ const MapboxGlobe: React.FC<MapboxGlobeProps> = ({ travelerType, onDestinationSe
         map.current.remove();
       }
     };
-  }, [travelerType]);
+  }, [travelerType, isValidMapboxToken]);
 
   const addDestinationMarkers = () => {
     if (!map.current) return;
 
-    const availableDestinations = getDestinationsByTravelerType(travelerType);
-    
-    availableDestinations.forEach((destination) => {
-      // Create custom marker element
-      const markerElement = document.createElement('div');
-      markerElement.className = 'destination-marker';
-      markerElement.style.cssText = `
-        width: 20px;
-        height: 20px;
-        background: linear-gradient(45deg, #ff6b6b, #ffd93d);
-        border: 3px solid white;
-        border-radius: 50%;
-        cursor: pointer;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-        transition: all 0.3s ease;
-        animation: pulse 2s infinite;
-      `;
+    try {
+      const availableDestinations = getDestinationsByTravelerType(travelerType);
+      
+      availableDestinations.forEach((destination) => {
+        // Create custom marker element
+        const markerElement = document.createElement('div');
+        markerElement.className = 'destination-marker';
+        markerElement.style.cssText = `
+          width: 20px;
+          height: 20px;
+          background: linear-gradient(45deg, #ff6b6b, #ffd93d);
+          border: 3px solid white;
+          border-radius: 50%;
+          cursor: pointer;
+          box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+          transition: all 0.3s ease;
+          animation: pulse 2s infinite;
+        `;
 
-      // Add hover effects
-      markerElement.addEventListener('mouseenter', () => {
-        markerElement.style.transform = 'scale(1.5)';
-        markerElement.style.zIndex = '1000';
+        // Add hover effects
+        markerElement.addEventListener('mouseenter', () => {
+          markerElement.style.transform = 'scale(1.5)';
+          markerElement.style.zIndex = '1000';
+        });
+
+        markerElement.addEventListener('mouseleave', () => {
+          markerElement.style.transform = 'scale(1)';
+          markerElement.style.zIndex = '1';
+        });
+
+        // Create marker and add to map
+        const marker = new mapboxgl.Marker(markerElement)
+          .setLngLat([destination.longitude, destination.latitude])
+          .addTo(map.current!);
+
+        // Add popup on click
+        const popup = new mapboxgl.Popup({
+          offset: 25,
+          closeButton: false,
+          className: 'destination-popup'
+        }).setHTML(`
+          <div style="
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 12px;
+            border-radius: 8px;
+            text-align: center;
+            font-family: system-ui, -apple-system, sans-serif;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+          ">
+            <h3 style="margin: 0 0 4px 0; font-size: 16px; font-weight: bold;">${destination.name}</h3>
+            <p style="margin: 0; font-size: 12px; opacity: 0.9;">${destination.country}</p>
+          </div>
+        `);
+
+        marker.setPopup(popup);
       });
-
-      markerElement.addEventListener('mouseleave', () => {
-        markerElement.style.transform = 'scale(1)';
-        markerElement.style.zIndex = '1';
-      });
-
-      // Create marker and add to map
-      const marker = new mapboxgl.Marker(markerElement)
-        .setLngLat([destination.longitude, destination.latitude])
-        .addTo(map.current!);
-
-      // Add popup on click
-      const popup = new mapboxgl.Popup({
-        offset: 25,
-        closeButton: false,
-        className: 'destination-popup'
-      }).setHTML(`
-        <div style="
-          background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-          color: white;
-          padding: 12px;
-          border-radius: 8px;
-          text-align: center;
-          font-family: system-ui, -apple-system, sans-serif;
-          box-shadow: 0 8px 32px rgba(0,0,0,0.3);
-        ">
-          <h3 style="margin: 0 0 4px 0; font-size: 16px; font-weight: bold;">${destination.name}</h3>
-          <p style="margin: 0; font-size: 12px; opacity: 0.9;">${destination.country}</p>
-        </div>
-      `);
-
-      marker.setPopup(popup);
-    });
+    } catch (error) {
+      console.error('Error adding destination markers:', error);
+    }
   };
 
   const startSpinning = () => {
@@ -166,33 +230,34 @@ const MapboxGlobe: React.FC<MapboxGlobeProps> = ({ travelerType, onDestinationSe
     function spinGlobe() {
       if (!map.current || spinPhase === 'stopped') return;
 
-      const zoom = map.current.getZoom();
-      if (!userInteractingRef.current && zoom < 5) {
-        // Calculate rotation speed based on phase
-        let distancePerSecond;
-        
-        if (spinPhase === 'fast') {
-          // Fast spinning: Complete rotation in 45 seconds (8 degrees per second)
-          distancePerSecond = 360 / 45;
-        } else {
-          // Normal spinning: Complete rotation in 120 seconds (3 degrees per second)
-          distancePerSecond = 360 / 120;
+      try {
+        const zoom = map.current.getZoom();
+        if (!userInteractingRef.current && zoom < 5) {
+          // Calculate rotation speed based on phase
+          let distancePerSecond;
+          
+          if (spinPhase === 'fast') {
+            distancePerSecond = 360 / 45;
+          } else {
+            distancePerSecond = 360 / 120;
+          }
+          
+          const center = map.current.getCenter();
+          center.lng -= distancePerSecond;
+          
+          const easingFunction = spinPhase === 'fast' 
+            ? (t: number) => t
+            : (t: number) => t * (2 - t);
+          
+          map.current.easeTo({ 
+            center, 
+            duration: spinPhase === 'fast' ? 800 : 1000,
+            easing: easingFunction
+          });
         }
-        
-        const center = map.current.getCenter();
-        center.lng -= distancePerSecond;
-        
-        // Use different easing based on speed
-        const easingFunction = spinPhase === 'fast' 
-          ? (t: number) => t // Linear for fast spinning
-          : (t: number) => t * (2 - t); // Ease out for normal spinning
-        
-        // Smoothly update the map center with appropriate duration
-        map.current.easeTo({ 
-          center, 
-          duration: spinPhase === 'fast' ? 800 : 1000,
-          easing: easingFunction
-        });
+      } catch (error) {
+        console.error('Error during spinning animation:', error);
+        return;
       }
       
       spinningRef.current = requestAnimationFrame(spinGlobe);
@@ -218,36 +283,74 @@ const MapboxGlobe: React.FC<MapboxGlobeProps> = ({ travelerType, onDestinationSe
 
     setSelectedDestination(destination);
 
-    // Animate to the selected destination with normal speed
-    if (map.current) {
-      map.current.flyTo({
-        center: [destination.longitude, destination.latitude],
-        zoom: 4,
-        pitch: 45,
-        bearing: 0,
-        duration: 3000,
-        essential: true,
-        // Use smooth easing for the final approach
-        easing: (t) => t < 0.5 ? 2 * t * t : -1 + (4 - 2 * t) * t
-      });
+    // Animate to the selected destination if map is available
+    if (map.current && !mapError) {
+      try {
+        map.current.flyTo({
+          center: [destination.longitude, destination.latitude],
+          zoom: 4,
+          pitch: 45,
+          bearing: 0,
+          duration: 3000,
+          essential: true,
+          easing: (t) => t < 0.5 ? 2 * t * t : -1 + (4 - 2 * t) * t
+        });
 
-      // Trigger destination selection after animation
+        setTimeout(() => {
+          onDestinationSelected(destination);
+        }, 3500);
+      } catch (error) {
+        console.error('Error flying to destination:', error);
+        // Fallback: just trigger destination selection
+        setTimeout(() => {
+          onDestinationSelected(destination);
+        }, 1000);
+      }
+    } else {
+      // No map available, just trigger destination selection
       setTimeout(() => {
         onDestinationSelected(destination);
-      }, 3500);
+      }, 1000);
     }
   };
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-indigo-900 via-purple-900 to-black relative overflow-hidden">
-      {/* Mapbox Globe Container */}
-      <div 
-        ref={mapContainer} 
-        className="absolute inset-0 w-full h-full"
-        style={{ 
-          background: 'linear-gradient(to bottom, #0f0f23, #1a1a2e, #16213e)',
-        }}
-      />
+      {/* Mapbox Globe Container or Fallback Background */}
+      {isValidMapboxToken && !mapError ? (
+        <div 
+          ref={mapContainer} 
+          className="absolute inset-0 w-full h-full"
+          style={{ 
+            background: 'linear-gradient(to bottom, #0f0f23, #1a1a2e, #16213e)',
+          }}
+        />
+      ) : (
+        <div className="absolute inset-0 bg-gradient-to-b from-indigo-900 via-purple-900 to-black">
+          {/* Animated background for fallback */}
+          <div className="absolute inset-0">
+            {[...Array(20)].map((_, i) => (
+              <motion.div
+                key={i}
+                className="absolute w-1 h-1 bg-white/20 rounded-full"
+                initial={{ 
+                  x: Math.random() * (typeof window !== 'undefined' ? window.innerWidth : 1000),
+                  y: Math.random() * (typeof window !== 'undefined' ? window.innerHeight : 1000),
+                }}
+                animate={{
+                  x: Math.random() * (typeof window !== 'undefined' ? window.innerWidth : 1000),
+                  y: Math.random() * (typeof window !== 'undefined' ? window.innerHeight : 1000),
+                }}
+                transition={{
+                  duration: Math.random() * 20 + 15,
+                  repeat: Infinity,
+                  ease: "linear"
+                }}
+              />
+            ))}
+          </div>
+        </div>
+      )}
       
       {/* Custom CSS for markers and popups */}
       <style jsx>{`
@@ -353,37 +456,53 @@ const MapboxGlobe: React.FC<MapboxGlobeProps> = ({ travelerType, onDestinationSe
         </div>
       </div>
 
-      {/* Controls hint */}
+      {/* Status indicator */}
       <div className="absolute bottom-8 left-8 text-white/60 text-sm z-10">
         <div className="bg-black/30 backdrop-blur-sm rounded-lg p-4 border border-white/20">
           <div className="flex items-center space-x-2 mb-2">
             <div className={`w-2 h-2 rounded-full animate-pulse ${
+              mapError ? 'bg-red-400' : 
+              !isValidMapboxToken ? 'bg-orange-400' :
               spinPhase === 'fast' ? 'bg-yellow-400' : 
               spinPhase === 'normal' ? 'bg-blue-400' : 'bg-green-400'
             }`} />
-            <span>Interactive Globe</span>
-            {spinPhase === 'fast' && <span className="text-yellow-400 text-xs">(Fast Spin)</span>}
-            {spinPhase === 'normal' && <span className="text-blue-400 text-xs">(Normal Speed)</span>}
+            <span>
+              {mapError ? 'Fallback Mode' :
+               !isValidMapboxToken ? 'Basic Mode' : 'Interactive Globe'}
+            </span>
           </div>
-          <div className="text-xs space-y-1">
-            <div>• Drag to rotate</div>
-            <div>• Scroll to zoom</div>
-            <div>• Click markers for details</div>
-          </div>
+          {mapError && (
+            <div className="text-xs text-red-300 mb-2">{mapError}</div>
+          )}
+          {!isValidMapboxToken && (
+            <div className="text-xs space-y-1">
+              <div>• Add valid Mapbox token for 3D globe</div>
+              <div>• Get token from mapbox.com</div>
+            </div>
+          )}
+          {isValidMapboxToken && !mapError && (
+            <div className="text-xs space-y-1">
+              <div>• Drag to rotate</div>
+              <div>• Scroll to zoom</div>
+              <div>• Click markers for details</div>
+            </div>
+          )}
         </div>
       </div>
 
       {/* Mapbox attribution */}
-      <div className="absolute bottom-4 right-4 text-white/40 text-xs z-10">
-        <a 
-          href="https://www.mapbox.com/" 
-          target="_blank" 
-          rel="noopener noreferrer"
-          className="hover:text-white/60 transition-colors"
-        >
-          © Mapbox
-        </a>
-      </div>
+      {isValidMapboxToken && !mapError && (
+        <div className="absolute bottom-4 right-4 text-white/40 text-xs z-10">
+          <a 
+            href="https://www.mapbox.com/" 
+            target="_blank" 
+            rel="noopener noreferrer"
+            className="hover:text-white/60 transition-colors"
+          >
+            © Mapbox
+          </a>
+        </div>
+      )}
     </div>
   );
 };

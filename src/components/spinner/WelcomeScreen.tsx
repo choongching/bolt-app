@@ -15,14 +15,16 @@ const WelcomeScreen: React.FC<WelcomeScreenProps> = ({ onStartSpin, isAuthentica
   const map = useRef<mapboxgl.Map | null>(null);
 
   useEffect(() => {
-    // Check if Mapbox token is available
-    const hasMapboxToken = import.meta.env.VITE_MAPBOX_ACCESS_TOKEN && 
-                          import.meta.env.VITE_MAPBOX_ACCESS_TOKEN !== 'YOUR_ACTUAL_MAPBOX_TOKEN_HERE';
+    // Check if Mapbox token is available and valid
+    const MAPBOX_TOKEN = import.meta.env.VITE_MAPBOX_ACCESS_TOKEN;
+    const hasValidMapboxToken = MAPBOX_TOKEN && 
+                               MAPBOX_TOKEN !== 'YOUR_ACTUAL_MAPBOX_TOKEN_HERE' &&
+                               MAPBOX_TOKEN.startsWith('pk.');
 
-    if (!hasMapboxToken || !mapContainer.current) return;
+    if (!hasValidMapboxToken || !mapContainer.current) return;
 
     // Set Mapbox access token
-    mapboxgl.accessToken = import.meta.env.VITE_MAPBOX_ACCESS_TOKEN;
+    mapboxgl.accessToken = MAPBOX_TOKEN;
 
     // Initialize the map with globe projection
     map.current = new mapboxgl.Map({
@@ -38,42 +40,62 @@ const WelcomeScreen: React.FC<WelcomeScreenProps> = ({ onStartSpin, isAuthentica
       interactive: false, // Disable user interaction
     });
 
+    // Add error handling
+    map.current.on('error', (e) => {
+      console.error('Mapbox GL JS Error in WelcomeScreen:', e);
+      // Silently handle the error - the fallback background will show
+      if (map.current) {
+        map.current.remove();
+        map.current = null;
+      }
+    });
+
     map.current.on('style.load', () => {
       if (!map.current) return;
 
-      // Set beautiful atmosphere for the globe
-      map.current.setFog({
-        color: 'rgb(186, 210, 235)',
-        'high-color': 'rgb(36, 92, 223)',
-        'horizon-blend': 0.02,
-        'space-color': 'rgb(11, 11, 25)',
-        'star-intensity': 0.8,
-      });
+      try {
+        // Set beautiful atmosphere for the globe
+        map.current.setFog({
+          color: 'rgb(186, 210, 235)',
+          'high-color': 'rgb(36, 92, 223)',
+          'horizon-blend': 0.02,
+          'space-color': 'rgb(11, 11, 25)',
+          'star-intensity': 0.8,
+        });
 
-      // Start continuous rotation
-      let userInteracting = false;
-      const spinEnabled = true;
+        // Start continuous rotation
+        let userInteracting = false;
+        const spinEnabled = true;
 
-      function spinGlobe() {
-        if (!map.current || !spinEnabled || userInteracting) return;
-        
-        const zoom = map.current.getZoom();
-        if (zoom < 5) {
-          let distancePerSecond = 360 / 240; // Complete rotation in 4 minutes (slower for background effect)
-          const center = map.current.getCenter();
-          center.lng -= distancePerSecond;
+        function spinGlobe() {
+          if (!map.current || !spinEnabled || userInteracting) return;
           
-          map.current.easeTo({ 
-            center, 
-            duration: 1000, 
-            easing: (t) => t 
-          });
+          try {
+            const zoom = map.current.getZoom();
+            if (zoom < 5) {
+              let distancePerSecond = 360 / 240; // Complete rotation in 4 minutes
+              const center = map.current.getCenter();
+              center.lng -= distancePerSecond;
+              
+              map.current.easeTo({ 
+                center, 
+                duration: 1000, 
+                easing: (t) => t 
+              });
+            }
+          } catch (error) {
+            console.error('Error during welcome screen globe spinning:', error);
+            return;
+          }
+          
+          requestAnimationFrame(spinGlobe);
         }
-        
-        requestAnimationFrame(spinGlobe);
-      }
 
-      spinGlobe();
+        spinGlobe();
+      } catch (error) {
+        console.error('Error setting up welcome screen map:', error);
+        // Silently handle the error
+      }
     });
 
     return () => {
@@ -83,19 +105,52 @@ const WelcomeScreen: React.FC<WelcomeScreenProps> = ({ onStartSpin, isAuthentica
     };
   }, []);
 
+  // Check if we have a valid Mapbox token
+  const MAPBOX_TOKEN = import.meta.env.VITE_MAPBOX_ACCESS_TOKEN;
+  const hasValidMapboxToken = MAPBOX_TOKEN && 
+                             MAPBOX_TOKEN !== 'YOUR_ACTUAL_MAPBOX_TOKEN_HERE' &&
+                             MAPBOX_TOKEN.startsWith('pk.');
+
   return (
     <div className="min-h-screen relative overflow-hidden">
-      {/* Background Globe Container */}
+      {/* Background Globe Container or Fallback */}
       <div className="absolute inset-0">
-        {/* Mapbox Globe */}
-        <div 
-          ref={mapContainer} 
-          className="absolute inset-0 w-full h-full"
-          style={{ 
-            filter: 'blur(1px) brightness(0.7)',
-            background: 'linear-gradient(to bottom, #0f0f23, #1a1a2e, #16213e)',
-          }}
-        />
+        {hasValidMapboxToken ? (
+          // Mapbox Globe
+          <div 
+            ref={mapContainer} 
+            className="absolute inset-0 w-full h-full"
+            style={{ 
+              filter: 'blur(1px) brightness(0.7)',
+              background: 'linear-gradient(to bottom, #0f0f23, #1a1a2e, #16213e)',
+            }}
+          />
+        ) : (
+          // Fallback animated background
+          <div className="absolute inset-0 bg-gradient-to-b from-indigo-900 via-purple-900 to-black">
+            <div className="absolute inset-0">
+              {[...Array(20)].map((_, i) => (
+                <motion.div
+                  key={i}
+                  className="absolute w-1 h-1 bg-white/20 rounded-full"
+                  initial={{ 
+                    x: Math.random() * (typeof window !== 'undefined' ? window.innerWidth : 1000),
+                    y: Math.random() * (typeof window !== 'undefined' ? window.innerHeight : 1000),
+                  }}
+                  animate={{
+                    x: Math.random() * (typeof window !== 'undefined' ? window.innerWidth : 1000),
+                    y: Math.random() * (typeof window !== 'undefined' ? window.innerHeight : 1000),
+                  }}
+                  transition={{
+                    duration: Math.random() * 20 + 15,
+                    repeat: Infinity,
+                    ease: "linear"
+                  }}
+                />
+              ))}
+            </div>
+          </div>
+        )}
         
         {/* Gradient Overlay for better text readability */}
         <div className="absolute inset-0 bg-gradient-to-br from-purple-900/40 via-blue-900/30 to-teal-900/40" />
@@ -109,12 +164,12 @@ const WelcomeScreen: React.FC<WelcomeScreenProps> = ({ onStartSpin, isAuthentica
             key={i}
             className="absolute w-1 h-1 bg-white/30 rounded-full"
             initial={{ 
-              x: Math.random() * window.innerWidth,
-              y: Math.random() * window.innerHeight,
+              x: Math.random() * (typeof window !== 'undefined' ? window.innerWidth : 1000),
+              y: Math.random() * (typeof window !== 'undefined' ? window.innerHeight : 1000),
             }}
             animate={{
-              x: Math.random() * window.innerWidth,
-              y: Math.random() * window.innerHeight,
+              x: Math.random() * (typeof window !== 'undefined' ? window.innerWidth : 1000),
+              y: Math.random() * (typeof window !== 'undefined' ? window.innerHeight : 1000),
             }}
             transition={{
               duration: Math.random() * 20 + 15,
@@ -234,9 +289,8 @@ const WelcomeScreen: React.FC<WelcomeScreenProps> = ({ onStartSpin, isAuthentica
         </div>
       </div>
 
-      {/* Setup instructions for missing Mapbox token */}
-      {(!import.meta.env.VITE_MAPBOX_ACCESS_TOKEN || 
-        import.meta.env.VITE_MAPBOX_ACCESS_TOKEN === 'YOUR_ACTUAL_MAPBOX_TOKEN_HERE') && (
+      {/* Setup instructions for missing or invalid Mapbox token */}
+      {!hasValidMapboxToken && (
         <div className="absolute bottom-8 left-8 text-white/60 text-sm z-20">
           <div className="bg-black/30 backdrop-blur-sm rounded-lg p-4 border border-white/20 max-w-sm">
             <div className="flex items-center space-x-2 mb-2">
@@ -244,9 +298,10 @@ const WelcomeScreen: React.FC<WelcomeScreenProps> = ({ onStartSpin, isAuthentica
               <span className="font-semibold">Enhanced Globe Available</span>
             </div>
             <div className="text-xs space-y-1">
-              <div>• Add VITE_MAPBOX_ACCESS_TOKEN to .env</div>
+              <div>• Add valid Mapbox token to .env</div>
               <div>• Get token from mapbox.com</div>
-              <div>• Restart dev server for 3D globe</div>
+              <div>• Token must start with 'pk.'</div>
+              <div>• Restart dev server after adding</div>
             </div>
           </div>
         </div>
