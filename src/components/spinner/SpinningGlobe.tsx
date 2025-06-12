@@ -65,6 +65,7 @@ const SpinningGlobe: React.FC<SpinningGlobeProps> = ({ travelerType, onDestinati
       bearing: 0,
       antialias: true,
       attributionControl: false,
+      maxZoom: 20, // Set maximum zoom level to 20
     });
 
     // Add error handling
@@ -301,7 +302,7 @@ const SpinningGlobe: React.FC<SpinningGlobeProps> = ({ travelerType, onDestinati
       try {
         map.current.flyTo({
           center: [destination.longitude, destination.latitude],
-          zoom: 4,
+          zoom: 12, // Increased zoom level for much closer view (was 4, now 12)
           pitch: 45,
           bearing: 0,
           duration: 3000,
