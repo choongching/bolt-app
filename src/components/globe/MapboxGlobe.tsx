@@ -19,7 +19,9 @@ const MapboxGlobe: React.FC<MapboxGlobeProps> = ({ travelerType, onDestinationSe
   const [isSpinning, setIsSpinning] = useState(true);
   const [showText, setShowText] = useState(false);
   const [selectedDestination, setSelectedDestination] = useState<Destination | null>(null);
+  const [spinPhase, setSpinPhase] = useState<'fast' | 'normal' | 'stopped'>('fast');
   const spinningRef = useRef<number | null>(null);
+  const userInteractingRef = useRef(false);
 
   useEffect(() => {
     if (!mapContainer.current) return;
@@ -52,15 +54,37 @@ const MapboxGlobe: React.FC<MapboxGlobeProps> = ({ travelerType, onDestinationSe
 
       // Add destinations as markers
       addDestinationMarkers();
+      
+      // Start fast spinning immediately
+      startSpinning();
     });
 
-    // Start automatic rotation
-    startSpinning();
+    // Set up interaction listeners
+    const handleInteractionStart = () => {
+      userInteractingRef.current = true;
+    };
 
-    // Auto-select destination after spinning
+    const handleInteractionEnd = () => {
+      userInteractingRef.current = false;
+    };
+
+    if (map.current) {
+      map.current.on('mousedown', handleInteractionStart);
+      map.current.on('touchstart', handleInteractionStart);
+      map.current.on('mouseup', handleInteractionEnd);
+      map.current.on('touchend', handleInteractionEnd);
+      map.current.on('dragend', handleInteractionEnd);
+      map.current.on('pitchend', handleInteractionEnd);
+      map.current.on('rotateend', handleInteractionEnd);
+    }
+
+    // Auto-select destination after fast spinning
     const timer = setTimeout(() => {
-      stopSpinning();
-      selectRandomDestination();
+      setSpinPhase('normal');
+      setTimeout(() => {
+        stopSpinning();
+        selectRandomDestination();
+      }, 1000); // Brief normal speed before selection
     }, 4000);
 
     return () => {
@@ -138,43 +162,50 @@ const MapboxGlobe: React.FC<MapboxGlobeProps> = ({ travelerType, onDestinationSe
   const startSpinning = () => {
     if (!map.current) return;
 
-    let userInteracting = false;
-    let spinEnabled = true;
-
-    // Disable spinning when user interacts
-    map.current.on('mousedown', () => { userInteracting = true; });
-    map.current.on('mouseup', () => { userInteracting = false; });
-    map.current.on('dragend', () => { userInteracting = false; });
-    map.current.on('pitchend', () => { userInteracting = false; });
-    map.current.on('rotateend', () => { userInteracting = false; });
-
-    // Spinning animation function
+    // Spinning animation function with variable speed
     function spinGlobe() {
-      if (!map.current || !spinEnabled) return;
+      if (!map.current || spinPhase === 'stopped') return;
 
       const zoom = map.current.getZoom();
-      if (spinEnabled && !userInteracting && zoom < 5) {
-        let distancePerSecond = 360 / 120; // Complete rotation in 2 minutes
+      if (!userInteractingRef.current && zoom < 5) {
+        // Calculate rotation speed based on phase
+        let distancePerSecond;
+        
+        if (spinPhase === 'fast') {
+          // Fast spinning: Complete rotation in 45 seconds (8 degrees per second)
+          distancePerSecond = 360 / 45;
+        } else {
+          // Normal spinning: Complete rotation in 120 seconds (3 degrees per second)
+          distancePerSecond = 360 / 120;
+        }
+        
         const center = map.current.getCenter();
         center.lng -= distancePerSecond;
         
-        // Smoothly update the map center
-        map.current.easeTo({ center, duration: 1000, easing: (t) => t });
+        // Use different easing based on speed
+        const easingFunction = spinPhase === 'fast' 
+          ? (t: number) => t // Linear for fast spinning
+          : (t: number) => t * (2 - t); // Ease out for normal spinning
+        
+        // Smoothly update the map center with appropriate duration
+        map.current.easeTo({ 
+          center, 
+          duration: spinPhase === 'fast' ? 800 : 1000,
+          easing: easingFunction
+        });
       }
       
       spinningRef.current = requestAnimationFrame(spinGlobe);
     }
 
     spinGlobe();
-
-    // Store reference to stop spinning later
-    map.current.spinEnabled = spinEnabled;
   };
 
   const stopSpinning = () => {
     if (spinningRef.current) {
       cancelAnimationFrame(spinningRef.current);
     }
+    setSpinPhase('stopped');
     setIsSpinning(false);
     setShowText(true);
   };
@@ -187,7 +218,7 @@ const MapboxGlobe: React.FC<MapboxGlobeProps> = ({ travelerType, onDestinationSe
 
     setSelectedDestination(destination);
 
-    // Animate to the selected destination
+    // Animate to the selected destination with normal speed
     if (map.current) {
       map.current.flyTo({
         center: [destination.longitude, destination.latitude],
@@ -195,7 +226,9 @@ const MapboxGlobe: React.FC<MapboxGlobeProps> = ({ travelerType, onDestinationSe
         pitch: 45,
         bearing: 0,
         duration: 3000,
-        essential: true
+        essential: true,
+        // Use smooth easing for the final approach
+        easing: (t) => t < 0.5 ? 2 * t * t : -1 + (4 - 2 * t) * t
       });
 
       // Trigger destination selection after animation
@@ -238,8 +271,39 @@ const MapboxGlobe: React.FC<MapboxGlobeProps> = ({ travelerType, onDestinationSe
       {/* Overlay Content */}
       <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-10">
         <div className="text-center">
-          {/* Spinning indicator */}
-          {isSpinning && (
+          {/* Fast spinning indicator */}
+          {isSpinning && spinPhase === 'fast' && (
+            <motion.div
+              initial={{ opacity: 0, scale: 0.8 }}
+              animate={{ opacity: 1, scale: 1 }}
+              className="mb-8"
+            >
+              <div className="relative">
+                <motion.div
+                  animate={{ rotate: 360 }}
+                  transition={{ duration: 1.2, repeat: Infinity, ease: "linear" }}
+                  className="w-20 h-20 border-4 border-yellow-400 border-t-transparent rounded-full mx-auto mb-4"
+                />
+                <div className="absolute inset-0 flex items-center justify-center">
+                  <div className="w-10 h-10 bg-yellow-400 rounded-full animate-pulse" />
+                </div>
+              </div>
+              <h2 className="text-4xl md:text-5xl font-bold text-white mb-2">
+                Spinning the Globe...
+              </h2>
+              <p className="text-white/80 text-xl">
+                Finding your perfect destination
+              </p>
+              <div className="mt-4 flex items-center justify-center space-x-2">
+                <div className="w-2 h-2 bg-yellow-400 rounded-full animate-bounce" style={{ animationDelay: '0ms' }} />
+                <div className="w-2 h-2 bg-yellow-400 rounded-full animate-bounce" style={{ animationDelay: '150ms' }} />
+                <div className="w-2 h-2 bg-yellow-400 rounded-full animate-bounce" style={{ animationDelay: '300ms' }} />
+              </div>
+            </motion.div>
+          )}
+
+          {/* Normal spinning indicator */}
+          {isSpinning && spinPhase === 'normal' && (
             <motion.div
               initial={{ opacity: 0, scale: 0.8 }}
               animate={{ opacity: 1, scale: 1 }}
@@ -249,17 +313,17 @@ const MapboxGlobe: React.FC<MapboxGlobeProps> = ({ travelerType, onDestinationSe
                 <motion.div
                   animate={{ rotate: 360 }}
                   transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
-                  className="w-16 h-16 border-4 border-yellow-400 border-t-transparent rounded-full mx-auto mb-4"
+                  className="w-16 h-16 border-4 border-blue-400 border-t-transparent rounded-full mx-auto mb-4"
                 />
                 <div className="absolute inset-0 flex items-center justify-center">
-                  <div className="w-8 h-8 bg-yellow-400 rounded-full animate-pulse" />
+                  <div className="w-8 h-8 bg-blue-400 rounded-full animate-pulse" />
                 </div>
               </div>
               <h2 className="text-3xl md:text-4xl font-bold text-white mb-2">
-                Spinning the Globe...
+                Focusing...
               </h2>
               <p className="text-white/80 text-lg">
-                Finding your perfect destination
+                Locking onto your destination
               </p>
             </motion.div>
           )}
@@ -293,8 +357,13 @@ const MapboxGlobe: React.FC<MapboxGlobeProps> = ({ travelerType, onDestinationSe
       <div className="absolute bottom-8 left-8 text-white/60 text-sm z-10">
         <div className="bg-black/30 backdrop-blur-sm rounded-lg p-4 border border-white/20">
           <div className="flex items-center space-x-2 mb-2">
-            <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse" />
+            <div className={`w-2 h-2 rounded-full animate-pulse ${
+              spinPhase === 'fast' ? 'bg-yellow-400' : 
+              spinPhase === 'normal' ? 'bg-blue-400' : 'bg-green-400'
+            }`} />
             <span>Interactive Globe</span>
+            {spinPhase === 'fast' && <span className="text-yellow-400 text-xs">(Fast Spin)</span>}
+            {spinPhase === 'normal' && <span className="text-blue-400 text-xs">(Normal Speed)</span>}
           </div>
           <div className="text-xs space-y-1">
             <div>• Drag to rotate</div>
