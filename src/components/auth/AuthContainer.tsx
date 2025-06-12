@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import GoogleSignInButton from './GoogleSignInButton';
@@ -18,11 +17,16 @@ const AuthContainer: React.FC = () => {
   return (
     <div className="w-full">
       {user ? (
-        <UserProfile />
+        <div className="text-center">
+          <div className="mb-4">
+            <UserProfile />
+          </div>
+          <p className="text-white/80 text-sm">You're signed in and ready to explore!</p>
+        </div>
       ) : (
         <div className="space-y-4">
           <div className="text-center">
-            <h3 className="text-lg font-semibold mb-2">Welcome to Travel Next</h3>
+            <h3 className="text-lg font-semibold mb-2">Welcome to Travel Spinner</h3>
             <p className="text-gray-600 mb-4">Sign in to save your favorite destinations and track your travel preferences</p>
           </div>
           <GoogleSignInButton />
