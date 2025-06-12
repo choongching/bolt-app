@@ -248,8 +248,7 @@ const WelcomeScreen: React.FC<WelcomeScreenProps> = ({ onStartSpin, isAuthentica
                 transition={{ duration: 2, repeat: Infinity }}
               />
               
-              <div className="flex items-center relative z-10">
-                <Sparkles className="w-6 h-6 mr-3" />
+              <div className="flex items-center justify-center relative z-10">
                 <SplitText
                   text="Start the Spin"
                   delay={1.2}
@@ -268,13 +267,6 @@ const WelcomeScreen: React.FC<WelcomeScreenProps> = ({ onStartSpin, isAuthentica
                   staggerChildren={0.08}
                   className="font-bold"
                 />
-                <motion.div
-                  animate={{ rotate: 360 }}
-                  transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
-                  className="ml-3"
-                >
-                  <Globe className="w-6 h-6" />
-                </motion.div>
               </div>
             </Button>
           </motion.div>

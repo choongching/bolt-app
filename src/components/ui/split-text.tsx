@@ -60,7 +60,7 @@ const SplitText: React.FC<SplitTextProps> = ({
     visible: {
       ...animationTo,
       transition: {
-        duration: 0.6,
+        duration: 2, // Changed from 0.6 to 2 seconds
         ease: [0.25, 0.46, 0.45, 0.94],
       },
     },
