@@ -2,6 +2,7 @@ import React, { useRef, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import { Plane, Globe, Sparkles } from 'lucide-react';
+import SplitText from '@/components/ui/split-text';
 import mapboxgl from 'mapbox-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
 
@@ -229,7 +230,7 @@ const WelcomeScreen: React.FC<WelcomeScreenProps> = ({ onStartSpin, isAuthentica
             Let destiny choose your next adventure. Spin the globe and discover amazing destinations tailored just for you.
           </motion.p>
 
-          {/* CTA Button */}
+          {/* CTA Button with Split Text Animation */}
           <motion.div
             initial={{ opacity: 0, scale: 0.8 }}
             animate={{ opacity: 1, scale: 1 }}
@@ -238,17 +239,43 @@ const WelcomeScreen: React.FC<WelcomeScreenProps> = ({ onStartSpin, isAuthentica
             <Button
               onClick={onStartSpin}
               size="lg"
-              className="bg-gradient-to-r from-yellow-400 to-orange-500 hover:from-yellow-500 hover:to-orange-600 text-white font-bold py-6 px-12 rounded-full text-xl shadow-2xl transform hover:scale-105 transition-all duration-300 border-0 backdrop-blur-sm"
+              className="bg-gradient-to-r from-yellow-400 to-orange-500 hover:from-yellow-500 hover:to-orange-600 text-white font-bold py-6 px-12 rounded-full text-xl shadow-2xl transform hover:scale-105 transition-all duration-300 border-0 backdrop-blur-sm group relative overflow-hidden"
             >
-              <Sparkles className="w-6 h-6 mr-3" />
-              Start the Spin
               <motion.div
-                animate={{ rotate: 360 }}
-                transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
-                className="ml-3"
-              >
-                <Globe className="w-6 h-6" />
-              </motion.div>
+                className="absolute inset-0 bg-gradient-to-r from-yellow-300 to-orange-400 opacity-0 group-hover:opacity-20 transition-opacity duration-300"
+                initial={false}
+                animate={{ scale: [1, 1.05, 1] }}
+                transition={{ duration: 2, repeat: Infinity }}
+              />
+              
+              <div className="flex items-center relative z-10">
+                <Sparkles className="w-6 h-6 mr-3" />
+                <SplitText
+                  text="Start the Spin"
+                  delay={1.2}
+                  animationFrom={{ 
+                    opacity: 0, 
+                    y: 30, 
+                    rotateX: -90,
+                    scale: 0.8 
+                  }}
+                  animationTo={{ 
+                    opacity: 1, 
+                    y: 0, 
+                    rotateX: 0,
+                    scale: 1 
+                  }}
+                  staggerChildren={0.08}
+                  className="font-bold"
+                />
+                <motion.div
+                  animate={{ rotate: 360 }}
+                  transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
+                  className="ml-3"
+                >
+                  <Globe className="w-6 h-6" />
+                </motion.div>
+              </div>
             </Button>
           </motion.div>
 
