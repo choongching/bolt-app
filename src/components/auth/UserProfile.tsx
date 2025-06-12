@@ -3,9 +3,13 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { useAuth } from '@/contexts/AuthContext';
-import { LogOut, User, Settings, ChevronDown } from 'lucide-react';
+import { LogOut, User, Settings, ChevronDown, MapPin } from 'lucide-react';
 
-const UserProfile: React.FC = () => {
+interface UserProfileProps {
+  onProfileClick?: () => void;
+}
+
+const UserProfile: React.FC<UserProfileProps> = ({ onProfileClick }) => {
   const { user, signOut } = useAuth();
   const [isLoggingOut, setIsLoggingOut] = useState(false);
 
@@ -67,10 +71,19 @@ const UserProfile: React.FC = () => {
         
         <DropdownMenuSeparator />
         
-        <DropdownMenuItem className="cursor-pointer">
-          <User className="mr-2 h-4 w-4" />
-          <span>Profile</span>
-        </DropdownMenuItem>
+        {onProfileClick && (
+          <DropdownMenuItem className="cursor-pointer" onClick={onProfileClick}>
+            <User className="mr-2 h-4 w-4" />
+            <span>My Profile</span>
+          </DropdownMenuItem>
+        )}
+        
+        {onProfileClick && (
+          <DropdownMenuItem className="cursor-pointer" onClick={onProfileClick}>
+            <MapPin className="mr-2 h-4 w-4" />
+            <span>Saved Locations</span>
+          </DropdownMenuItem>
+        )}
         
         <DropdownMenuItem className="cursor-pointer">
           <Settings className="mr-2 h-4 w-4" />

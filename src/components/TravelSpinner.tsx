@@ -12,8 +12,9 @@ import DestinationReveal from './spinner/DestinationReveal';
 import DestinationExplorer from './spinner/DestinationExplorer';
 import UserAccount from './spinner/UserAccount';
 import UserProfile from './auth/UserProfile';
+import UserProfilePage from './profile/UserProfilePage';
 
-type SpinnerStep = 'welcome' | 'traveler-type' | 'spinning' | 'reveal' | 'explore' | 'account';
+type SpinnerStep = 'welcome' | 'traveler-type' | 'spinning' | 'reveal' | 'explore' | 'account' | 'profile';
 
 const TravelSpinner: React.FC = () => {
   const { user } = useAuth();
@@ -67,6 +68,10 @@ const TravelSpinner: React.FC = () => {
 
   const handleShowAccount = () => {
     setCurrentStep('account');
+  };
+
+  const handleShowProfile = () => {
+    setCurrentStep('profile');
   };
 
   const handleBackToSpinner = () => {
@@ -168,10 +173,24 @@ const TravelSpinner: React.FC = () => {
             />
           </motion.div>
         )}
+
+        {currentStep === 'profile' && (
+          <motion.div
+            key="profile"
+            initial={{ opacity: 0, y: 100 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -100 }}
+            transition={{ duration: 0.5 }}
+          >
+            <UserProfilePage 
+              onBack={handleBackToSpinner}
+            />
+          </motion.div>
+        )}
       </AnimatePresence>
 
       {/* Enhanced User Profile Button */}
-      {user && currentStep !== 'account' && (
+      {user && currentStep !== 'account' && currentStep !== 'profile' && (
         <motion.div
           initial={{ opacity: 0, scale: 0 }}
           animate={{ opacity: 1, scale: 1 }}
@@ -179,7 +198,7 @@ const TravelSpinner: React.FC = () => {
           className="fixed top-6 right-6 z-50"
         >
           <div className="bg-black/20 backdrop-blur-sm border border-white/20 rounded-full p-1 shadow-lg">
-            <UserProfile />
+            <UserProfile onProfileClick={handleShowProfile} />
           </div>
         </motion.div>
       )}
