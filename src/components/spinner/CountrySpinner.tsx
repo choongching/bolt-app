@@ -92,16 +92,14 @@ const CountrySpinner: React.FC<CountrySpinnerProps> = ({
           setTimeout(() => {
             setSpinPhase('zooming');
             
-            // Phase 5: Complete and transition to reveal
+            // Phase 5: Complete and transition to reveal - FIXED: Immediate transition
             setTimeout(() => {
               setSpinPhase('complete');
               
-              // Final transition to destination reveal
-              setTimeout(() => {
-                onCountrySelected(result.country);
-              }, 1500);
-            }, 3000); // 3 seconds for zoom animation
-          }, 1500); // 1.5 seconds for pin drop
+              // FIXED: Immediate transition to destination reveal without delay
+              onCountrySelected(result.country);
+            }, 2000); // Reduced from 3000 to 2000
+          }, 1000); // Reduced from 1500 to 1000
         } else {
           // If no country was selected, reset to idle
           setSpinPhase('idle');
@@ -115,7 +113,7 @@ const CountrySpinner: React.FC<CountrySpinnerProps> = ({
         setShowGlobe(false);
         setSelectedCountry(null);
       }
-    }, 4000); // 4 seconds of spinning
+    }, 3000); // Reduced from 4000 to 3000
   };
 
   // Handle filter changes
@@ -512,53 +510,7 @@ const CountrySpinner: React.FC<CountrySpinnerProps> = ({
             </motion.div>
           )}
 
-          {spinPhase === 'complete' && selectedCountry && (
-            <motion.div
-              key="complete"
-              initial={{ opacity: 0, scale: 0.8 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.8 }}
-              className="text-center"
-            >
-              <Card className="bg-white/10 backdrop-blur-sm border-white/20 p-8">
-                <CardContent className="text-center space-y-6">
-                  <motion.div
-                    initial={{ scale: 0 }}
-                    animate={{ scale: 1 }}
-                    transition={{ type: "spring", stiffness: 200 }}
-                  >
-                    <MapPin className="w-20 h-20 text-green-500 mx-auto" />
-                  </motion.div>
-                  
-                  <div>
-                    <h2 className="text-3xl font-bold text-white mb-2">{travelStyle} Destination Found!</h2>
-                    <h3 className="text-2xl font-semibold text-yellow-400 mb-2">
-                      {selectedCountry.name}
-                    </h3>
-                    <p className="text-white/80 mb-4">
-                      {selectedCountry.tagline}
-                    </p>
-                    
-                    <div className="flex justify-center space-x-2 mb-4">
-                      <Badge variant="secondary" className="bg-white/20 text-white">
-                        {selectedCountry.adventureLevel}
-                      </Badge>
-                      <Badge variant="secondary" className="bg-white/20 text-white">
-                        {selectedCountry.region}
-                      </Badge>
-                      <Badge variant="secondary" className={`bg-gradient-to-r ${styleInfo.color} text-white border-0`}>
-                        {travelStyle}
-                      </Badge>
-                    </div>
-                  </div>
-
-                  <p className="text-white/70 text-sm">
-                    Preparing your {travelStyle.toLowerCase()} adventure details...
-                  </p>
-                </CardContent>
-              </Card>
-            </motion.div>
-          )}
+          {/* REMOVED: The 'complete' phase that was causing the blank screen */}
         </AnimatePresence>
       </div>
 
