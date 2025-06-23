@@ -1,7 +1,7 @@
 import React, { useRef, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
-import { Plane, Globe, Sparkles, Heart, Users, Briefcase } from 'lucide-react';
+import { Plane, Globe, Sparkles } from 'lucide-react';
 import SplitText from '@/components/ui/split-text';
 import mapboxgl from 'mapbox-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
@@ -15,25 +15,19 @@ interface WelcomeScreenProps {
 const travelStyles = [
   {
     type: 'couple' as TravelerType,
-    icon: Heart,
-    title: 'Romantic Getaway',
-    description: 'Perfect destinations for couples seeking romance and intimate experiences',
+    title: 'Romantic',
     color: 'from-pink-500 to-red-500',
     hoverColor: 'from-pink-600 to-red-600'
   },
   {
     type: 'family' as TravelerType,
-    icon: Users,
-    title: 'Family Adventure',
-    description: 'Kid-friendly destinations with activities for the whole family',
+    title: 'Family',
     color: 'from-green-500 to-blue-500',
     hoverColor: 'from-green-600 to-blue-600'
   },
   {
     type: 'solo' as TravelerType,
-    icon: Briefcase,
-    title: 'Solo Explorer',
-    description: 'Discover amazing places at your own pace with complete freedom',
+    title: 'Solo',
     color: 'from-purple-500 to-indigo-500',
     hoverColor: 'from-purple-600 to-indigo-600'
   }
@@ -255,68 +249,40 @@ const WelcomeScreen: React.FC<WelcomeScreenProps> = ({ onTravelStyleSelect, isAu
             transition={{ duration: 0.8, delay: 0.6 }}
             className="text-xl md:text-2xl text-white/95 mb-12 max-w-3xl mx-auto leading-relaxed drop-shadow-lg"
           >
-            Choose your travel style and let destiny guide you to amazing destinations tailored just for you.
+            Choose your travel style and let destiny guide you to amazing destinations.
           </motion.p>
 
-          {/* Travel Style Selection */}
+          {/* Travel Style Selection - Simplified */}
           <motion.div
             initial={{ opacity: 0, y: 50 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.9 }}
-            className="grid md:grid-cols-3 gap-6 max-w-5xl mx-auto mb-12"
+            className="flex justify-center gap-4 mb-16"
           >
             {travelStyles.map((style, index) => (
-              <motion.div
+              <motion.button
                 key={style.type}
                 initial={{ opacity: 0, y: 30 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: 1.1 + index * 0.1 }}
-                whileHover={{ scale: 1.05, y: -10 }}
+                whileHover={{ scale: 1.05, y: -5 }}
                 whileTap={{ scale: 0.95 }}
-                className="group cursor-pointer"
+                className={`relative overflow-hidden rounded-xl bg-gradient-to-r ${style.color} px-8 py-4 shadow-lg transition-all duration-300 hover:shadow-xl border border-white/20 backdrop-blur-sm group`}
                 onClick={() => onTravelStyleSelect(style.type)}
               >
-                <div className={`relative overflow-hidden rounded-2xl bg-gradient-to-br ${style.color} p-8 shadow-2xl transition-all duration-300 group-hover:shadow-3xl border border-white/20 backdrop-blur-sm`}>
-                  {/* Hover overlay */}
-                  <div className={`absolute inset-0 bg-gradient-to-br ${style.hoverColor} opacity-0 group-hover:opacity-100 transition-opacity duration-300`} />
-                  
-                  {/* Content */}
-                  <div className="relative z-10">
-                    {/* Icon */}
-                    <div className="mb-6 flex justify-center">
-                      <div className="w-16 h-16 bg-white/20 rounded-full flex items-center justify-center group-hover:bg-white/30 transition-colors duration-300">
-                        <style.icon className="w-8 h-8 text-white" />
-                      </div>
-                    </div>
-                    
-                    {/* Title */}
-                    <h3 className="text-2xl font-bold text-white mb-4 group-hover:scale-105 transition-transform duration-300">
-                      {style.title}
-                    </h3>
-                    
-                    {/* Description */}
-                    <p className="text-white/90 text-sm leading-relaxed mb-6">
-                      {style.description}
-                    </p>
-                    
-                    {/* Call to action */}
-                    <div className="flex items-center justify-center text-white/80 group-hover:text-white transition-colors duration-300">
-                      <span className="text-sm font-medium">Click to explore</span>
-                      <motion.div
-                        className="ml-2"
-                        animate={{ x: [0, 5, 0] }}
-                        transition={{ duration: 1.5, repeat: Infinity }}
-                      >
-                        →
-                      </motion.div>
-                    </div>
-                  </div>
-                  
-                  {/* Decorative elements */}
-                  <div className="absolute top-4 right-4 w-20 h-20 bg-white/10 rounded-full blur-xl group-hover:bg-white/20 transition-colors duration-300" />
-                  <div className="absolute bottom-4 left-4 w-12 h-12 bg-white/10 rounded-full blur-lg group-hover:bg-white/20 transition-colors duration-300" />
+                {/* Hover overlay */}
+                <div className={`absolute inset-0 bg-gradient-to-r ${style.hoverColor} opacity-0 group-hover:opacity-100 transition-opacity duration-300`} />
+                
+                {/* Content */}
+                <div className="relative z-10">
+                  <span className="text-white font-semibold text-lg">
+                    {style.title}
+                  </span>
                 </div>
-              </motion.div>
+                
+                {/* Subtle glow effect */}
+                <div className="absolute inset-0 bg-white/10 opacity-0 group-hover:opacity-20 transition-opacity duration-300 rounded-xl" />
+              </motion.button>
             ))}
           </motion.div>
 
