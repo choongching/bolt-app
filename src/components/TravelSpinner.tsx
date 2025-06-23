@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useAuth } from '@/contexts/AuthContext';
 import { useDestinations } from '@/hooks/useDestinations';
 import { Destination, TravelerType } from '@/types/destination';
+import { Country } from '@/types/country';
 
 // Import all spinner components
 import WelcomeScreen from './spinner/WelcomeScreen';
@@ -12,8 +13,9 @@ import DestinationExplorer from './spinner/DestinationExplorer';
 import UserAccount from './spinner/UserAccount';
 import UserProfile from './auth/UserProfile';
 import UserProfilePage from './profile/UserProfilePage';
+import CountrySpinner from './spinner/CountrySpinner';
 
-type SpinnerStep = 'welcome' | 'spinning' | 'reveal' | 'explore' | 'account' | 'profile';
+type SpinnerStep = 'welcome' | 'country-spinner' | 'spinning' | 'reveal' | 'explore' | 'account' | 'profile';
 
 const TravelSpinner: React.FC = () => {
   const { user } = useAuth();
@@ -22,10 +24,34 @@ const TravelSpinner: React.FC = () => {
   const [currentStep, setCurrentStep] = useState<SpinnerStep>('welcome');
   const [selectedTravelerType, setSelectedTravelerType] = useState<TravelerType>('solo');
   const [currentDestination, setCurrentDestination] = useState<Destination | null>(null);
+  const [currentCountry, setCurrentCountry] = useState<Country | null>(null);
 
   const handleTravelStyleSelect = (type: TravelerType) => {
     setSelectedTravelerType(type);
-    setCurrentStep('spinning');
+    setCurrentStep('country-spinner');
+  };
+
+  const handleCountrySelected = (country: Country) => {
+    setCurrentCountry(country);
+    
+    // Convert country to destination format for compatibility
+    const destination: Destination = {
+      id: country.isoCode,
+      name: country.name,
+      country: country.name,
+      city: country.capital,
+      latitude: country.coordinates.lat,
+      longitude: country.coordinates.lng,
+      tagline: country.tagline,
+      budget_estimate: '$50-200/day', // Default, will be updated with real data
+      best_time_to_visit: country.bestTimeToVisit || 'Year-round',
+      visa_requirements: 'Check requirements for your nationality',
+      activities: country.highlights || ['Sightseeing', 'Culture', 'Adventure'],
+      description: `Explore ${country.name}, ${country.tagline.toLowerCase()}`
+    };
+    
+    setCurrentDestination(destination);
+    setCurrentStep('reveal');
   };
 
   const handleDestinationSelected = async (destination: Destination) => {
@@ -49,12 +75,14 @@ const TravelSpinner: React.FC = () => {
 
   const handleSpinAgain = () => {
     setCurrentDestination(null);
-    setCurrentStep('spinning');
+    setCurrentCountry(null);
+    setCurrentStep('country-spinner');
   };
 
   const handleBackToWelcome = () => {
     setCurrentStep('welcome');
     setCurrentDestination(null);
+    setCurrentCountry(null);
   };
 
   const handleBackToReveal = () => {
@@ -87,6 +115,21 @@ const TravelSpinner: React.FC = () => {
             <WelcomeScreen 
               onTravelStyleSelect={handleTravelStyleSelect}
               isAuthenticated={!!user}
+            />
+          </motion.div>
+        )}
+
+        {currentStep === 'country-spinner' && (
+          <motion.div
+            key="country-spinner"
+            initial={{ opacity: 0, x: 100 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: -100 }}
+            transition={{ duration: 0.5 }}
+          >
+            <CountrySpinner 
+              onCountrySelected={handleCountrySelected}
+              onBack={handleBackToWelcome}
             />
           </motion.div>
         )}
