@@ -6,7 +6,6 @@ import { Destination, TravelerType } from '@/types/destination';
 
 // Import all spinner components
 import WelcomeScreen from './spinner/WelcomeScreen';
-import TravelerTypeSelector from './spinner/TravelerTypeSelector';
 import SpinningGlobe from './spinner/SpinningGlobe';
 import DestinationReveal from './spinner/DestinationReveal';
 import DestinationExplorer from './spinner/DestinationExplorer';
@@ -14,7 +13,7 @@ import UserAccount from './spinner/UserAccount';
 import UserProfile from './auth/UserProfile';
 import UserProfilePage from './profile/UserProfilePage';
 
-type SpinnerStep = 'welcome' | 'traveler-type' | 'spinning' | 'reveal' | 'explore' | 'account' | 'profile';
+type SpinnerStep = 'welcome' | 'spinning' | 'reveal' | 'explore' | 'account' | 'profile';
 
 const TravelSpinner: React.FC = () => {
   const { user } = useAuth();
@@ -24,11 +23,7 @@ const TravelSpinner: React.FC = () => {
   const [selectedTravelerType, setSelectedTravelerType] = useState<TravelerType>('solo');
   const [currentDestination, setCurrentDestination] = useState<Destination | null>(null);
 
-  const handleStartSpin = () => {
-    setCurrentStep('traveler-type');
-  };
-
-  const handleTravelerTypeSelect = (type: TravelerType) => {
+  const handleTravelStyleSelect = (type: TravelerType) => {
     setSelectedTravelerType(type);
     setCurrentStep('spinning');
   };
@@ -90,23 +85,8 @@ const TravelSpinner: React.FC = () => {
             transition={{ duration: 0.5 }}
           >
             <WelcomeScreen 
-              onStartSpin={handleStartSpin}
+              onTravelStyleSelect={handleTravelStyleSelect}
               isAuthenticated={!!user}
-            />
-          </motion.div>
-        )}
-
-        {currentStep === 'traveler-type' && (
-          <motion.div
-            key="traveler-type"
-            initial={{ opacity: 0, x: 100 }}
-            animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: -100 }}
-            transition={{ duration: 0.5 }}
-          >
-            <TravelerTypeSelector 
-              onSelect={handleTravelerTypeSelect}
-              onBack={handleBackToWelcome}
             />
           </motion.div>
         )}
