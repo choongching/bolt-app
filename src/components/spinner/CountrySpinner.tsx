@@ -27,9 +27,15 @@ interface CountrySpinnerProps {
   onCountrySelected: (country: Country) => void;
   onBack: () => void;
   travelStyle: TravelStyle;
+  autoStart?: boolean; // New prop to auto-start spinning
 }
 
-const CountrySpinner: React.FC<CountrySpinnerProps> = ({ onCountrySelected, onBack, travelStyle }) => {
+const CountrySpinner: React.FC<CountrySpinnerProps> = ({ 
+  onCountrySelected, 
+  onBack, 
+  travelStyle, 
+  autoStart = false 
+}) => {
   const {
     currentCountry,
     isSpinning,
@@ -46,6 +52,16 @@ const CountrySpinner: React.FC<CountrySpinnerProps> = ({ onCountrySelected, onBa
   const [spinPhase, setSpinPhase] = useState<'idle' | 'globe-fade-in' | 'spinning' | 'pin-drop' | 'zooming' | 'complete'>('idle');
   const [selectedCountry, setSelectedCountry] = useState<Country | null>(null);
   const [showGlobe, setShowGlobe] = useState(false);
+
+  // Auto-start spinning when component mounts if autoStart is true
+  useEffect(() => {
+    if (autoStart && !isSpinning && spinPhase === 'idle') {
+      // Small delay to let the component render first
+      setTimeout(() => {
+        handleSpin();
+      }, 500);
+    }
+  }, [autoStart]);
 
   // Update filter when travel style changes
   useEffect(() => {
@@ -182,40 +198,42 @@ const CountrySpinner: React.FC<CountrySpinnerProps> = ({ onCountrySelected, onBa
         </div>
       )}
 
-      {/* Header */}
-      <div className="absolute top-6 left-6 right-6 z-20">
-        <div className="flex items-center justify-between">
-          <Button
-            onClick={onBack}
-            variant="outline"
-            className="bg-white/10 border-white/30 text-white hover:bg-white/20 backdrop-blur-sm"
-            disabled={spinPhase !== 'idle'}
-          >
-            <ArrowLeft className="w-4 h-4 mr-2" />
-            Back
-          </Button>
+      {/* Header - only show when not in spinning phases */}
+      {spinPhase === 'idle' && (
+        <div className="absolute top-6 left-6 right-6 z-20">
+          <div className="flex items-center justify-between">
+            <Button
+              onClick={onBack}
+              variant="outline"
+              className="bg-white/10 border-white/30 text-white hover:bg-white/20 backdrop-blur-sm"
+              disabled={spinPhase !== 'idle'}
+            >
+              <ArrowLeft className="w-4 h-4 mr-2" />
+              Back
+            </Button>
 
-          <div className="text-center">
-            <div className="flex items-center justify-center mb-2">
-              <div className={`w-8 h-8 rounded-full bg-gradient-to-r ${styleInfo.color} flex items-center justify-center mr-3`}>
-                <styleInfo.icon className="w-4 h-4 text-white" />
+            <div className="text-center">
+              <div className="flex items-center justify-center mb-2">
+                <div className={`w-8 h-8 rounded-full bg-gradient-to-r ${styleInfo.color} flex items-center justify-center mr-3`}>
+                  <styleInfo.icon className="w-4 h-4 text-white" />
+                </div>
+                <h1 className="text-2xl font-bold text-white drop-shadow-lg">{travelStyle} Travel</h1>
               </div>
-              <h1 className="text-2xl font-bold text-white drop-shadow-lg">{travelStyle} Travel</h1>
+              <p className="text-white/80 text-sm max-w-md">{styleInfo.description}</p>
             </div>
-            <p className="text-white/80 text-sm max-w-md">{styleInfo.description}</p>
-          </div>
 
-          <Button
-            onClick={() => setShowFilters(!showFilters)}
-            variant="outline"
-            className="bg-white/10 border-white/30 text-white hover:bg-white/20 backdrop-blur-sm"
-            disabled={spinPhase !== 'idle'}
-          >
-            <Filter className="w-4 h-4 mr-2" />
-            Filters
-          </Button>
+            <Button
+              onClick={() => setShowFilters(!showFilters)}
+              variant="outline"
+              className="bg-white/10 border-white/30 text-white hover:bg-white/20 backdrop-blur-sm"
+              disabled={spinPhase !== 'idle'}
+            >
+              <Filter className="w-4 h-4 mr-2" />
+              Filters
+            </Button>
+          </div>
         </div>
-      </div>
+      )}
 
       {/* Filters Panel */}
       <AnimatePresence>
@@ -279,7 +297,7 @@ const CountrySpinner: React.FC<CountrySpinnerProps> = ({ onCountrySelected, onBa
       {/* Center Spin Control and Status Messages */}
       <div className="absolute inset-0 flex items-center justify-center z-10">
         <AnimatePresence mode="wait">
-          {spinPhase === 'idle' && (
+          {spinPhase === 'idle' && !autoStart && (
             <motion.div
               key="idle"
               initial={{ opacity: 0, scale: 0.8 }}

@@ -25,8 +25,10 @@ const TravelSpinner: React.FC = () => {
   const [currentDestination, setCurrentDestination] = useState<Destination | null>(null);
   const [currentCountry, setCurrentCountry] = useState<Country | null>(null);
 
+  // Directly trigger the globe spinning when travel style is selected
   const handleTravelStyleSelect = (style: TravelStyle) => {
     setSelectedTravelStyle(style);
+    // Skip the intermediate screen and go directly to spinning
     setCurrentStep('country-spinner');
   };
 
@@ -131,6 +133,7 @@ const TravelSpinner: React.FC = () => {
               onCountrySelected={handleCountrySelected}
               onBack={handleBackToWelcome}
               travelStyle={selectedTravelStyle}
+              autoStart={true} // Add this prop to auto-start the spinning
             />
           </motion.div>
         )}
