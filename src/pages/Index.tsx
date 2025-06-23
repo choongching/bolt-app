@@ -48,50 +48,6 @@ const Index = () => {
             <div className="space-y-6">
               <AuthContainer />
               
-              {/* Why Join the Adventure section */}
-              <div className="bg-gradient-to-br from-blue-50 to-purple-50 rounded-xl p-6 border border-blue-100">
-                <h3 className="text-lg font-bold text-gray-900 mb-4 text-center">
-                  Why Join the Adventure?
-                </h3>
-                <div className="space-y-3">
-                  <div className="flex items-start">
-                    <div className="flex-shrink-0 w-6 h-6 bg-green-500 rounded-full flex items-center justify-center mr-3 mt-0.5">
-                      <svg className="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
-                      </svg>
-                    </div>
-                    <div>
-                      <h4 className="font-semibold text-gray-900 text-sm">Unleash Random Wonders</h4>
-                      <p className="text-gray-600 text-sm">Discover exciting new destinations with every spin!</p>
-                    </div>
-                  </div>
-                  
-                  <div className="flex items-start">
-                    <div className="flex-shrink-0 w-6 h-6 bg-green-500 rounded-full flex items-center justify-center mr-3 mt-0.5">
-                      <svg className="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
-                      </svg>
-                    </div>
-                    <div>
-                      <h4 className="font-semibold text-gray-900 text-sm">Save Your Treasures</h4>
-                      <p className="text-gray-600 text-sm">Pin your favorite spots and build a personal travel map.</p>
-                    </div>
-                  </div>
-                  
-                  <div className="flex items-start">
-                    <div className="flex-shrink-0 w-6 h-6 bg-green-500 rounded-full flex items-center justify-center mr-3 mt-0.5">
-                      <svg className="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
-                      </svg>
-                    </div>
-                    <div>
-                      <h4 className="font-semibold text-gray-900 text-sm">Craft Epic Plans</h4>
-                      <p className="text-gray-600 text-sm">Create customized itineraries for your next big adventure.</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              
               {/* Additional info with good contrast */}
               <div className="text-center pt-4 border-t border-gray-100">
                 <p className="text-xs text-gray-500">
