@@ -152,7 +152,7 @@ const WelcomeScreen: React.FC<WelcomeScreenProps> = ({ onTravelStyleSelect, isAu
           // Fallback animated background
           <div className="absolute inset-0 bg-gradient-to-b from-indigo-900 via-purple-900 to-black">
             <div className="absolute inset-0">
-              {[...Array(20)].map((_, i) => (
+              {[...Array(30)].map((_, i) => (
                 <motion.div
                   key={i}
                   className="absolute w-1 h-1 bg-white/20 rounded-full"
@@ -180,9 +180,9 @@ const WelcomeScreen: React.FC<WelcomeScreenProps> = ({ onTravelStyleSelect, isAu
         <div className="absolute inset-0 bg-black/20" />
       </div>
 
-      {/* Animated background particles */}
+      {/* Enhanced animated background particles */}
       <div className="absolute inset-0">
-        {[...Array(15)].map((_, i) => (
+        {[...Array(25)].map((_, i) => (
           <motion.div
             key={i}
             className="absolute w-1 h-1 bg-white/30 rounded-full"
@@ -206,26 +206,65 @@ const WelcomeScreen: React.FC<WelcomeScreenProps> = ({ onTravelStyleSelect, isAu
       {/* Main Content */}
       <div className="relative z-10 min-h-screen flex items-center justify-center">
         <div className="text-center max-w-6xl mx-auto px-6">
-          {/* Logo/Icon */}
+          {/* Logo/Icon with enhanced animation */}
           <motion.div
             initial={{ scale: 0, rotate: -180 }}
             animate={{ scale: 1, rotate: 0 }}
-            transition={{ duration: 1, ease: "easeOut" }}
+            transition={{ duration: 1.2, ease: "easeOut" }}
             className="mb-8"
           >
             <div className="relative inline-block">
-              <Globe className="w-20 h-20 text-white mx-auto drop-shadow-lg" />
+              <motion.div
+                animate={{ 
+                  scale: [1, 1.1, 1],
+                  filter: ['brightness(1)', 'brightness(1.2)', 'brightness(1)']
+                }}
+                transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+              >
+                <Globe className="w-24 h-24 text-white mx-auto drop-shadow-lg" />
+              </motion.div>
               <motion.div
                 animate={{ rotate: 360 }}
                 transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
                 className="absolute inset-0"
               >
-                <Plane className="w-6 h-6 text-yellow-300 absolute top-1 right-1 drop-shadow-lg" />
+                <Plane className="w-8 h-8 text-yellow-300 absolute top-2 right-2 drop-shadow-lg" />
+              </motion.div>
+              {/* Sparkle effects */}
+              <motion.div
+                animate={{ 
+                  scale: [0, 1, 0],
+                  rotate: [0, 180, 360]
+                }}
+                transition={{ 
+                  duration: 2, 
+                  repeat: Infinity, 
+                  delay: 0.5,
+                  ease: "easeInOut"
+                }}
+                className="absolute -top-2 -left-2"
+              >
+                <Sparkles className="w-4 h-4 text-yellow-400" />
+              </motion.div>
+              <motion.div
+                animate={{ 
+                  scale: [0, 1, 0],
+                  rotate: [360, 180, 0]
+                }}
+                transition={{ 
+                  duration: 2, 
+                  repeat: Infinity, 
+                  delay: 1,
+                  ease: "easeInOut"
+                }}
+                className="absolute -bottom-2 -right-2"
+              >
+                <Sparkles className="w-4 h-4 text-pink-400" />
               </motion.div>
             </div>
           </motion.div>
 
-          {/* Main heading */}
+          {/* Main heading with enhanced animation */}
           <motion.h1
             initial={{ opacity: 0, y: 50 }}
             animate={{ opacity: 1, y: 0 }}
@@ -234,15 +273,23 @@ const WelcomeScreen: React.FC<WelcomeScreenProps> = ({ onTravelStyleSelect, isAu
           >
             Travel
             <motion.span
-              animate={{ color: ['#ffffff', '#fbbf24', '#ffffff'] }}
-              transition={{ duration: 2, repeat: Infinity }}
+              animate={{ 
+                color: ['#ffffff', '#fbbf24', '#f59e0b', '#ffffff'],
+                textShadow: [
+                  '0 0 20px rgba(251, 191, 36, 0)',
+                  '0 0 20px rgba(251, 191, 36, 0.5)',
+                  '0 0 30px rgba(245, 158, 11, 0.8)',
+                  '0 0 20px rgba(251, 191, 36, 0)'
+                ]
+              }}
+              transition={{ duration: 3, repeat: Infinity }}
               className="block"
             >
               Spinner
             </motion.span>
           </motion.h1>
 
-          {/* Subtitle */}
+          {/* Subtitle with bounce animation */}
           <motion.p
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
@@ -252,41 +299,71 @@ const WelcomeScreen: React.FC<WelcomeScreenProps> = ({ onTravelStyleSelect, isAu
             Pick your crew: Solo Explorer, Lovebirds, or Family Squad
           </motion.p>
 
-          {/* Travel Style Selection - Simplified */}
+          {/* Travel Style Selection with enhanced animations */}
           <motion.div
             initial={{ opacity: 0, y: 50 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.9 }}
-            className="flex justify-center gap-4 mb-16"
+            className="flex justify-center gap-6 mb-16"
           >
             {travelStyles.map((style, index) => (
               <motion.button
                 key={style.type}
-                initial={{ opacity: 0, y: 30 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: 1.1 + index * 0.1 }}
-                whileHover={{ scale: 1.05, y: -5 }}
+                initial={{ opacity: 0, y: 30, scale: 0.8 }}
+                animate={{ opacity: 1, y: 0, scale: 1 }}
+                transition={{ 
+                  duration: 0.6, 
+                  delay: 1.1 + index * 0.15,
+                  type: "spring",
+                  stiffness: 200
+                }}
+                whileHover={{ 
+                  scale: 1.1, 
+                  y: -10,
+                  rotateY: 5,
+                  boxShadow: "0 20px 40px rgba(0,0,0,0.3)"
+                }}
                 whileTap={{ scale: 0.95 }}
-                className={`relative overflow-hidden rounded-xl bg-gradient-to-r ${style.color} px-8 py-4 shadow-lg transition-all duration-300 hover:shadow-xl border border-white/20 backdrop-blur-sm group`}
+                className={`relative overflow-hidden rounded-xl bg-gradient-to-r ${style.color} px-8 py-4 shadow-lg transition-all duration-300 border border-white/20 backdrop-blur-sm group min-w-[120px]`}
                 onClick={() => onTravelStyleSelect(style.type)}
               >
-                {/* Hover overlay */}
-                <div className={`absolute inset-0 bg-gradient-to-r ${style.hoverColor} opacity-0 group-hover:opacity-100 transition-opacity duration-300`} />
+                {/* Animated background overlay */}
+                <motion.div 
+                  className={`absolute inset-0 bg-gradient-to-r ${style.hoverColor} opacity-0 group-hover:opacity-100 transition-opacity duration-300`}
+                  animate={{
+                    background: [
+                      `linear-gradient(45deg, ${style.color.split(' ')[1]}, ${style.color.split(' ')[3]})`,
+                      `linear-gradient(90deg, ${style.color.split(' ')[1]}, ${style.color.split(' ')[3]})`,
+                      `linear-gradient(135deg, ${style.color.split(' ')[1]}, ${style.color.split(' ')[3]})`,
+                      `linear-gradient(45deg, ${style.color.split(' ')[1]}, ${style.color.split(' ')[3]})`
+                    ]
+                  }}
+                  transition={{ duration: 4, repeat: Infinity }}
+                />
                 
-                {/* Content */}
+                {/* Content with enhanced styling */}
                 <div className="relative z-10">
                   <span className="text-white font-semibold text-lg">
                     {style.title}
                   </span>
                 </div>
                 
-                {/* Subtle glow effect */}
-                <div className="absolute inset-0 bg-white/10 opacity-0 group-hover:opacity-20 transition-opacity duration-300 rounded-xl" />
+                {/* Sparkle effect on hover */}
+                <motion.div
+                  className="absolute top-1 right-1 opacity-0 group-hover:opacity-100"
+                  animate={{ rotate: 360 }}
+                  transition={{ duration: 2, repeat: Infinity }}
+                >
+                  <Sparkles className="w-4 h-4 text-white/80" />
+                </motion.div>
+                
+                {/* Glow effect */}
+                <div className="absolute inset-0 bg-white/10 opacity-0 group-hover:opacity-30 transition-opacity duration-300 rounded-xl blur-sm" />
               </motion.button>
             ))}
           </motion.div>
 
-          {/* Features */}
+          {/* Features with updated copy and enhanced animations */}
           <motion.div
             initial={{ opacity: 0, y: 50 }}
             animate={{ opacity: 1, y: 0 }}
@@ -294,18 +371,61 @@ const WelcomeScreen: React.FC<WelcomeScreenProps> = ({ onTravelStyleSelect, isAu
             className="grid md:grid-cols-3 gap-8 max-w-4xl mx-auto"
           >
             {[
-              { icon: Globe, title: "Smart Discovery", desc: "AI-powered destination matching" },
-              { icon: Sparkles, title: "Personalized", desc: "Tailored to your travel style" },
-              { icon: Plane, title: "Ready to Go", desc: "Complete travel information included" }
+              { 
+                icon: Globe, 
+                title: "Unleash Random Wonders", 
+                desc: "Discover exciting new destinations with every spin!",
+                color: "text-blue-400"
+              },
+              { 
+                icon: Sparkles, 
+                title: "Your Journey, Your Rules", 
+                desc: "Tailored to your unique travel vibe",
+                color: "text-purple-400"
+              },
+              { 
+                icon: Plane, 
+                title: "Adventure Awaits", 
+                desc: "All the info you need, right at your fingertips",
+                color: "text-green-400"
+              }
             ].map((feature, index) => (
               <motion.div
                 key={index}
-                whileHover={{ scale: 1.05, y: -5 }}
-                className="bg-white/10 backdrop-blur-md rounded-2xl p-6 text-center border border-white/20 shadow-xl"
+                initial={{ opacity: 0, y: 30, scale: 0.9 }}
+                animate={{ opacity: 1, y: 0, scale: 1 }}
+                transition={{ 
+                  duration: 0.6, 
+                  delay: 1.6 + index * 0.1,
+                  type: "spring",
+                  stiffness: 150
+                }}
+                whileHover={{ 
+                  scale: 1.05, 
+                  y: -8,
+                  rotateX: 5,
+                  boxShadow: "0 25px 50px rgba(0,0,0,0.3)"
+                }}
+                className="bg-white/10 backdrop-blur-md rounded-2xl p-6 text-center border border-white/20 shadow-xl group cursor-pointer"
               >
-                <feature.icon className="w-10 h-10 text-yellow-300 mx-auto mb-4 drop-shadow-lg" />
-                <h3 className="text-lg font-semibold text-white mb-2 drop-shadow-lg">{feature.title}</h3>
-                <p className="text-white/90 text-sm drop-shadow-lg">{feature.desc}</p>
+                <motion.div
+                  whileHover={{ 
+                    scale: 1.2,
+                    rotate: 360
+                  }}
+                  transition={{ duration: 0.6 }}
+                >
+                  <feature.icon className={`w-12 h-12 ${feature.color} mx-auto mb-4 drop-shadow-lg group-hover:drop-shadow-2xl transition-all duration-300`} />
+                </motion.div>
+                <h3 className="text-lg font-semibold text-white mb-2 drop-shadow-lg group-hover:text-yellow-300 transition-colors duration-300">
+                  {feature.title}
+                </h3>
+                <p className="text-white/90 text-sm drop-shadow-lg">
+                  {feature.desc}
+                </p>
+                
+                {/* Subtle glow effect */}
+                <div className="absolute inset-0 bg-gradient-to-t from-white/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-2xl" />
               </motion.div>
             ))}
           </motion.div>
@@ -314,7 +434,7 @@ const WelcomeScreen: React.FC<WelcomeScreenProps> = ({ onTravelStyleSelect, isAu
             <motion.p
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
-              transition={{ delay: 1.7 }}
+              transition={{ delay: 2 }}
               className="mt-8 text-white/80 text-sm drop-shadow-lg"
             >
               Sign in to save your discoveries and create personalized travel plans
