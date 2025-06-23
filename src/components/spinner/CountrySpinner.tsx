@@ -27,7 +27,7 @@ interface CountrySpinnerProps {
   onCountrySelected: (country: Country) => void;
   onBack: () => void;
   travelStyle: TravelStyle;
-  autoStart?: boolean; // New prop to auto-start spinning
+  autoStart?: boolean;
 }
 
 const CountrySpinner: React.FC<CountrySpinnerProps> = ({ 
@@ -56,7 +56,6 @@ const CountrySpinner: React.FC<CountrySpinnerProps> = ({
   // Auto-start spinning when component mounts if autoStart is true
   useEffect(() => {
     if (autoStart && !isSpinning && spinPhase === 'idle') {
-      // Small delay to let the component render first
       setTimeout(() => {
         handleSpin();
       }, 500);
@@ -69,9 +68,9 @@ const CountrySpinner: React.FC<CountrySpinnerProps> = ({
     updateAvailableCountries({ travelStyle });
   }, [travelStyle, updateAvailableCountries]);
 
-  // Handle spin button click - start the sequence
+  // Handle spin button click - start the sequence with proper timing
   const handleSpin = async () => {
-    // Phase 1: Show globe fading in from foreground
+    // Phase 1: Show globe fading in
     setSpinPhase('globe-fade-in');
     setShowGlobe(true);
     
@@ -80,26 +79,41 @@ const CountrySpinner: React.FC<CountrySpinnerProps> = ({
       setSpinPhase('spinning');
     }, 1000);
 
-    // Phase 3: Select country and show pin drop
+    // Phase 3: Select country after spinning duration
     setTimeout(async () => {
-      const result = await spinCountry(filter);
-      
-      if (result) {
-        setSelectedCountry(result.country);
-        setSpinPhase('pin-drop');
+      try {
+        const result = await spinCountry(filter);
         
-        // Phase 4: Zoom in effect
-        setTimeout(() => {
-          setSpinPhase('zooming');
+        if (result) {
+          setSelectedCountry(result.country);
+          setSpinPhase('pin-drop');
           
-          // Phase 5: Complete and transition to reveal
+          // Phase 4: Zoom in effect
           setTimeout(() => {
-            setSpinPhase('complete');
+            setSpinPhase('zooming');
+            
+            // Phase 5: Complete and transition to reveal
             setTimeout(() => {
-              onCountrySelected(result.country);
-            }, 1500);
-          }, 3000); // 3 seconds for zoom animation
-        }, 1500); // 1.5 seconds for pin drop
+              setSpinPhase('complete');
+              
+              // Final transition to destination reveal
+              setTimeout(() => {
+                onCountrySelected(result.country);
+              }, 1500);
+            }, 3000); // 3 seconds for zoom animation
+          }, 1500); // 1.5 seconds for pin drop
+        } else {
+          // If no country was selected, reset to idle
+          setSpinPhase('idle');
+          setShowGlobe(false);
+          setSelectedCountry(null);
+        }
+      } catch (error) {
+        console.error('Error during spin:', error);
+        // Reset on error
+        setSpinPhase('idle');
+        setShowGlobe(false);
+        setSelectedCountry(null);
       }
     }, 4000); // 4 seconds of spinning
   };
@@ -115,7 +129,6 @@ const CountrySpinner: React.FC<CountrySpinnerProps> = ({
     setFilter(newFilter);
     updateAvailableCountries(newFilter);
     
-    // Update session preferences for adventure level
     if (key === 'adventureLevel') {
       updatePreferences({ [key]: value });
     }

@@ -132,7 +132,7 @@ const CountryGlobe: React.FC<CountryGlobeProps> = ({
     }
   }, [availableCountries, isValidMapboxToken]);
 
-  // Handle spinning animation
+  // Handle spinning animation - FIXED: Properly stop spinning when isSpinning becomes false
   useEffect(() => {
     if (isSpinning) {
       startSpinning();
@@ -242,10 +242,17 @@ const CountryGlobe: React.FC<CountryGlobeProps> = ({
   };
 
   const startSpinning = () => {
-    if (!map.current) return;
+    if (!map.current || spinningRef.current) return; // Prevent multiple spinning animations
 
     function spinGlobe() {
-      if (!map.current || !isSpinning) return;
+      if (!map.current || !isSpinning) {
+        // FIXED: Stop spinning when isSpinning becomes false
+        if (spinningRef.current) {
+          cancelAnimationFrame(spinningRef.current);
+          spinningRef.current = null;
+        }
+        return;
+      }
 
       try {
         const zoom = map.current.getZoom();
@@ -274,6 +281,7 @@ const CountryGlobe: React.FC<CountryGlobeProps> = ({
   const stopSpinning = () => {
     if (spinningRef.current) {
       cancelAnimationFrame(spinningRef.current);
+      spinningRef.current = null;
     }
   };
 
@@ -283,6 +291,9 @@ const CountryGlobe: React.FC<CountryGlobeProps> = ({
     setIsZooming(true);
 
     try {
+      // Stop any ongoing spinning
+      stopSpinning();
+
       // First, add a special marker for the selected country
       const selectedMarkerElement = document.createElement('div');
       selectedMarkerElement.style.cssText = `
