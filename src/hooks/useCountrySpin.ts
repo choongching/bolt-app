@@ -1,9 +1,9 @@
 import { useState, useEffect, useCallback } from 'react';
-import { Country, CountryFilter, SpinResult } from '@/types/country';
+import { Country, CountryFilter, SpinResult, TravelStyle } from '@/types/country';
 import { countrySpinService } from '@/services/countrySpinService';
 import { useToast } from '@/hooks/use-toast';
 
-export const useCountrySpin = () => {
+export const useCountrySpin = (travelStyle?: TravelStyle) => {
   const [sessionId, setSessionId] = useState<string>('');
   const [currentCountry, setCurrentCountry] = useState<Country | null>(null);
   const [isSpinning, setIsSpinning] = useState(false);
@@ -11,12 +11,13 @@ export const useCountrySpin = () => {
   const [availableCountries, setAvailableCountries] = useState<Country[]>([]);
   const { toast } = useToast();
 
-  // Initialize session
+  // Initialize session with travel style
   useEffect(() => {
-    const newSessionId = countrySpinService.createSession();
+    const newSessionId = countrySpinService.createSession(travelStyle);
     setSessionId(newSessionId);
     updateSessionStats(newSessionId);
-  }, []);
+    updateAvailableCountries(newSessionId, { travelStyle });
+  }, [travelStyle]);
 
   // Update session statistics
   const updateSessionStats = useCallback((sessionId: string) => {
@@ -40,11 +41,17 @@ export const useCountrySpin = () => {
       // Add artificial delay for better UX
       await new Promise(resolve => setTimeout(resolve, 2000));
       
-      const result = countrySpinService.spinCountry(sessionId, filter);
+      // Ensure travel style is included in filter
+      const filterWithStyle = {
+        ...filter,
+        travelStyle: filter?.travelStyle || travelStyle
+      };
+      
+      const result = countrySpinService.spinCountry(sessionId, filterWithStyle);
       
       setCurrentCountry(result.country);
       updateSessionStats(sessionId);
-      updateAvailableCountries(sessionId, filter);
+      updateAvailableCountries(sessionId, filterWithStyle);
 
       if (result.reset) {
         toast({
@@ -66,7 +73,7 @@ export const useCountrySpin = () => {
     } finally {
       setIsSpinning(false);
     }
-  }, [sessionId, isSpinning, toast, updateSessionStats, updateAvailableCountries]);
+  }, [sessionId, isSpinning, travelStyle, toast, updateSessionStats, updateAvailableCountries]);
 
   // Reset session
   const resetSession = useCallback(() => {
@@ -76,23 +83,27 @@ export const useCountrySpin = () => {
     if (success) {
       setCurrentCountry(null);
       updateSessionStats(sessionId);
-      updateAvailableCountries(sessionId);
+      updateAvailableCountries(sessionId, { travelStyle });
       toast({
         title: "Session Reset",
         description: "Starting fresh with all countries available again!",
       });
     }
-  }, [sessionId, toast, updateSessionStats, updateAvailableCountries]);
+  }, [sessionId, travelStyle, toast, updateSessionStats, updateAvailableCountries]);
 
   // Update preferences
-  const updatePreferences = useCallback((preferences: { adventureLevel?: string; travelerType?: string }) => {
+  const updatePreferences = useCallback((preferences: { 
+    adventureLevel?: string; 
+    travelerType?: string;
+    travelStyle?: TravelStyle;
+  }) => {
     if (!sessionId) return;
 
     const success = countrySpinService.updateSessionPreferences(sessionId, preferences);
     if (success) {
-      updateAvailableCountries(sessionId);
+      updateAvailableCountries(sessionId, { travelStyle: preferences.travelStyle || travelStyle });
     }
-  }, [sessionId, updateAvailableCountries]);
+  }, [sessionId, travelStyle, updateAvailableCountries]);
 
   return {
     sessionId,
@@ -103,6 +114,9 @@ export const useCountrySpin = () => {
     spinCountry,
     resetSession,
     updatePreferences,
-    updateAvailableCountries: (filter?: CountryFilter) => updateAvailableCountries(sessionId, filter)
+    updateAvailableCountries: (filter?: CountryFilter) => updateAvailableCountries(sessionId, { 
+      ...filter, 
+      travelStyle: filter?.travelStyle || travelStyle 
+    })
   };
 };

@@ -3,31 +3,30 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useAuth } from '@/contexts/AuthContext';
 import { useDestinations } from '@/hooks/useDestinations';
 import { Destination, TravelerType } from '@/types/destination';
-import { Country } from '@/types/country';
+import { Country, TravelStyle } from '@/types/country';
 
 // Import all spinner components
 import WelcomeScreen from './spinner/WelcomeScreen';
-import SpinningGlobe from './spinner/SpinningGlobe';
+import CountrySpinner from './spinner/CountrySpinner';
 import DestinationReveal from './spinner/DestinationReveal';
 import DestinationExplorer from './spinner/DestinationExplorer';
 import UserAccount from './spinner/UserAccount';
 import UserProfile from './auth/UserProfile';
 import UserProfilePage from './profile/UserProfilePage';
-import CountrySpinner from './spinner/CountrySpinner';
 
-type SpinnerStep = 'welcome' | 'country-spinner' | 'spinning' | 'reveal' | 'explore' | 'account' | 'profile';
+type SpinnerStep = 'welcome' | 'country-spinner' | 'reveal' | 'explore' | 'account' | 'profile';
 
 const TravelSpinner: React.FC = () => {
   const { user } = useAuth();
   const { saveDestination, recordSpin, isDestinationSaved } = useDestinations();
   
   const [currentStep, setCurrentStep] = useState<SpinnerStep>('welcome');
-  const [selectedTravelerType, setSelectedTravelerType] = useState<TravelerType>('solo');
+  const [selectedTravelStyle, setSelectedTravelStyle] = useState<TravelStyle>('Solo');
   const [currentDestination, setCurrentDestination] = useState<Destination | null>(null);
   const [currentCountry, setCurrentCountry] = useState<Country | null>(null);
 
-  const handleTravelStyleSelect = (type: TravelerType) => {
-    setSelectedTravelerType(type);
+  const handleTravelStyleSelect = (style: TravelStyle) => {
+    setSelectedTravelStyle(style);
     setCurrentStep('country-spinner');
   };
 
@@ -51,14 +50,15 @@ const TravelSpinner: React.FC = () => {
     };
     
     setCurrentDestination(destination);
-    setCurrentStep('reveal');
-  };
-
-  const handleDestinationSelected = async (destination: Destination) => {
-    setCurrentDestination(destination);
     
-    // Record the spin
-    await recordSpin(destination.name, selectedTravelerType);
+    // Record the spin with travel style
+    const travelerTypeMap: { [key in TravelStyle]: TravelerType } = {
+      'Romantic': 'couple',
+      'Family': 'family',
+      'Solo': 'solo'
+    };
+    
+    recordSpin(destination.name, travelerTypeMap[selectedTravelStyle]);
     
     setCurrentStep('reveal');
   };
@@ -130,21 +130,7 @@ const TravelSpinner: React.FC = () => {
             <CountrySpinner 
               onCountrySelected={handleCountrySelected}
               onBack={handleBackToWelcome}
-            />
-          </motion.div>
-        )}
-
-        {currentStep === 'spinning' && (
-          <motion.div
-            key="spinning"
-            initial={{ opacity: 0, scale: 0.8 }}
-            animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0, scale: 1.2 }}
-            transition={{ duration: 0.5 }}
-          >
-            <SpinningGlobe 
-              travelerType={selectedTravelerType}
-              onDestinationSelected={handleDestinationSelected}
+              travelStyle={selectedTravelStyle}
             />
           </motion.div>
         )}

@@ -1,5 +1,5 @@
-import { Country, CountryFilter, SpinResult, UserSession } from '@/types/country';
-import { countries, getCountriesByAdventureLevel, getCountriesByTravelerType, getAllRegions } from '@/data/countries';
+import { Country, CountryFilter, SpinResult, UserSession, TravelStyle } from '@/types/country';
+import { countries, getCountriesByTravelStyle, getCountriesByAdventureLevel, getCountriesByTravelerType, getAllRegions } from '@/data/countries';
 
 export class CountrySpinService {
   private static instance: CountrySpinService;
@@ -18,13 +18,16 @@ export class CountrySpinService {
     return `session_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
   }
 
-  // Create or get user session
-  createSession(preferences?: { adventureLevel?: string; travelerType?: string }): string {
+  // Create or get user session with travel style
+  createSession(travelStyle?: TravelStyle, preferences?: { adventureLevel?: string; travelerType?: string }): string {
     const sessionId = this.generateSessionId();
     const session: UserSession = {
       sessionId,
       selectedCountries: [],
-      preferences: preferences || {},
+      preferences: { 
+        travelStyle,
+        ...preferences 
+      },
       createdAt: new Date(),
       lastActivity: new Date()
     };
@@ -63,6 +66,11 @@ export class CountrySpinService {
   // Apply filters to country list
   private applyFilters(countries: Country[], filter: CountryFilter): Country[] {
     let filtered = [...countries];
+
+    // Filter by travel style first (most important filter)
+    if (filter.travelStyle) {
+      filtered = getCountriesByTravelStyle(filter.travelStyle);
+    }
 
     // Filter by adventure level
     if (filter.adventureLevel) {
@@ -152,7 +160,7 @@ export class CountrySpinService {
     return prioritized;
   }
 
-  // Main spin function
+  // Main spin function with travel style support
   spinCountry(sessionId: string, filter?: CountryFilter): SpinResult {
     const session = this.getSession(sessionId);
     if (!session) {
@@ -162,6 +170,7 @@ export class CountrySpinService {
     // Apply session preferences to filter if not provided
     const effectiveFilter: CountryFilter = {
       ...filter,
+      travelStyle: filter?.travelStyle || session.preferences.travelStyle,
       adventureLevel: filter?.adventureLevel || session.preferences.adventureLevel,
       travelerType: filter?.travelerType || session.preferences.travelerType,
       excludeCountries: [...(filter?.excludeCountries || []), ...session.selectedCountries]
@@ -219,6 +228,7 @@ export class CountrySpinService {
     uniqueRegions: number;
     adventureLevels: string[];
     remainingCountries: number;
+    travelStyle?: TravelStyle;
   } | null {
     const session = this.getSession(sessionId);
     if (!session) return null;
@@ -229,13 +239,20 @@ export class CountrySpinService {
 
     const uniqueRegions = new Set(selectedCountryObjects.map(c => c.region)).size;
     const adventureLevels = [...new Set(selectedCountryObjects.map(c => c.adventureLevel))];
-    const remainingCountries = countries.length - session.selectedCountries.length;
+    
+    // Calculate remaining countries based on travel style
+    let totalAvailable = countries.length;
+    if (session.preferences.travelStyle) {
+      totalAvailable = getCountriesByTravelStyle(session.preferences.travelStyle).length;
+    }
+    const remainingCountries = totalAvailable - session.selectedCountries.length;
 
     return {
       totalSpins: session.selectedCountries.length,
       uniqueRegions,
       adventureLevels,
-      remainingCountries
+      remainingCountries,
+      travelStyle: session.preferences.travelStyle
     };
   }
 
@@ -256,16 +273,21 @@ export class CountrySpinService {
 
     const effectiveFilter: CountryFilter = {
       ...filter,
+      travelStyle: filter?.travelStyle || session.preferences.travelStyle,
       excludeCountries: [...(filter?.excludeCountries || []), ...session.selectedCountries]
     };
 
     return this.applyFilters(countries, effectiveFilter);
   }
 
-  // Update session preferences
+  // Update session preferences including travel style
   updateSessionPreferences(
     sessionId: string, 
-    preferences: { adventureLevel?: string; travelerType?: string }
+    preferences: { 
+      adventureLevel?: string; 
+      travelerType?: string;
+      travelStyle?: TravelStyle;
+    }
   ): boolean {
     const session = this.getSession(sessionId);
     if (!session) return false;
@@ -273,6 +295,11 @@ export class CountrySpinService {
     session.preferences = { ...session.preferences, ...preferences };
     session.lastActivity = new Date();
     return true;
+  }
+
+  // Get countries by travel style
+  getCountriesByTravelStyle(travelStyle: TravelStyle): Country[] {
+    return getCountriesByTravelStyle(travelStyle);
   }
 }
 

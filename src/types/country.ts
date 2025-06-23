@@ -25,6 +25,7 @@ export interface CountryFilter {
   travelerType?: 'Solo' | 'Couple' | 'Family' | 'Friends' | 'Business';
   region?: string;
   excludeCountries?: string[]; // ISO codes to exclude
+  travelStyle?: 'Romantic' | 'Family' | 'Solo'; // New filter for the three main categories
 }
 
 export interface SpinResult {
@@ -40,7 +41,10 @@ export interface UserSession {
   preferences: {
     adventureLevel?: string;
     travelerType?: string;
+    travelStyle?: 'Romantic' | 'Family' | 'Solo'; // Store selected travel style
   };
   createdAt: Date;
   lastActivity: Date;
 }
+
+export type TravelStyle = 'Romantic' | 'Family' | 'Solo';

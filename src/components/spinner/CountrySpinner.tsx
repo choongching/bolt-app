@@ -6,26 +6,28 @@ import { Badge } from '@/components/ui/badge';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { 
   Globe, 
-  RotateCcw, 
   Filter, 
   MapPin, 
-  Users, 
   Mountain, 
   Compass,
   TrendingUp,
-  RefreshCw
+  RefreshCw,
+  Heart,
+  Users,
+  User
 } from 'lucide-react';
-import { Country, CountryFilter } from '@/types/country';
+import { Country, CountryFilter, TravelStyle } from '@/types/country';
 import { useCountrySpin } from '@/hooks/useCountrySpin';
-import { getAllAdventureLevels, getAllTravelerTypes, getAllRegions } from '@/data/countries';
+import { getAllAdventureLevels, getAllRegions } from '@/data/countries';
 import CountryGlobe from '@/components/globe/CountryGlobe';
 
 interface CountrySpinnerProps {
   onCountrySelected: (country: Country) => void;
   onBack: () => void;
+  travelStyle: TravelStyle;
 }
 
-const CountrySpinner: React.FC<CountrySpinnerProps> = ({ onCountrySelected, onBack }) => {
+const CountrySpinner: React.FC<CountrySpinnerProps> = ({ onCountrySelected, onBack, travelStyle }) => {
   const {
     currentCountry,
     isSpinning,
@@ -35,11 +37,17 @@ const CountrySpinner: React.FC<CountrySpinnerProps> = ({ onCountrySelected, onBa
     resetSession,
     updatePreferences,
     updateAvailableCountries
-  } = useCountrySpin();
+  } = useCountrySpin(travelStyle);
 
-  const [filter, setFilter] = useState<CountryFilter>({});
+  const [filter, setFilter] = useState<CountryFilter>({ travelStyle });
   const [showFilters, setShowFilters] = useState(false);
   const [spinPhase, setSpinPhase] = useState<'idle' | 'spinning' | 'selecting' | 'complete'>('idle');
+
+  // Update filter when travel style changes
+  useEffect(() => {
+    setFilter({ travelStyle });
+    updateAvailableCountries({ travelStyle });
+  }, [travelStyle, updateAvailableCountries]);
 
   // Handle spin button click
   const handleSpin = async () => {
@@ -71,8 +79,8 @@ const CountrySpinner: React.FC<CountrySpinnerProps> = ({ onCountrySelected, onBa
     setFilter(newFilter);
     updateAvailableCountries(newFilter);
     
-    // Update session preferences for adventure level and traveler type
-    if (key === 'adventureLevel' || key === 'travelerType') {
+    // Update session preferences for adventure level
+    if (key === 'adventureLevel') {
       updatePreferences({ [key]: value });
     }
   };
@@ -81,6 +89,32 @@ const CountrySpinner: React.FC<CountrySpinnerProps> = ({ onCountrySelected, onBa
   const handleGlobeCountrySelect = (country: Country) => {
     onCountrySelected(country);
   };
+
+  // Get travel style icon and info
+  const getTravelStyleInfo = () => {
+    switch (travelStyle) {
+      case 'Romantic':
+        return {
+          icon: Heart,
+          color: 'from-pink-500 to-red-500',
+          description: 'Perfect destinations for couples and romantic getaways'
+        };
+      case 'Family':
+        return {
+          icon: Users,
+          color: 'from-green-500 to-blue-500',
+          description: 'Family-friendly destinations with activities for all ages'
+        };
+      case 'Solo':
+        return {
+          icon: User,
+          color: 'from-purple-500 to-indigo-500',
+          description: 'Perfect for solo travelers seeking adventure and self-discovery'
+        };
+    }
+  };
+
+  const styleInfo = getTravelStyleInfo();
 
   return (
     <div className="min-h-screen relative">
@@ -106,8 +140,13 @@ const CountrySpinner: React.FC<CountrySpinnerProps> = ({ onCountrySelected, onBa
             </Button>
 
             <div className="text-center">
-              <h1 className="text-2xl font-bold text-white drop-shadow-lg">Country Spinner</h1>
-              <p className="text-white/80 text-sm">Discover your next adventure destination</p>
+              <div className="flex items-center justify-center mb-2">
+                <div className={`w-8 h-8 rounded-full bg-gradient-to-r ${styleInfo.color} flex items-center justify-center mr-3`}>
+                  <styleInfo.icon className="w-4 h-4 text-white" />
+                </div>
+                <h1 className="text-2xl font-bold text-white drop-shadow-lg">{travelStyle} Travel</h1>
+              </div>
+              <p className="text-white/80 text-sm max-w-md">{styleInfo.description}</p>
             </div>
 
             <Button
@@ -128,13 +167,13 @@ const CountrySpinner: React.FC<CountrySpinnerProps> = ({ onCountrySelected, onBa
               initial={{ opacity: 0, y: -20 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -20 }}
-              className="absolute top-20 left-6 right-6 z-20 pointer-events-auto"
+              className="absolute top-24 left-6 right-6 z-20 pointer-events-auto"
             >
               <Card className="bg-white/10 backdrop-blur-sm border-white/20">
                 <CardHeader>
-                  <CardTitle className="text-white text-lg">Filter Countries</CardTitle>
+                  <CardTitle className="text-white text-lg">Filter {travelStyle} Destinations</CardTitle>
                 </CardHeader>
-                <CardContent className="grid md:grid-cols-3 gap-4">
+                <CardContent className="grid md:grid-cols-2 gap-4">
                   <div>
                     <label className="text-white/80 text-sm font-medium mb-2 block">
                       Adventure Level
@@ -150,26 +189,6 @@ const CountrySpinner: React.FC<CountrySpinnerProps> = ({ onCountrySelected, onBa
                         <SelectItem value="all">Any Level</SelectItem>
                         {getAllAdventureLevels().map(level => (
                           <SelectItem key={level} value={level}>{level}</SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                  </div>
-
-                  <div>
-                    <label className="text-white/80 text-sm font-medium mb-2 block">
-                      Traveler Type
-                    </label>
-                    <Select
-                      value={filter.travelerType || 'all'}
-                      onValueChange={(value) => handleFilterChange('travelerType', value)}
-                    >
-                      <SelectTrigger className="bg-white/10 border-white/30 text-white">
-                        <SelectValue placeholder="Any type" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="all">Any Type</SelectItem>
-                        {getAllTravelerTypes().map(type => (
-                          <SelectItem key={type} value={type}>{type}</SelectItem>
                         ))}
                       </SelectContent>
                     </Select>
@@ -225,20 +244,26 @@ const CountrySpinner: React.FC<CountrySpinnerProps> = ({ onCountrySelected, onBa
                     </div>
                     
                     <div>
-                      <h2 className="text-3xl font-bold text-white mb-2">Ready to Explore?</h2>
+                      <h2 className="text-3xl font-bold text-white mb-2">Ready for {travelStyle} Adventure?</h2>
                       <p className="text-white/80 mb-6">
-                        Spin the globe to discover your next adventure destination
+                        Spin the globe to discover your perfect {travelStyle.toLowerCase()} destination
                       </p>
+                      
+                      <div className="flex justify-center mb-4">
+                        <Badge variant="secondary" className={`bg-gradient-to-r ${styleInfo.color} text-white border-0`}>
+                          {availableCountries.length} {travelStyle} destinations available
+                        </Badge>
+                      </div>
                     </div>
 
                     <Button
                       onClick={handleSpin}
                       size="lg"
                       disabled={isSpinning || availableCountries.length === 0}
-                      className="bg-gradient-to-r from-yellow-400 to-orange-500 hover:from-yellow-500 hover:to-orange-600 text-white font-bold py-4 px-8 rounded-full text-lg shadow-lg transform hover:scale-105 transition-all duration-300"
+                      className={`bg-gradient-to-r ${styleInfo.color} hover:opacity-90 text-white font-bold py-4 px-8 rounded-full text-lg shadow-lg transform hover:scale-105 transition-all duration-300`}
                     >
                       <Globe className="w-5 h-5 mr-2" />
-                      Spin the Globe
+                      Spin for {travelStyle} Destination
                     </Button>
 
                     {availableCountries.length === 0 && (
@@ -271,7 +296,7 @@ const CountrySpinner: React.FC<CountrySpinnerProps> = ({ onCountrySelected, onBa
                     <div>
                       <h2 className="text-3xl font-bold text-white mb-2">Spinning the Globe...</h2>
                       <p className="text-white/80">
-                        Finding your perfect destination
+                        Finding your perfect {travelStyle.toLowerCase()} destination
                       </p>
                     </div>
                   </CardContent>
@@ -299,7 +324,7 @@ const CountrySpinner: React.FC<CountrySpinnerProps> = ({ onCountrySelected, onBa
                     <div>
                       <h2 className="text-3xl font-bold text-white mb-2">Selecting Destination...</h2>
                       <p className="text-white/80">
-                        Pinpointing your adventure
+                        Pinpointing your {travelStyle.toLowerCase()} adventure
                       </p>
                     </div>
                   </CardContent>
@@ -326,7 +351,7 @@ const CountrySpinner: React.FC<CountrySpinnerProps> = ({ onCountrySelected, onBa
                     </motion.div>
                     
                     <div>
-                      <h2 className="text-3xl font-bold text-white mb-2">Destination Found!</h2>
+                      <h2 className="text-3xl font-bold text-white mb-2">{travelStyle} Destination Found!</h2>
                       <h3 className="text-2xl font-semibold text-yellow-400 mb-2">
                         {currentCountry.name}
                       </h3>
@@ -341,11 +366,14 @@ const CountrySpinner: React.FC<CountrySpinnerProps> = ({ onCountrySelected, onBa
                         <Badge variant="secondary" className="bg-white/20 text-white">
                           {currentCountry.region}
                         </Badge>
+                        <Badge variant="secondary" className={`bg-gradient-to-r ${styleInfo.color} text-white border-0`}>
+                          {travelStyle}
+                        </Badge>
                       </div>
                     </div>
 
                     <p className="text-white/70 text-sm">
-                      Preparing your adventure details...
+                      Preparing your {travelStyle.toLowerCase()} adventure details...
                     </p>
                   </CardContent>
                 </Card>
@@ -362,7 +390,7 @@ const CountrySpinner: React.FC<CountrySpinnerProps> = ({ onCountrySelected, onBa
                 <div className="text-white text-sm space-y-2">
                   <div className="flex items-center">
                     <TrendingUp className="w-4 h-4 mr-2" />
-                    <span>Session Stats</span>
+                    <span>{travelStyle} Session Stats</span>
                   </div>
                   <div className="grid grid-cols-2 gap-4 text-xs">
                     <div>

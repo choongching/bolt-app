@@ -3,7 +3,6 @@ import mapboxgl from 'mapbox-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import { motion } from 'framer-motion';
 import { Country } from '@/types/country';
-import { countries } from '@/data/countries';
 
 // Set your Mapbox access token from environment variables
 const MAPBOX_TOKEN = import.meta.env.VITE_MAPBOX_ACCESS_TOKEN;
@@ -17,7 +16,7 @@ interface CountryGlobeProps {
 
 const CountryGlobe: React.FC<CountryGlobeProps> = ({ 
   onCountrySelected, 
-  availableCountries = countries,
+  availableCountries = [],
   isSpinning = false,
   targetCountry = null
 }) => {
@@ -147,21 +146,21 @@ const CountryGlobe: React.FC<CountryGlobeProps> = ({
 
     try {
       availableCountries.forEach((country) => {
-        // Create custom marker element based on adventure level
+        // Create custom marker element based on travel type
         const markerElement = document.createElement('div');
         markerElement.className = 'country-marker';
         
-        // Color coding based on adventure level
-        let markerColor = '#4ade80'; // Default green for Casual Explorer
-        if (country.adventureLevel === 'Adventurous Spirit') {
-          markerColor = '#f59e0b'; // Orange
-        } else if (country.adventureLevel === 'Extreme Wanderer') {
-          markerColor = '#ef4444'; // Red
+        // Color coding based on traveler type
+        let markerColor = '#8b5cf6'; // Default purple for Solo
+        if (country.travelerType.includes('Couple')) {
+          markerColor = '#ef4444'; // Red for Romantic
+        } else if (country.travelerType.includes('Family')) {
+          markerColor = '#10b981'; // Green for Family
         }
 
         markerElement.style.cssText = `
-          width: 16px;
-          height: 16px;
+          width: 18px;
+          height: 18px;
           background: ${markerColor};
           border: 2px solid white;
           border-radius: 50%;
@@ -194,7 +193,7 @@ const CountryGlobe: React.FC<CountryGlobeProps> = ({
           className: 'country-popup'
         }).setHTML(`
           <div style="
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, ${markerColor} 0%, ${markerColor}dd 100%);
             color: white;
             padding: 12px;
             border-radius: 8px;
@@ -212,6 +211,9 @@ const CountryGlobe: React.FC<CountryGlobeProps> = ({
               <span style="background: rgba(255,255,255,0.2); padding: 2px 6px; border-radius: 10px;">
                 ${country.region}
               </span>
+            </div>
+            <div style="margin-top: 6px; font-size: 10px; opacity: 0.8;">
+              Click to select this destination
             </div>
           </div>
         `);
@@ -314,9 +316,9 @@ const CountryGlobe: React.FC<CountryGlobeProps> = ({
       {/* Custom CSS for markers and popups */}
       <style jsx>{`
         @keyframes countryPulse {
-          0% { box-shadow: 0 0 0 0 rgba(74, 222, 128, 0.7); }
-          70% { box-shadow: 0 0 0 8px rgba(74, 222, 128, 0); }
-          100% { box-shadow: 0 0 0 0 rgba(74, 222, 128, 0); }
+          0% { box-shadow: 0 0 0 0 rgba(139, 92, 246, 0.7); }
+          70% { box-shadow: 0 0 0 8px rgba(139, 92, 246, 0); }
+          100% { box-shadow: 0 0 0 0 rgba(139, 92, 246, 0); }
         }
         
         .mapboxgl-popup-content {
@@ -326,7 +328,7 @@ const CountryGlobe: React.FC<CountryGlobeProps> = ({
         }
         
         .mapboxgl-popup-tip {
-          border-top-color: #667eea !important;
+          border-top-color: #8b5cf6 !important;
         }
       `}</style>
 
@@ -345,9 +347,9 @@ const CountryGlobe: React.FC<CountryGlobeProps> = ({
             <div className="text-xs text-red-300 mb-2">{mapError}</div>
           )}
           <div className="text-xs space-y-1">
-            <div>• Green: Casual Explorer</div>
-            <div>• Orange: Adventurous Spirit</div>
-            <div>• Red: Extreme Wanderer</div>
+            <div>• Red: Romantic destinations</div>
+            <div>• Green: Family destinations</div>
+            <div>• Purple: Solo destinations</div>
             <div>• Click markers to select countries</div>
           </div>
         </div>
