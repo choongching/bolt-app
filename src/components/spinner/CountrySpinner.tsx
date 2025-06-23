@@ -49,7 +49,7 @@ const CountrySpinner: React.FC<CountrySpinnerProps> = ({
 
   const [filter, setFilter] = useState<CountryFilter>({ travelStyle });
   const [showFilters, setShowFilters] = useState(false);
-  const [spinPhase, setSpinPhase] = useState<'idle' | 'globe-fade-in' | 'spinning' | 'pin-drop' | 'zooming' | 'complete'>('idle');
+  const [spinPhase, setSpinPhase] = useState<'idle' | 'globe-fade-in' | 'spinning' | 'pin-drop' | 'zooming' | 'destination-found'>('idle');
   const [selectedCountry, setSelectedCountry] = useState<Country | null>(null);
   const [showGlobe, setShowGlobe] = useState(false);
 
@@ -68,7 +68,7 @@ const CountrySpinner: React.FC<CountrySpinnerProps> = ({
     updateAvailableCountries({ travelStyle });
   }, [travelStyle, updateAvailableCountries]);
 
-  // Handle spin button click - start the sequence with proper timing
+  // Handle spin button click - FIXED: Improved timing and flow
   const handleSpin = async () => {
     // Phase 1: Show globe fading in
     setSpinPhase('globe-fade-in');
@@ -92,14 +92,16 @@ const CountrySpinner: React.FC<CountrySpinnerProps> = ({
           setTimeout(() => {
             setSpinPhase('zooming');
             
-            // Phase 5: Complete and transition to reveal - FIXED: Immediate transition
+            // Phase 5: Show "Destination Found!" message
             setTimeout(() => {
-              setSpinPhase('complete');
+              setSpinPhase('destination-found');
               
-              // FIXED: Immediate transition to destination reveal without delay
-              onCountrySelected(result.country);
-            }, 2000); // Reduced from 3000 to 2000
-          }, 1000); // Reduced from 1500 to 1000
+              // Phase 6: FIXED - Transition to reveal after showing destination found
+              setTimeout(() => {
+                onCountrySelected(result.country);
+              }, 2000); // Show "Destination Found!" for 2 seconds
+            }, 2000); // Zoom effect duration
+          }, 1000); // Pin drop duration
         } else {
           // If no country was selected, reset to idle
           setSpinPhase('idle');
@@ -113,7 +115,7 @@ const CountrySpinner: React.FC<CountrySpinnerProps> = ({
         setShowGlobe(false);
         setSelectedCountry(null);
       }
-    }, 3000); // Reduced from 4000 to 3000
+    }, 3000); // Spinning duration
   };
 
   // Handle filter changes
@@ -510,7 +512,65 @@ const CountrySpinner: React.FC<CountrySpinnerProps> = ({
             </motion.div>
           )}
 
-          {/* REMOVED: The 'complete' phase that was causing the blank screen */}
+          {/* FIXED: Added the "Destination Found!" phase */}
+          {spinPhase === 'destination-found' && selectedCountry && (
+            <motion.div
+              key="destination-found"
+              initial={{ opacity: 0, y: 50 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -50 }}
+              transition={{ duration: 0.8 }}
+              className="text-center"
+            >
+              <Card className="bg-black/30 backdrop-blur-sm border-white/20 p-8">
+                <CardContent className="text-center space-y-6">
+                  <motion.div
+                    initial={{ scale: 0, rotate: -180 }}
+                    animate={{ scale: 1, rotate: 0 }}
+                    transition={{ duration: 1, ease: "easeOut" }}
+                  >
+                    <MapPin className="w-24 h-24 text-red-500 mx-auto drop-shadow-lg" />
+                  </motion.div>
+                  
+                  <motion.h1
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.5, duration: 0.8 }}
+                    className="text-5xl md:text-6xl font-bold text-white mb-4 drop-shadow-2xl"
+                  >
+                    Destination Found!
+                  </motion.h1>
+                  
+                  <motion.h2
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.8, duration: 0.8 }}
+                    className="text-3xl md:text-4xl font-semibold text-yellow-400 mb-2"
+                  >
+                    {selectedCountry.name}
+                  </motion.h2>
+                  
+                  <motion.p
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ delay: 1, duration: 0.8 }}
+                    className="text-white/80 text-xl"
+                  >
+                    {selectedCountry.tagline}
+                  </motion.p>
+
+                  <motion.p
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ delay: 1.2, duration: 0.8 }}
+                    className="text-white/60 text-sm"
+                  >
+                    Preparing your adventure details...
+                  </motion.p>
+                </CardContent>
+              </Card>
+            </motion.div>
+          )}
         </AnimatePresence>
       </div>
 

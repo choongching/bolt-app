@@ -141,10 +141,13 @@ const CountryGlobe: React.FC<CountryGlobeProps> = ({
     }
   }, [isSpinning]);
 
-  // Handle target country selection with dramatic zoom
+  // Handle target country selection with dramatic zoom - FIXED: Better timing
   useEffect(() => {
     if (targetCountry && map.current && !mapError && !isZooming) {
-      flyToCountry(targetCountry);
+      // Add a small delay to ensure the pin drop animation completes first
+      setTimeout(() => {
+        flyToCountry(targetCountry);
+      }, 500);
     }
   }, [targetCountry, mapError, isZooming]);
 
@@ -297,30 +300,31 @@ const CountryGlobe: React.FC<CountryGlobeProps> = ({
       // First, add a special marker for the selected country
       const selectedMarkerElement = document.createElement('div');
       selectedMarkerElement.style.cssText = `
-        width: 24px;
-        height: 24px;
+        width: 32px;
+        height: 32px;
         background: #ef4444;
-        border: 3px solid white;
+        border: 4px solid white;
         border-radius: 50%;
-        box-shadow: 0 4px 16px rgba(239, 68, 68, 0.6);
+        box-shadow: 0 6px 20px rgba(239, 68, 68, 0.8);
         animation: selectedCountryPulse 1s infinite;
+        z-index: 1000;
       `;
 
       const selectedMarker = new mapboxgl.Marker(selectedMarkerElement)
         .setLngLat([country.coordinates.lng, country.coordinates.lat])
         .addTo(map.current);
 
-      // Dramatic zoom in with multiple stages
+      // FIXED: More dramatic zoom with better timing
       map.current.flyTo({
         center: [country.coordinates.lng, country.coordinates.lat],
-        zoom: 8, // Much closer zoom
-        pitch: 60, // Dramatic angle
+        zoom: 10, // Even closer zoom for more dramatic effect
+        pitch: 65, // More dramatic angle
         bearing: 0,
-        duration: 3000,
+        duration: 4000, // Longer duration for more dramatic effect
         essential: true,
         easing: (t) => {
-          // Custom easing for dramatic effect
-          return t < 0.5 ? 2 * t * t : -1 + (4 - 2 * t) * t;
+          // Custom easing for very dramatic effect
+          return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
         }
       });
 
@@ -328,7 +332,7 @@ const CountryGlobe: React.FC<CountryGlobeProps> = ({
       setTimeout(() => {
         selectedMarker.remove();
         setIsZooming(false);
-      }, 3000);
+      }, 4000);
 
     } catch (error) {
       console.error('Error flying to country:', error);
@@ -373,12 +377,12 @@ const CountryGlobe: React.FC<CountryGlobeProps> = ({
         
         @keyframes selectedCountryPulse {
           0% { 
-            box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.8);
+            box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.9);
             transform: scale(1);
           }
           50% { 
-            box-shadow: 0 0 0 15px rgba(239, 68, 68, 0);
-            transform: scale(1.2);
+            box-shadow: 0 0 0 20px rgba(239, 68, 68, 0);
+            transform: scale(1.3);
           }
           100% { 
             box-shadow: 0 0 0 0 rgba(239, 68, 68, 0);
