@@ -75,78 +75,6 @@ export const countries: Country[] = [
     highlights: ['Overwater bungalows', 'Crystal clear waters', 'Coral reefs', 'Spa treatments'],
     difficulty: 1
   },
-  {
-    id: 'CZ',
-    name: 'Czech Republic',
-    isoCode: 'CZ',
-    coordinates: { lat: 50.0755, lng: 14.4378 }, // Prague coordinates
-    adventureLevel: 'Casual Explorer',
-    travelerType: ['Couple'],
-    popularity: 7,
-    tagline: 'Fairytale Romance in Prague',
-    region: 'Europe',
-    capital: 'Prague',
-    currency: 'CZK',
-    languages: ['Czech'],
-    timeZone: 'CET',
-    bestTimeToVisit: 'April-June, September-October',
-    highlights: ['Prague Castle', 'Charles Bridge', 'Old Town Square', 'River cruises'],
-    difficulty: 2
-  },
-  {
-    id: 'MA',
-    name: 'Morocco',
-    isoCode: 'MA',
-    coordinates: { lat: 31.6295, lng: -7.9811 }, // Marrakech coordinates
-    adventureLevel: 'Adventurous Spirit',
-    travelerType: ['Couple'],
-    popularity: 7,
-    tagline: 'Exotic Romance in Imperial Cities',
-    region: 'Africa',
-    capital: 'Rabat',
-    currency: 'MAD',
-    languages: ['Arabic', 'French'],
-    timeZone: 'WET',
-    bestTimeToVisit: 'March-May, September-November',
-    highlights: ['Marrakech souks', 'Sahara Desert', 'Riads', 'Atlas Mountains'],
-    difficulty: 4
-  },
-  {
-    id: 'JP',
-    name: 'Japan',
-    isoCode: 'JP',
-    coordinates: { lat: 35.0116, lng: 135.7681 }, // Kyoto coordinates
-    adventureLevel: 'Adventurous Spirit',
-    travelerType: ['Couple'],
-    popularity: 8,
-    tagline: 'Cherry Blossoms and Ancient Romance',
-    region: 'Asia',
-    capital: 'Tokyo',
-    currency: 'JPY',
-    languages: ['Japanese'],
-    timeZone: 'JST',
-    bestTimeToVisit: 'March-May, September-November',
-    highlights: ['Cherry blossoms', 'Traditional ryokans', 'Temple gardens', 'Hot springs'],
-    difficulty: 3
-  },
-  {
-    id: 'TR',
-    name: 'Turkey',
-    isoCode: 'TR',
-    coordinates: { lat: 38.3232, lng: 34.9245 }, // Cappadocia coordinates
-    adventureLevel: 'Adventurous Spirit',
-    travelerType: ['Couple'],
-    popularity: 7,
-    tagline: 'Hot Air Balloons and Ancient Love Stories',
-    region: 'Europe',
-    capital: 'Ankara',
-    currency: 'TRY',
-    languages: ['Turkish'],
-    timeZone: 'TRT',
-    bestTimeToVisit: 'April-May, September-November',
-    highlights: ['Cappadocia balloons', 'Istanbul bridges', 'Pamukkale', 'Bosphorus cruises'],
-    difficulty: 4
-  },
 
   // FAMILY DESTINATIONS
   {
@@ -204,24 +132,6 @@ export const countries: Country[] = [
     difficulty: 3
   },
   {
-    id: 'CR',
-    name: 'Costa Rica',
-    isoCode: 'CR',
-    coordinates: { lat: 9.7489, lng: -83.7534 },
-    adventureLevel: 'Adventurous Spirit',
-    travelerType: ['Family'],
-    popularity: 7,
-    tagline: 'Pura Vida Family Adventures',
-    region: 'North America',
-    capital: 'San José',
-    currency: 'CRC',
-    languages: ['Spanish'],
-    timeZone: 'CST',
-    bestTimeToVisit: 'December-April',
-    highlights: ['Zip-lining', 'Wildlife parks', 'Volcanoes', 'Beaches'],
-    difficulty: 4
-  },
-  {
     id: 'SG',
     name: 'Singapore',
     isoCode: 'SG',
@@ -238,60 +148,6 @@ export const countries: Country[] = [
     bestTimeToVisit: 'February-April',
     highlights: ['Universal Studios', 'Gardens by the Bay', 'Zoo', 'Sentosa Island'],
     difficulty: 1
-  },
-  {
-    id: 'GB',
-    name: 'United Kingdom',
-    isoCode: 'GB',
-    coordinates: { lat: 51.5074, lng: -0.1278 }, // London coordinates
-    adventureLevel: 'Casual Explorer',
-    travelerType: ['Family'],
-    popularity: 8,
-    tagline: 'Royal Adventures and Harry Potter Magic',
-    region: 'Europe',
-    capital: 'London',
-    currency: 'GBP',
-    languages: ['English'],
-    timeZone: 'GMT',
-    bestTimeToVisit: 'May-September',
-    highlights: ['Harry Potter studios', 'Castles', 'Museums', 'Countryside'],
-    difficulty: 2
-  },
-  {
-    id: 'NZ',
-    name: 'New Zealand',
-    isoCode: 'NZ',
-    coordinates: { lat: -45.0312, lng: 168.6626 }, // Queenstown coordinates
-    adventureLevel: 'Adventurous Spirit',
-    travelerType: ['Family'],
-    popularity: 7,
-    tagline: 'Middle-earth Family Adventures',
-    region: 'Oceania',
-    capital: 'Wellington',
-    currency: 'NZD',
-    languages: ['English'],
-    timeZone: 'NZST',
-    bestTimeToVisit: 'December-February, March-May',
-    highlights: ['Hobbiton', 'Adventure activities', 'Fjords', 'Glaciers'],
-    difficulty: 5
-  },
-  {
-    id: 'MX',
-    name: 'Mexico',
-    isoCode: 'MX',
-    coordinates: { lat: 20.6296, lng: -87.0739 }, // Cancun coordinates
-    adventureLevel: 'Casual Explorer',
-    travelerType: ['Family'],
-    popularity: 8,
-    tagline: 'Beach Fun and Ancient Wonders',
-    region: 'North America',
-    capital: 'Mexico City',
-    currency: 'MXN',
-    languages: ['Spanish'],
-    timeZone: 'CST',
-    bestTimeToVisit: 'December-April',
-    highlights: ['Mayan ruins', 'Beaches', 'Cenotes', 'Family resorts'],
-    difficulty: 3
   },
 
   // SOLO DESTINATIONS
@@ -350,94 +206,22 @@ export const countries: Country[] = [
     difficulty: 8
   },
   {
-    id: 'IN',
-    name: 'India',
-    isoCode: 'IN',
-    coordinates: { lat: 27.1751, lng: 78.0421 }, // Agra coordinates (Taj Mahal)
-    adventureLevel: 'Extreme Wanderer',
-    travelerType: ['Solo'],
-    popularity: 8,
-    tagline: 'Solo Spiritual Journey Through Colors and Chaos',
-    region: 'Asia',
-    capital: 'New Delhi',
-    currency: 'INR',
-    languages: ['Hindi', 'English'],
-    timeZone: 'IST',
-    bestTimeToVisit: 'October-March',
-    highlights: ['Taj Mahal', 'Rajasthan palaces', 'Kerala backwaters', 'Yoga retreats'],
-    difficulty: 9
-  },
-  {
-    id: 'VN',
-    name: 'Vietnam',
-    isoCode: 'VN',
-    coordinates: { lat: 21.0285, lng: 105.8542 }, // Hanoi coordinates
-    adventureLevel: 'Adventurous Spirit',
-    travelerType: ['Solo'],
-    popularity: 7,
-    tagline: 'Solo Adventure Through Ancient and Modern',
-    region: 'Asia',
-    capital: 'Hanoi',
-    currency: 'VND',
-    languages: ['Vietnamese'],
-    timeZone: 'ICT',
-    bestTimeToVisit: 'February-April, August-October',
-    highlights: ['Ha Long Bay', 'Motorbike tours', 'Street food', 'History'],
-    difficulty: 6
-  },
-  {
-    id: 'PT',
-    name: 'Portugal',
-    isoCode: 'PT',
-    coordinates: { lat: 38.7223, lng: -9.1393 }, // Lisbon coordinates
-    adventureLevel: 'Casual Explorer',
-    travelerType: ['Solo'],
-    popularity: 6,
-    tagline: 'Solo Wandering Through Coastal Charm',
-    region: 'Europe',
-    capital: 'Lisbon',
-    currency: 'EUR',
-    languages: ['Portuguese'],
-    timeZone: 'WET',
-    bestTimeToVisit: 'March-May, September-October',
-    highlights: ['Porto wine cellars', 'Coastal towns', 'Fado music', 'Pastéis de nata'],
-    difficulty: 2
-  },
-  {
-    id: 'NP',
-    name: 'Nepal',
-    isoCode: 'NP',
-    coordinates: { lat: 27.7172, lng: 85.3240 }, // Kathmandu coordinates
-    adventureLevel: 'Extreme Wanderer',
-    travelerType: ['Solo'],
-    popularity: 6,
-    tagline: 'Solo Trek to the Roof of the World',
-    region: 'Asia',
-    capital: 'Kathmandu',
-    currency: 'NPR',
-    languages: ['Nepali'],
-    timeZone: 'NPT',
-    bestTimeToVisit: 'September-November, March-May',
-    highlights: ['Everest Base Camp', 'Annapurna Circuit', 'Temples', 'Mountain views'],
-    difficulty: 9
-  },
-  {
-    id: 'ID',
-    name: 'Indonesia',
-    isoCode: 'ID',
-    coordinates: { lat: -8.3405, lng: 115.0920 }, // Bali coordinates
+    id: 'JP',
+    name: 'Japan',
+    isoCode: 'JP',
+    coordinates: { lat: 35.0116, lng: 135.7681 }, // Kyoto coordinates
     adventureLevel: 'Adventurous Spirit',
     travelerType: ['Solo'],
     popularity: 8,
-    tagline: 'Solo Island-Hopping and Self-Discovery',
+    tagline: 'Solo Journey Through Ancient and Modern',
     region: 'Asia',
-    capital: 'Jakarta',
-    currency: 'IDR',
-    languages: ['Indonesian'],
-    timeZone: 'WIB',
-    bestTimeToVisit: 'April-October',
-    highlights: ['Bali temples', 'Volcano hikes', 'Island hopping', 'Yoga retreats'],
-    difficulty: 5
+    capital: 'Tokyo',
+    currency: 'JPY',
+    languages: ['Japanese'],
+    timeZone: 'JST',
+    bestTimeToVisit: 'March-May, September-November',
+    highlights: ['Cherry blossoms', 'Traditional ryokans', 'Temple gardens', 'Hot springs'],
+    difficulty: 3
   }
 ];
 

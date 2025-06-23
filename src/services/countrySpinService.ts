@@ -1,5 +1,5 @@
 import { Country, CountryFilter, SpinResult, UserSession, TravelStyle } from '@/types/country';
-import { countries, getCountriesByTravelStyle, getCountriesByAdventureLevel, getCountriesByTravelerType, getAllRegions } from '@/data/countries';
+import { countries, getCountriesByTravelStyle } from '@/data/countries';
 
 export class CountrySpinService {
   private static instance: CountrySpinService;
@@ -127,39 +127,6 @@ export class CountrySpinService {
     return countries[countries.length - 1];
   }
 
-  // Ensure regional diversity by prioritizing different regions
-  private prioritizeRegionalDiversity(countries: Country[], selectedCountries: string[]): Country[] {
-    if (selectedCountries.length === 0) {
-      return countries;
-    }
-
-    // Get regions of already selected countries
-    const selectedRegions = new Set(
-      selectedCountries
-        .map(isoCode => countries.find(c => c.isoCode === isoCode)?.region)
-        .filter(Boolean)
-    );
-
-    // Separate countries by whether their region has been selected
-    const newRegionCountries = countries.filter(country => 
-      !selectedRegions.has(country.region)
-    );
-    const sameRegionCountries = countries.filter(country => 
-      selectedRegions.has(country.region)
-    );
-
-    // Prioritize countries from new regions (boost their popularity)
-    const prioritized = [
-      ...newRegionCountries.map(country => ({ 
-        ...country, 
-        popularity: country.popularity + 3 // Boost for regional diversity
-      })),
-      ...sameRegionCountries
-    ];
-
-    return prioritized;
-  }
-
   // Main spin function with travel style support
   spinCountry(sessionId: string, filter?: CountryFilter): SpinResult {
     const session = this.getSession(sessionId);
@@ -204,14 +171,8 @@ export class CountrySpinService {
       };
     }
 
-    // Apply regional diversity prioritization
-    const diversifiedCountries = this.prioritizeRegionalDiversity(
-      availableCountries, 
-      session.selectedCountries
-    );
-
     // Select country using weighted random
-    const selectedCountry = this.selectWeightedRandom(diversifiedCountries);
+    const selectedCountry = this.selectWeightedRandom(availableCountries);
     
     // Add to session's selected countries
     session.selectedCountries.push(selectedCountry.isoCode);

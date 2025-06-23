@@ -5,28 +5,28 @@ import { Plane, Globe, Sparkles } from 'lucide-react';
 import SplitText from '@/components/ui/split-text';
 import mapboxgl from 'mapbox-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
-import { TravelerType } from '@/types/destination';
+import { TravelStyle } from '@/types/country';
 
 interface WelcomeScreenProps {
-  onTravelStyleSelect: (type: TravelerType) => void;
+  onTravelStyleSelect: (type: TravelStyle) => void;
   isAuthenticated: boolean;
 }
 
 const travelStyles = [
   {
-    type: 'couple' as TravelerType,
+    type: 'Romantic' as TravelStyle,
     title: 'Romantic',
     color: 'from-pink-500 to-red-500',
     hoverColor: 'from-pink-600 to-red-600'
   },
   {
-    type: 'family' as TravelerType,
+    type: 'Family' as TravelStyle,
     title: 'Family',
     color: 'from-green-500 to-blue-500',
     hoverColor: 'from-green-600 to-blue-600'
   },
   {
-    type: 'solo' as TravelerType,
+    type: 'Solo' as TravelStyle,
     title: 'Solo',
     color: 'from-purple-500 to-indigo-500',
     hoverColor: 'from-purple-600 to-indigo-600'
