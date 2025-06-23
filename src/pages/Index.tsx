@@ -40,7 +40,7 @@ const Index = () => {
                 Welcome to Travel Spinner – Your Global Adventure Awaits!
               </h2>
               <p className="text-gray-600 text-base leading-relaxed mb-6">
-                Spin the Globe and Let the Journey Begin! Sign in to unlock a world of random travel thrills and craft your dream trips.
+                Turns each spin into an epic travel quest—fun and adventurous!
               </p>
             </div>
             
