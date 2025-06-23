@@ -15,10 +15,14 @@ import {
   Users,
   Camera,
   Loader2,
-  TrendingUp
+  TrendingUp,
+  Info,
+  CheckCircle,
+  AlertCircle
 } from 'lucide-react';
 import { Destination } from '@/types/destination';
 import { numbeoService } from '@/services/numbeoApi';
+import { getVisaRequirementByDestination } from '@/data/visaRequirements';
 
 interface DestinationRevealProps {
   destination: Destination;
@@ -38,6 +42,7 @@ const DestinationReveal: React.FC<DestinationRevealProps> = ({
   const [imageLoaded, setImageLoaded] = useState(false);
   const [budgetData, setBudgetData] = useState<any>(null);
   const [budgetLoading, setBudgetLoading] = useState(true);
+  const [visaInfo, setVisaInfo] = useState<any>(null);
 
   useEffect(() => {
     const fetchBudgetData = async () => {
@@ -53,6 +58,10 @@ const DestinationReveal: React.FC<DestinationRevealProps> = ({
         setBudgetLoading(false);
       }
     };
+
+    // Get detailed visa information
+    const visaRequirement = getVisaRequirementByDestination(destination.country, destination.city);
+    setVisaInfo(visaRequirement);
 
     fetchBudgetData();
   }, [destination]);
@@ -100,6 +109,60 @@ const DestinationReveal: React.FC<DestinationRevealProps> = ({
     }
 
     return destination.budget_estimate;
+  };
+
+  const formatVisaDisplay = () => {
+    if (!visaInfo) {
+      return (
+        <div className="flex items-center text-white/90">
+          <AlertCircle className="w-4 h-4 mr-2 text-yellow-400" />
+          <span>{destination.visa_requirements}</span>
+        </div>
+      );
+    }
+
+    const isVisaFree = visaInfo.requirements.general.toLowerCase().includes('no visa required');
+    
+    return (
+      <div>
+        <div className="flex items-center mb-3">
+          {isVisaFree ? (
+            <CheckCircle className="w-5 h-5 mr-2 text-green-400" />
+          ) : (
+            <Info className="w-5 h-5 mr-2 text-blue-400" />
+          )}
+          <span className="text-lg font-semibold text-white">
+            {visaInfo.requirements.general}
+          </span>
+        </div>
+        
+        <div className="text-sm text-white/80 space-y-2">
+          <div className="flex justify-between">
+            <span>Duration allowed:</span>
+            <span className="font-medium">{visaInfo.duration_allowed}</span>
+          </div>
+          
+          {visaInfo.notes && visaInfo.notes.length > 0 && (
+            <div className="mt-3">
+              <p className="text-white/70 text-xs mb-2">Important notes:</p>
+              <ul className="text-xs text-white/60 space-y-1">
+                {visaInfo.notes.slice(0, 3).map((note: string, index: number) => (
+                  <li key={index} className="flex items-start">
+                    <span className="w-1 h-1 bg-white/40 rounded-full mt-2 mr-2 flex-shrink-0" />
+                    {note}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+          
+          <div className="mt-3 text-xs text-white/50 flex items-center">
+            <Info className="w-3 h-3 mr-1" />
+            Updated {visaInfo.last_updated}
+          </div>
+        </div>
+      </div>
+    );
   };
 
   return (
@@ -217,7 +280,7 @@ const DestinationReveal: React.FC<DestinationRevealProps> = ({
                   <FileText className="w-6 h-6 mr-2 text-yellow-400" />
                   Visa Requirements
                 </h3>
-                <p className="text-white/90 text-lg">{destination.visa_requirements}</p>
+                {formatVisaDisplay()}
               </CardContent>
             </Card>
 
@@ -292,7 +355,7 @@ const DestinationReveal: React.FC<DestinationRevealProps> = ({
         >
           <p className="text-white/60 text-sm">
             <Clock className="w-4 h-4 inline mr-1" />
-            Budget estimates updated with real-time data • Destination selected based on your travel preferences
+            Budget estimates updated with real-time data • Visa information verified from official sources
           </p>
         </motion.div>
       </div>
