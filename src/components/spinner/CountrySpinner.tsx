@@ -351,7 +351,7 @@ const CountrySpinner: React.FC<CountrySpinnerProps> = ({
                     className={`bg-gradient-to-r ${styleInfo.color} hover:opacity-90 text-white font-bold py-4 px-8 rounded-full text-lg shadow-lg transform hover:scale-105 transition-all duration-300`}
                   >
                     <Globe className="w-5 h-5 mr-2" />
-                    Spin for {travelStyle} Destination
+                    Start the Spin
                   </Button>
 
                   {availableCountries.length === 0 && (

@@ -249,7 +249,7 @@ const WelcomeScreen: React.FC<WelcomeScreenProps> = ({ onTravelStyleSelect, isAu
             transition={{ duration: 0.8, delay: 0.6 }}
             className="text-xl md:text-2xl text-white/95 mb-12 max-w-3xl mx-auto leading-relaxed drop-shadow-lg"
           >
-            Choose your travel style and let destiny guide you to amazing destinations.
+            Pick your crew: Solo Explorer, Lovebirds, or Family Squad
           </motion.p>
 
           {/* Travel Style Selection - Simplified */}
