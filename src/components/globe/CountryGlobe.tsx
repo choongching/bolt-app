@@ -386,33 +386,6 @@ const CountryGlobe: React.FC<CountryGlobeProps> = ({
         }
       `}</style>
 
-      {/* Status indicator */}
-      <div className="absolute bottom-8 left-8 text-white/60 text-sm z-10">
-        <div className="bg-black/30 backdrop-blur-sm rounded-lg p-4 border border-white/20">
-          <div className="flex items-center space-x-2 mb-2">
-            <div className={`w-2 h-2 rounded-full animate-pulse ${
-              mapError ? 'bg-red-400' : 
-              isSpinning ? 'bg-yellow-400' :
-              isZooming ? 'bg-blue-400' : 'bg-green-400'
-            }`} />
-            <span>
-              {mapError ? 'Fallback Mode' : 
-               isSpinning ? 'Globe Spinning' :
-               isZooming ? 'Zooming to Destination' : 'Interactive Country Globe'}
-            </span>
-          </div>
-          {mapError && (
-            <div className="text-xs text-red-300 mb-2">{mapError}</div>
-          )}
-          <div className="text-xs space-y-1">
-            <div>• Red: Romantic destinations</div>
-            <div>• Green: Family destinations</div>
-            <div>• Purple: Solo destinations</div>
-            {!isSpinning && <div>• Click markers to select countries</div>}
-          </div>
-        </div>
-      </div>
-
       {/* Country count indicator */}
       <div className="absolute top-8 right-8 text-white/80 text-sm z-10">
         <div className="bg-black/30 backdrop-blur-sm rounded-lg p-4 border border-white/20">
