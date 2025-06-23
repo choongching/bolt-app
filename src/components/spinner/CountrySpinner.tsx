@@ -50,7 +50,7 @@ const CountrySpinner: React.FC<CountrySpinnerProps> = ({
 
   const [filter, setFilter] = useState<CountryFilter>({ travelStyle });
   const [showFilters, setShowFilters] = useState(false);
-  const [spinPhase, setSpinPhase] = useState<'idle' | 'spinning' | 'pin-drop' | 'zooming' | 'destination-found'>('idle');
+  const [spinPhase, setSpinPhase] = useState<'idle' | 'pin-drop' | 'zooming' | 'destination-found'>('idle');
   const [selectedCountry, setSelectedCountry] = useState<Country | null>(null);
   const [showGlobe, setShowGlobe] = useState(true);
 
@@ -59,7 +59,7 @@ const CountrySpinner: React.FC<CountrySpinnerProps> = ({
     if (autoStart && !isSpinning && spinPhase === 'idle') {
       setTimeout(() => {
         handleSpin();
-      }, 500); // Start immediately after component loads
+      }, 1000); // Small delay to ensure globe is loaded
     }
   }, [autoStart]);
 
@@ -73,51 +73,44 @@ const CountrySpinner: React.FC<CountrySpinnerProps> = ({
   const handleSpin = async () => {
     console.log('Starting spin process...');
     
-    // Phase 1: Start spinning immediately
-    setSpinPhase('spinning');
-
-    // Phase 2: Select country after spinning duration
-    setTimeout(async () => {
-      console.log('Spinning phase complete, selecting country...');
+    // Skip spinning phase, go directly to selection
+    try {
+      const result = await spinCountry(filter);
       
-      try {
-        const result = await spinCountry(filter);
+      if (result) {
+        console.log('Country selected:', result.country.name);
+        setSelectedCountry(result.country);
+        setSpinPhase('pin-drop');
         
-        if (result) {
-          console.log('Country selected:', result.country.name);
-          setSelectedCountry(result.country);
-          setSpinPhase('pin-drop');
+        // Phase 1: Pin drop effect
+        setTimeout(() => {
+          console.log('Pin drop phase complete, starting zoom...');
+          setSpinPhase('zooming');
           
-          // Phase 3: Pin drop effect
+          // Phase 2: Show "Destination Found!" message after zoom
           setTimeout(() => {
-            console.log('Pin drop phase complete, starting zoom...');
-            setSpinPhase('zooming');
+            console.log('Zoom phase complete, showing destination found...');
+            setSpinPhase('destination-found');
             
-            // Phase 4: Show "Destination Found!" message after zoom
+            // Phase 3: Transition to reveal after showing message
             setTimeout(() => {
-              console.log('Zoom phase complete, showing destination found...');
-              setSpinPhase('destination-found');
-              
-              // Phase 5: Transition to reveal after showing message
-              setTimeout(() => {
-                console.log('Transitioning to destination reveal...');
-                onCountrySelected(result.country);
-              }, 3000); // Show "Destination Found!" for 3 seconds
-            }, 4000); // Wait for zoom animation to complete (4 seconds)
-          }, 1500); // Pin drop duration
-        } else {
-          // If no country was selected, reset to idle
-          console.log('No country selected, resetting to idle');
-          setSpinPhase('idle');
-          setSelectedCountry(null);
-        }
-      } catch (error) {
-        console.error('Error during spin:', error);
-        // Reset on error
+              console.log('Transitioning to destination reveal...');
+              onCountrySelected(result.country);
+            }, 3000); // Show "Destination Found!" for 3 seconds
+          }, 4000); // Wait for zoom animation to complete (4 seconds)
+        }, 1500); // Pin drop duration
+      } else {
+        // If no country was selected, reset to idle
+        console.log('No country selected, resetting to idle');
         setSpinPhase('idle');
         setSelectedCountry(null);
       }
-    }, 3000); // Spinning duration
+    } catch (error) {
+      console.error('Error during spin:', error);
+      // Reset on error
+      setSpinPhase('idle');
+      setSelectedCountry(null);
+    }
   };
 
   // Handle filter changes
@@ -169,7 +162,7 @@ const CountrySpinner: React.FC<CountrySpinnerProps> = ({
         <CountryGlobe
           onCountrySelected={() => {}} // Disabled during spinning
           availableCountries={availableCountries}
-          isSpinning={spinPhase === 'spinning'}
+          isSpinning={spinPhase === 'pin-drop' || spinPhase === 'zooming'} // Show spinning during these phases
           targetCountry={spinPhase === 'zooming' ? selectedCountry : null}
         />
       </div>
@@ -330,39 +323,6 @@ const CountrySpinner: React.FC<CountrySpinnerProps> = ({
                       No countries match your filters. Try adjusting your preferences.
                     </p>
                   )}
-                </CardContent>
-              </Card>
-            </motion.div>
-          )}
-
-          {spinPhase === 'spinning' && (
-            <motion.div
-              key="spinning"
-              initial={{ opacity: 0, scale: 0.8 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.8 }}
-              className="text-center"
-            >
-              <Card className="bg-black/40 backdrop-blur-sm border-white/20 p-8">
-                <CardContent className="text-center space-y-6">
-                  <motion.div
-                    animate={{ rotate: 360 }}
-                    transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
-                  >
-                    <Globe className="w-20 h-20 text-yellow-400 mx-auto" />
-                  </motion.div>
-                  
-                  <div>
-                    <h2 className="text-3xl font-bold text-white mb-2">Globe's a-whirl!</h2>
-                    <p className="text-white/80">
-                      Feel the Zappy vibes as it spins to your next big thrill!
-                    </p>
-                    <div className="mt-4 flex items-center justify-center space-x-2">
-                      <div className="w-2 h-2 bg-yellow-400 rounded-full animate-bounce" style={{ animationDelay: '0ms' }} />
-                      <div className="w-2 h-2 bg-yellow-400 rounded-full animate-bounce" style={{ animationDelay: '150ms' }} />
-                      <div className="w-2 h-2 bg-yellow-400 rounded-full animate-bounce" style={{ animationDelay: '300ms' }} />
-                    </div>
-                  </div>
                 </CardContent>
               </Card>
             </motion.div>
