@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
@@ -13,9 +13,12 @@ import {
   ExternalLink,
   Clock,
   Users,
-  Camera
+  Camera,
+  Loader2,
+  TrendingUp
 } from 'lucide-react';
 import { Destination } from '@/types/destination';
+import { numbeoService } from '@/services/numbeoApi';
 
 interface DestinationRevealProps {
   destination: Destination;
@@ -33,6 +36,71 @@ const DestinationReveal: React.FC<DestinationRevealProps> = ({
   isSaved = false
 }) => {
   const [imageLoaded, setImageLoaded] = useState(false);
+  const [budgetData, setBudgetData] = useState<any>(null);
+  const [budgetLoading, setBudgetLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchBudgetData = async () => {
+      setBudgetLoading(true);
+      try {
+        const city = destination.city || destination.name;
+        const estimate = await numbeoService.getBudgetEstimate(city, destination.country);
+        setBudgetData(estimate);
+      } catch (error) {
+        console.error('Failed to fetch budget data:', error);
+        setBudgetData(null);
+      } finally {
+        setBudgetLoading(false);
+      }
+    };
+
+    fetchBudgetData();
+  }, [destination]);
+
+  const formatBudgetDisplay = () => {
+    if (budgetLoading) {
+      return (
+        <div className="flex items-center">
+          <Loader2 className="w-4 h-4 animate-spin mr-2" />
+          <span>Loading real-time data...</span>
+        </div>
+      );
+    }
+
+    if (budgetData) {
+      return (
+        <div>
+          <div className="text-lg font-semibold mb-2">
+            ${budgetData.daily_budget_low}-${budgetData.daily_budget_high}/day
+          </div>
+          <div className="text-sm text-white/80 space-y-1">
+            <div className="flex justify-between">
+              <span>Accommodation:</span>
+              <span>${budgetData.breakdown.accommodation.low}-${budgetData.breakdown.accommodation.high}</span>
+            </div>
+            <div className="flex justify-between">
+              <span>Meals:</span>
+              <span>${budgetData.breakdown.meals.low}-${budgetData.breakdown.meals.high}</span>
+            </div>
+            <div className="flex justify-between">
+              <span>Transport:</span>
+              <span>${budgetData.breakdown.transport.low}-${budgetData.breakdown.transport.high}</span>
+            </div>
+            <div className="flex justify-between">
+              <span>Activities:</span>
+              <span>${budgetData.breakdown.activities.low}-${budgetData.breakdown.activities.high}</span>
+            </div>
+          </div>
+          <div className="mt-2 text-xs text-white/60 flex items-center">
+            <TrendingUp className="w-3 h-3 mr-1" />
+            Real-time data from Numbeo
+          </div>
+        </div>
+      );
+    }
+
+    return destination.budget_estimate;
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-900 via-blue-900 to-indigo-900 flex items-center justify-center p-6">
@@ -125,9 +193,11 @@ const DestinationReveal: React.FC<DestinationRevealProps> = ({
               <CardContent className="p-6">
                 <h3 className="text-2xl font-bold text-white mb-4 flex items-center">
                   <DollarSign className="w-6 h-6 mr-2 text-green-400" />
-                  Budget Estimate
+                  Daily Budget Estimate
                 </h3>
-                <p className="text-white/90 text-lg">{destination.budget_estimate}</p>
+                <div className="text-white/90">
+                  {formatBudgetDisplay()}
+                </div>
               </CardContent>
             </Card>
 
@@ -222,7 +292,7 @@ const DestinationReveal: React.FC<DestinationRevealProps> = ({
         >
           <p className="text-white/60 text-sm">
             <Clock className="w-4 h-4 inline mr-1" />
-            Destination selected based on your traveler preferences
+            Budget estimates updated with real-time data • Destination selected based on your travel preferences
           </p>
         </motion.div>
       </div>
