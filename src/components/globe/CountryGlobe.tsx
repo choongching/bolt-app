@@ -86,11 +86,6 @@ const CountryGlobe: React.FC<CountryGlobeProps> = ({
             });
           }
         }, 500);
-        
-        // Start spinning if needed
-        if (isSpinning) {
-          startSpinning();
-        }
       } catch (error) {
         console.error('Error setting up map:', error);
         setMapError('Map setup failed.');
@@ -132,7 +127,7 @@ const CountryGlobe: React.FC<CountryGlobeProps> = ({
     }
   }, [availableCountries, isValidMapboxToken]);
 
-  // Handle spinning animation - FIXED: Properly stop spinning when isSpinning becomes false
+  // Handle spinning animation - Start/stop based on isSpinning prop
   useEffect(() => {
     if (isSpinning) {
       startSpinning();
@@ -141,13 +136,13 @@ const CountryGlobe: React.FC<CountryGlobeProps> = ({
     }
   }, [isSpinning]);
 
-  // Handle target country selection with dramatic zoom - FIXED: Better timing and more dramatic effect
+  // Handle target country selection with dramatic zoom
   useEffect(() => {
     if (targetCountry && map.current && !mapError && !isZooming) {
       // Add a small delay to ensure the pin drop animation completes first
       setTimeout(() => {
         flyToCountry(targetCountry);
-      }, 800); // Increased delay for better synchronization
+      }, 800);
     }
   }, [targetCountry, mapError, isZooming]);
 
@@ -249,7 +244,7 @@ const CountryGlobe: React.FC<CountryGlobeProps> = ({
 
     function spinGlobe() {
       if (!map.current || !isSpinning) {
-        // FIXED: Stop spinning when isSpinning becomes false
+        // Stop spinning when isSpinning becomes false
         if (spinningRef.current) {
           cancelAnimationFrame(spinningRef.current);
           spinningRef.current = null;
@@ -314,7 +309,7 @@ const CountryGlobe: React.FC<CountryGlobeProps> = ({
         .setLngLat([country.coordinates.lng, country.coordinates.lat])
         .addTo(map.current);
 
-      // FIXED: Even more dramatic zoom with perfect timing
+      // Dramatic zoom with perfect timing
       map.current.flyTo({
         center: [country.coordinates.lng, country.coordinates.lat],
         zoom: 14, // Much closer zoom for dramatic effect
