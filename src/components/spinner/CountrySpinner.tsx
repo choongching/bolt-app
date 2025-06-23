@@ -68,7 +68,7 @@ const CountrySpinner: React.FC<CountrySpinnerProps> = ({
     updateAvailableCountries({ travelStyle });
   }, [travelStyle, updateAvailableCountries]);
 
-  // Handle spin button click - FIXED: Improved timing and flow
+  // Handle spin button click - FIXED: Keep globe visible throughout the entire process
   const handleSpin = async () => {
     // Phase 1: Show globe fading in
     setSpinPhase('globe-fade-in');
@@ -88,19 +88,20 @@ const CountrySpinner: React.FC<CountrySpinnerProps> = ({
           setSelectedCountry(result.country);
           setSpinPhase('pin-drop');
           
-          // Phase 4: Zoom in effect
+          // Phase 4: Zoom in effect - KEEP GLOBE VISIBLE
           setTimeout(() => {
             setSpinPhase('zooming');
             
-            // Phase 5: Show "Destination Found!" message
+            // Phase 5: Show "Destination Found!" message - KEEP GLOBE VISIBLE
             setTimeout(() => {
               setSpinPhase('destination-found');
               
-              // Phase 6: FIXED - Transition to reveal after showing destination found
+              // Phase 6: FIXED - Transition to reveal while keeping globe visible
               setTimeout(() => {
+                // Don't hide the globe here - let the reveal component handle it
                 onCountrySelected(result.country);
-              }, 2000); // Show "Destination Found!" for 2 seconds
-            }, 2000); // Zoom effect duration
+              }, 3000); // Show "Destination Found!" for 3 seconds
+            }, 3000); // Zoom effect duration - increased for better effect
           }, 1000); // Pin drop duration
         } else {
           // If no country was selected, reset to idle
@@ -162,7 +163,7 @@ const CountrySpinner: React.FC<CountrySpinnerProps> = ({
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-indigo-900 via-purple-900 to-black relative overflow-hidden">
-      {/* 3D Globe Background - Shows during spinning phases */}
+      {/* 3D Globe Background - FIXED: Shows during all spinning phases and stays visible */}
       <AnimatePresence>
         {showGlobe && (
           <motion.div
@@ -172,7 +173,7 @@ const CountrySpinner: React.FC<CountrySpinnerProps> = ({
               scale: 1, 
               z: 0 
             }}
-            exit={{ opacity: 0, scale: 1.2 }}
+            // REMOVED exit animation - let the globe stay visible
             transition={{ duration: 1, ease: "easeOut" }}
             className="absolute inset-0 z-0"
           >
@@ -512,7 +513,7 @@ const CountrySpinner: React.FC<CountrySpinnerProps> = ({
             </motion.div>
           )}
 
-          {/* FIXED: Added the "Destination Found!" phase */}
+          {/* FIXED: "Destination Found!" phase with globe still visible in background */}
           {spinPhase === 'destination-found' && selectedCountry && (
             <motion.div
               key="destination-found"
@@ -522,7 +523,7 @@ const CountrySpinner: React.FC<CountrySpinnerProps> = ({
               transition={{ duration: 0.8 }}
               className="text-center"
             >
-              <Card className="bg-black/30 backdrop-blur-sm border-white/20 p-8">
+              <Card className="bg-black/40 backdrop-blur-sm border-white/20 p-8">
                 <CardContent className="text-center space-y-6">
                   <motion.div
                     initial={{ scale: 0, rotate: -180 }}

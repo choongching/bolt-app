@@ -141,13 +141,13 @@ const CountryGlobe: React.FC<CountryGlobeProps> = ({
     }
   }, [isSpinning]);
 
-  // Handle target country selection with dramatic zoom - FIXED: Better timing
+  // Handle target country selection with dramatic zoom - FIXED: Better timing and more dramatic effect
   useEffect(() => {
     if (targetCountry && map.current && !mapError && !isZooming) {
       // Add a small delay to ensure the pin drop animation completes first
       setTimeout(() => {
         flyToCountry(targetCountry);
-      }, 500);
+      }, 800); // Increased delay for better synchronization
     }
   }, [targetCountry, mapError, isZooming]);
 
@@ -300,12 +300,12 @@ const CountryGlobe: React.FC<CountryGlobeProps> = ({
       // First, add a special marker for the selected country
       const selectedMarkerElement = document.createElement('div');
       selectedMarkerElement.style.cssText = `
-        width: 32px;
-        height: 32px;
+        width: 40px;
+        height: 40px;
         background: #ef4444;
-        border: 4px solid white;
+        border: 6px solid white;
         border-radius: 50%;
-        box-shadow: 0 6px 20px rgba(239, 68, 68, 0.8);
+        box-shadow: 0 8px 30px rgba(239, 68, 68, 0.8);
         animation: selectedCountryPulse 1s infinite;
         z-index: 1000;
       `;
@@ -314,17 +314,23 @@ const CountryGlobe: React.FC<CountryGlobeProps> = ({
         .setLngLat([country.coordinates.lng, country.coordinates.lat])
         .addTo(map.current);
 
-      // FIXED: More dramatic zoom with better timing
+      // FIXED: Even more dramatic zoom with perfect timing
       map.current.flyTo({
         center: [country.coordinates.lng, country.coordinates.lat],
-        zoom: 10, // Even closer zoom for more dramatic effect
-        pitch: 65, // More dramatic angle
+        zoom: 14, // Much closer zoom for dramatic effect
+        pitch: 70, // Very dramatic angle
         bearing: 0,
-        duration: 4000, // Longer duration for more dramatic effect
+        duration: 5000, // Longer duration for more dramatic effect
         essential: true,
         easing: (t) => {
-          // Custom easing for very dramatic effect
-          return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+          // Custom easing for very dramatic effect - slow start, fast middle, slow end
+          if (t < 0.3) {
+            return 2 * t * t;
+          } else if (t < 0.7) {
+            return 1 - Math.pow(-2 * t + 2, 3) / 2;
+          } else {
+            return 1 - Math.pow(-2 * t + 2, 2) / 2;
+          }
         }
       });
 
@@ -332,7 +338,7 @@ const CountryGlobe: React.FC<CountryGlobeProps> = ({
       setTimeout(() => {
         selectedMarker.remove();
         setIsZooming(false);
-      }, 4000);
+      }, 5000);
 
     } catch (error) {
       console.error('Error flying to country:', error);
@@ -381,8 +387,8 @@ const CountryGlobe: React.FC<CountryGlobeProps> = ({
             transform: scale(1);
           }
           50% { 
-            box-shadow: 0 0 0 20px rgba(239, 68, 68, 0);
-            transform: scale(1.3);
+            box-shadow: 0 0 0 25px rgba(239, 68, 68, 0);
+            transform: scale(1.4);
           }
           100% { 
             box-shadow: 0 0 0 0 rgba(239, 68, 68, 0);
