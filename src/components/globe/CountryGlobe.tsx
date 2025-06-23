@@ -27,6 +27,7 @@ const CountryGlobe: React.FC<CountryGlobeProps> = ({
   const spinningRef = useRef<number | null>(null);
   const userInteractingRef = useRef(false);
   const [isZooming, setIsZooming] = useState(false);
+  const [mapReady, setMapReady] = useState(false);
 
   // Validate Mapbox token
   const isValidMapboxToken = MAPBOX_TOKEN && 
@@ -86,6 +87,9 @@ const CountryGlobe: React.FC<CountryGlobeProps> = ({
             });
           }
         }, 500);
+
+        // Mark map as ready
+        setMapReady(true);
       } catch (error) {
         console.error('Error setting up map:', error);
         setMapError('Map setup failed.');
@@ -121,30 +125,32 @@ const CountryGlobe: React.FC<CountryGlobeProps> = ({
 
   // Update markers when available countries change
   useEffect(() => {
-    if (map.current && isValidMapboxToken) {
+    if (map.current && isValidMapboxToken && mapReady) {
       clearMarkers();
       addCountryMarkers();
     }
-  }, [availableCountries, isValidMapboxToken]);
+  }, [availableCountries, isValidMapboxToken, mapReady]);
 
   // Handle spinning animation - Start/stop based on isSpinning prop
   useEffect(() => {
+    if (!mapReady) return;
+
     if (isSpinning) {
       startSpinning();
     } else {
       stopSpinning();
     }
-  }, [isSpinning]);
+  }, [isSpinning, mapReady]);
 
   // Handle target country selection with dramatic zoom
   useEffect(() => {
-    if (targetCountry && map.current && !mapError && !isZooming) {
-      // Add a small delay to ensure the pin drop animation completes first
+    if (targetCountry && map.current && !mapError && !isZooming && mapReady) {
+      // Add a small delay to ensure the spinning has completely stopped
       setTimeout(() => {
         flyToCountry(targetCountry);
-      }, 800);
+      }, 500);
     }
-  }, [targetCountry, mapError, isZooming]);
+  }, [targetCountry, mapError, isZooming, mapReady]);
 
   const clearMarkers = () => {
     markers.current.forEach(marker => marker.remove());
@@ -152,7 +158,7 @@ const CountryGlobe: React.FC<CountryGlobeProps> = ({
   };
 
   const addCountryMarkers = () => {
-    if (!map.current) return;
+    if (!map.current || !mapReady) return;
 
     try {
       availableCountries.forEach((country) => {
@@ -240,7 +246,7 @@ const CountryGlobe: React.FC<CountryGlobeProps> = ({
   };
 
   const startSpinning = () => {
-    if (!map.current || spinningRef.current) return; // Prevent multiple spinning animations
+    if (!map.current || spinningRef.current || !mapReady) return; // Prevent multiple spinning animations
 
     function spinGlobe() {
       if (!map.current || !isSpinning) {
@@ -284,56 +290,73 @@ const CountryGlobe: React.FC<CountryGlobeProps> = ({
   };
 
   const flyToCountry = (country: Country) => {
-    if (!map.current || isZooming) return;
+    if (!map.current || isZooming || !mapReady) return;
 
+    console.log('Starting flyTo animation for:', country.name);
     setIsZooming(true);
 
     try {
-      // Stop any ongoing spinning
+      // Stop any ongoing spinning first
       stopSpinning();
 
-      // First, add a special marker for the selected country
-      const selectedMarkerElement = document.createElement('div');
-      selectedMarkerElement.style.cssText = `
-        width: 40px;
-        height: 40px;
-        background: #ef4444;
-        border: 6px solid white;
-        border-radius: 50%;
-        box-shadow: 0 8px 30px rgba(239, 68, 68, 0.8);
-        animation: selectedCountryPulse 1s infinite;
-        z-index: 1000;
-      `;
+      // Ensure we're not in a spinning state
+      if (spinningRef.current) {
+        cancelAnimationFrame(spinningRef.current);
+        spinningRef.current = null;
+      }
 
-      const selectedMarker = new mapboxgl.Marker(selectedMarkerElement)
-        .setLngLat([country.coordinates.lng, country.coordinates.lat])
-        .addTo(map.current);
-
-      // Dramatic zoom with perfect timing
-      map.current.flyTo({
-        center: [country.coordinates.lng, country.coordinates.lat],
-        zoom: 14, // Much closer zoom for dramatic effect
-        pitch: 70, // Very dramatic angle
-        bearing: 0,
-        duration: 5000, // Longer duration for more dramatic effect
-        essential: true,
-        easing: (t) => {
-          // Custom easing for very dramatic effect - slow start, fast middle, slow end
-          if (t < 0.3) {
-            return 2 * t * t;
-          } else if (t < 0.7) {
-            return 1 - Math.pow(-2 * t + 2, 3) / 2;
-          } else {
-            return 1 - Math.pow(-2 * t + 2, 2) / 2;
-          }
-        }
-      });
-
-      // After zoom completes, clean up
+      // Wait a moment for any ongoing animations to settle
       setTimeout(() => {
-        selectedMarker.remove();
-        setIsZooming(false);
-      }, 5000);
+        if (!map.current) {
+          setIsZooming(false);
+          return;
+        }
+
+        // First, add a special marker for the selected country
+        const selectedMarkerElement = document.createElement('div');
+        selectedMarkerElement.style.cssText = `
+          width: 40px;
+          height: 40px;
+          background: #ef4444;
+          border: 6px solid white;
+          border-radius: 50%;
+          box-shadow: 0 8px 30px rgba(239, 68, 68, 0.8);
+          animation: selectedCountryPulse 1s infinite;
+          z-index: 1000;
+        `;
+
+        const selectedMarker = new mapboxgl.Marker(selectedMarkerElement)
+          .setLngLat([country.coordinates.lng, country.coordinates.lat])
+          .addTo(map.current!);
+
+        // Dramatic zoom with perfect timing
+        map.current!.flyTo({
+          center: [country.coordinates.lng, country.coordinates.lat],
+          zoom: 14, // Much closer zoom for dramatic effect
+          pitch: 70, // Very dramatic angle
+          bearing: 0,
+          duration: 4000, // 4 second duration for dramatic effect
+          essential: true,
+          easing: (t) => {
+            // Custom easing for very dramatic effect - slow start, fast middle, slow end
+            if (t < 0.3) {
+              return 2 * t * t;
+            } else if (t < 0.7) {
+              return 1 - Math.pow(-2 * t + 2, 3) / 2;
+            } else {
+              return 1 - Math.pow(-2 * t + 2, 2) / 2;
+            }
+          }
+        });
+
+        // After zoom completes, clean up
+        setTimeout(() => {
+          selectedMarker.remove();
+          setIsZooming(false);
+          console.log('Zoom animation completed for:', country.name);
+        }, 4000);
+
+      }, 200); // Small delay to ensure spinning has stopped
 
     } catch (error) {
       console.error('Error flying to country:', error);
@@ -402,15 +425,27 @@ const CountryGlobe: React.FC<CountryGlobeProps> = ({
         }
       `}</style>
 
-      {/* Country count indicator */}
-      <div className="absolute top-8 right-8 text-white/80 text-sm z-10">
-        <div className="bg-black/30 backdrop-blur-sm rounded-lg p-4 border border-white/20">
-          <div className="text-center">
-            <div className="text-2xl font-bold">{availableCountries.length}</div>
-            <div className="text-xs">Countries Available</div>
+      {/* Loading indicator when map is not ready */}
+      {!mapReady && (
+        <div className="absolute inset-0 flex items-center justify-center z-10">
+          <div className="text-center text-white">
+            <div className="w-16 h-16 border-4 border-white border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+            <p className="text-lg">Loading interactive globe...</p>
           </div>
         </div>
-      </div>
+      )}
+
+      {/* Country count indicator */}
+      {mapReady && (
+        <div className="absolute top-8 right-8 text-white/80 text-sm z-10">
+          <div className="bg-black/30 backdrop-blur-sm rounded-lg p-4 border border-white/20">
+            <div className="text-center">
+              <div className="text-2xl font-bold">{availableCountries.length}</div>
+              <div className="text-xs">Countries Available</div>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Mapbox attribution */}
       <div className="absolute bottom-4 right-4 text-white/40 text-xs z-10">

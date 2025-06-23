@@ -59,7 +59,7 @@ const CountrySpinner: React.FC<CountrySpinnerProps> = ({
     if (autoStart && !isSpinning && spinPhase === 'idle') {
       setTimeout(() => {
         handleSpin();
-      }, 1000); // Small delay to let the globe render
+      }, 1500); // Slightly longer delay to ensure globe is fully loaded
     }
   }, [autoStart]);
 
@@ -71,34 +71,43 @@ const CountrySpinner: React.FC<CountrySpinnerProps> = ({
 
   // Handle spin button click - Globe stays visible throughout
   const handleSpin = async () => {
+    console.log('Starting spin process...');
+    
     // Phase 1: Start spinning immediately
     setSpinPhase('spinning');
 
     // Phase 2: Select country after spinning duration
     setTimeout(async () => {
+      console.log('Spinning phase complete, selecting country...');
+      
       try {
         const result = await spinCountry(filter);
         
         if (result) {
+          console.log('Country selected:', result.country.name);
           setSelectedCountry(result.country);
           setSpinPhase('pin-drop');
           
-          // Phase 3: Zoom in effect
+          // Phase 3: Pin drop effect
           setTimeout(() => {
+            console.log('Pin drop phase complete, starting zoom...');
             setSpinPhase('zooming');
             
-            // Phase 4: Show "Destination Found!" message
+            // Phase 4: Show "Destination Found!" message after zoom
             setTimeout(() => {
+              console.log('Zoom phase complete, showing destination found...');
               setSpinPhase('destination-found');
               
-              // Phase 5: Transition to reveal
+              // Phase 5: Transition to reveal after showing message
               setTimeout(() => {
+                console.log('Transitioning to destination reveal...');
                 onCountrySelected(result.country);
               }, 3000); // Show "Destination Found!" for 3 seconds
-            }, 3000); // Zoom effect duration
-          }, 1000); // Pin drop duration
+            }, 4000); // Wait for zoom animation to complete (4 seconds)
+          }, 1500); // Pin drop duration
         } else {
           // If no country was selected, reset to idle
+          console.log('No country selected, resetting to idle');
           setSpinPhase('idle');
           setSelectedCountry(null);
         }
@@ -161,7 +170,7 @@ const CountrySpinner: React.FC<CountrySpinnerProps> = ({
           onCountrySelected={() => {}} // Disabled during spinning
           availableCountries={availableCountries}
           isSpinning={spinPhase === 'spinning'}
-          targetCountry={selectedCountry}
+          targetCountry={spinPhase === 'zooming' ? selectedCountry : null}
         />
       </div>
 
