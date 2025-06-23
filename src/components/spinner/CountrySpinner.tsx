@@ -15,11 +15,13 @@ import {
   Heart,
   Users,
   User,
-  ArrowLeft
+  ArrowLeft,
+  Loader2
 } from 'lucide-react';
 import { Country, CountryFilter, TravelStyle } from '@/types/country';
 import { useCountrySpin } from '@/hooks/useCountrySpin';
 import { getAllAdventureLevels, getAllRegions } from '@/data/countries';
+import CountryGlobe from '@/components/globe/CountryGlobe';
 
 interface CountrySpinnerProps {
   onCountrySelected: (country: Country) => void;
@@ -41,7 +43,9 @@ const CountrySpinner: React.FC<CountrySpinnerProps> = ({ onCountrySelected, onBa
 
   const [filter, setFilter] = useState<CountryFilter>({ travelStyle });
   const [showFilters, setShowFilters] = useState(false);
-  const [spinPhase, setSpinPhase] = useState<'idle' | 'spinning' | 'selecting' | 'complete'>('idle');
+  const [spinPhase, setSpinPhase] = useState<'idle' | 'globe-fade-in' | 'spinning' | 'pin-drop' | 'zooming' | 'complete'>('idle');
+  const [selectedCountry, setSelectedCountry] = useState<Country | null>(null);
+  const [showGlobe, setShowGlobe] = useState(false);
 
   // Update filter when travel style changes
   useEffect(() => {
@@ -49,23 +53,39 @@ const CountrySpinner: React.FC<CountrySpinnerProps> = ({ onCountrySelected, onBa
     updateAvailableCountries({ travelStyle });
   }, [travelStyle, updateAvailableCountries]);
 
-  // Handle spin button click
+  // Handle spin button click - start the sequence
   const handleSpin = async () => {
-    setSpinPhase('spinning');
+    // Phase 1: Show globe fading in from foreground
+    setSpinPhase('globe-fade-in');
+    setShowGlobe(true);
     
-    // Start spinning animation
-    setTimeout(() => setSpinPhase('selecting'), 2000);
-    
-    const result = await spinCountry(filter);
-    
-    if (result) {
-      setSpinPhase('complete');
-      setTimeout(() => {
-        onCountrySelected(result.country);
-      }, 1500);
-    } else {
-      setSpinPhase('idle');
-    }
+    // Phase 2: Start spinning after globe appears
+    setTimeout(() => {
+      setSpinPhase('spinning');
+    }, 1000);
+
+    // Phase 3: Select country and show pin drop
+    setTimeout(async () => {
+      const result = await spinCountry(filter);
+      
+      if (result) {
+        setSelectedCountry(result.country);
+        setSpinPhase('pin-drop');
+        
+        // Phase 4: Zoom in effect
+        setTimeout(() => {
+          setSpinPhase('zooming');
+          
+          // Phase 5: Complete and transition to reveal
+          setTimeout(() => {
+            setSpinPhase('complete');
+            setTimeout(() => {
+              onCountrySelected(result.country);
+            }, 1500);
+          }, 3000); // 3 seconds for zoom animation
+        }, 1500); // 1.5 seconds for pin drop
+      }
+    }, 4000); // 4 seconds of spinning
   };
 
   // Handle filter changes
@@ -113,28 +133,54 @@ const CountrySpinner: React.FC<CountrySpinnerProps> = ({ onCountrySelected, onBa
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-indigo-900 via-purple-900 to-black relative overflow-hidden">
-      {/* Animated background particles */}
-      <div className="absolute inset-0">
-        {[...Array(20)].map((_, i) => (
+      {/* 3D Globe Background - Shows during spinning phases */}
+      <AnimatePresence>
+        {showGlobe && (
           <motion.div
-            key={i}
-            className="absolute w-1 h-1 bg-white/20 rounded-full"
-            initial={{ 
-              x: Math.random() * (typeof window !== 'undefined' ? window.innerWidth : 1000),
-              y: Math.random() * (typeof window !== 'undefined' ? window.innerHeight : 1000),
+            initial={{ opacity: 0, scale: 0.8, z: -100 }}
+            animate={{ 
+              opacity: spinPhase === 'globe-fade-in' ? 0.7 : 1, 
+              scale: 1, 
+              z: 0 
             }}
-            animate={{
-              x: Math.random() * (typeof window !== 'undefined' ? window.innerWidth : 1000),
-              y: Math.random() * (typeof window !== 'undefined' ? window.innerHeight : 1000),
-            }}
-            transition={{
-              duration: Math.random() * 20 + 15,
-              repeat: Infinity,
-              ease: "linear"
-            }}
-          />
-        ))}
-      </div>
+            exit={{ opacity: 0, scale: 1.2 }}
+            transition={{ duration: 1, ease: "easeOut" }}
+            className="absolute inset-0 z-0"
+          >
+            <CountryGlobe
+              onCountrySelected={() => {}} // Disabled during spinning
+              availableCountries={availableCountries}
+              isSpinning={spinPhase === 'spinning'}
+              targetCountry={selectedCountry}
+            />
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Animated background particles - only show when globe is not visible */}
+      {!showGlobe && (
+        <div className="absolute inset-0">
+          {[...Array(20)].map((_, i) => (
+            <motion.div
+              key={i}
+              className="absolute w-1 h-1 bg-white/20 rounded-full"
+              initial={{ 
+                x: Math.random() * (typeof window !== 'undefined' ? window.innerWidth : 1000),
+                y: Math.random() * (typeof window !== 'undefined' ? window.innerHeight : 1000),
+              }}
+              animate={{
+                x: Math.random() * (typeof window !== 'undefined' ? window.innerWidth : 1000),
+                y: Math.random() * (typeof window !== 'undefined' ? window.innerHeight : 1000),
+              }}
+              transition={{
+                duration: Math.random() * 20 + 15,
+                repeat: Infinity,
+                ease: "linear"
+              }}
+            />
+          ))}
+        </div>
+      )}
 
       {/* Header */}
       <div className="absolute top-6 left-6 right-6 z-20">
@@ -143,6 +189,7 @@ const CountrySpinner: React.FC<CountrySpinnerProps> = ({ onCountrySelected, onBa
             onClick={onBack}
             variant="outline"
             className="bg-white/10 border-white/30 text-white hover:bg-white/20 backdrop-blur-sm"
+            disabled={spinPhase !== 'idle'}
           >
             <ArrowLeft className="w-4 h-4 mr-2" />
             Back
@@ -162,6 +209,7 @@ const CountrySpinner: React.FC<CountrySpinnerProps> = ({ onCountrySelected, onBa
             onClick={() => setShowFilters(!showFilters)}
             variant="outline"
             className="bg-white/10 border-white/30 text-white hover:bg-white/20 backdrop-blur-sm"
+            disabled={spinPhase !== 'idle'}
           >
             <Filter className="w-4 h-4 mr-2" />
             Filters
@@ -171,7 +219,7 @@ const CountrySpinner: React.FC<CountrySpinnerProps> = ({ onCountrySelected, onBa
 
       {/* Filters Panel */}
       <AnimatePresence>
-        {showFilters && (
+        {showFilters && spinPhase === 'idle' && (
           <motion.div
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -228,7 +276,7 @@ const CountrySpinner: React.FC<CountrySpinnerProps> = ({ onCountrySelected, onBa
         )}
       </AnimatePresence>
 
-      {/* Center Spin Control */}
+      {/* Center Spin Control and Status Messages */}
       <div className="absolute inset-0 flex items-center justify-center z-10">
         <AnimatePresence mode="wait">
           {spinPhase === 'idle' && (
@@ -285,6 +333,34 @@ const CountrySpinner: React.FC<CountrySpinnerProps> = ({ onCountrySelected, onBa
             </motion.div>
           )}
 
+          {spinPhase === 'globe-fade-in' && (
+            <motion.div
+              key="globe-fade-in"
+              initial={{ opacity: 0, scale: 0.8 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.8 }}
+              className="text-center"
+            >
+              <Card className="bg-white/10 backdrop-blur-sm border-white/20 p-8">
+                <CardContent className="text-center space-y-6">
+                  <motion.div
+                    animate={{ scale: [1, 1.1, 1] }}
+                    transition={{ duration: 1, repeat: Infinity }}
+                  >
+                    <Globe className="w-20 h-20 text-blue-400 mx-auto" />
+                  </motion.div>
+                  
+                  <div>
+                    <h2 className="text-3xl font-bold text-white mb-2">Focusing the Globe...</h2>
+                    <p className="text-white/80">
+                      Preparing your {travelStyle.toLowerCase()} adventure
+                    </p>
+                  </div>
+                </CardContent>
+              </Card>
+            </motion.div>
+          )}
+
           {spinPhase === 'spinning' && (
             <motion.div
               key="spinning"
@@ -303,19 +379,24 @@ const CountrySpinner: React.FC<CountrySpinnerProps> = ({ onCountrySelected, onBa
                   </motion.div>
                   
                   <div>
-                    <h2 className="text-3xl font-bold text-white mb-2">Spinning the Globe...</h2>
+                    <h2 className="text-3xl font-bold text-white mb-2">Spinning...</h2>
                     <p className="text-white/80">
                       Finding your perfect {travelStyle.toLowerCase()} destination
                     </p>
+                    <div className="mt-4 flex items-center justify-center space-x-2">
+                      <div className="w-2 h-2 bg-yellow-400 rounded-full animate-bounce" style={{ animationDelay: '0ms' }} />
+                      <div className="w-2 h-2 bg-yellow-400 rounded-full animate-bounce" style={{ animationDelay: '150ms' }} />
+                      <div className="w-2 h-2 bg-yellow-400 rounded-full animate-bounce" style={{ animationDelay: '300ms' }} />
+                    </div>
                   </div>
                 </CardContent>
               </Card>
             </motion.div>
           )}
 
-          {spinPhase === 'selecting' && (
+          {spinPhase === 'pin-drop' && selectedCountry && (
             <motion.div
-              key="selecting"
+              key="pin-drop"
               initial={{ opacity: 0, scale: 0.8 }}
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.8 }}
@@ -324,16 +405,25 @@ const CountrySpinner: React.FC<CountrySpinnerProps> = ({ onCountrySelected, onBa
               <Card className="bg-white/10 backdrop-blur-sm border-white/20 p-8">
                 <CardContent className="text-center space-y-6">
                   <motion.div
-                    animate={{ scale: [1, 1.1, 1] }}
-                    transition={{ duration: 0.5, repeat: Infinity }}
+                    initial={{ y: -100, scale: 0 }}
+                    animate={{ y: 0, scale: 1 }}
+                    transition={{ 
+                      type: "spring", 
+                      stiffness: 200, 
+                      damping: 10,
+                      duration: 1
+                    }}
                   >
                     <MapPin className="w-20 h-20 text-red-500 mx-auto" />
                   </motion.div>
                   
                   <div>
-                    <h2 className="text-3xl font-bold text-white mb-2">Selecting Destination...</h2>
+                    <h2 className="text-3xl font-bold text-white mb-2">Pin Dropped!</h2>
+                    <h3 className="text-2xl font-semibold text-yellow-400 mb-2">
+                      {selectedCountry.name}
+                    </h3>
                     <p className="text-white/80">
-                      Pinpointing your {travelStyle.toLowerCase()} adventure
+                      Zooming in on your {travelStyle.toLowerCase()} destination...
                     </p>
                   </div>
                 </CardContent>
@@ -341,7 +431,57 @@ const CountrySpinner: React.FC<CountrySpinnerProps> = ({ onCountrySelected, onBa
             </motion.div>
           )}
 
-          {spinPhase === 'complete' && currentCountry && (
+          {spinPhase === 'zooming' && selectedCountry && (
+            <motion.div
+              key="zooming"
+              initial={{ opacity: 0, scale: 0.8 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.8 }}
+              className="text-center"
+            >
+              <Card className="bg-white/10 backdrop-blur-sm border-white/20 p-8">
+                <CardContent className="text-center space-y-6">
+                  <motion.div
+                    animate={{ 
+                      scale: [1, 1.5, 1],
+                      rotate: [0, 180, 360]
+                    }}
+                    transition={{ 
+                      duration: 2, 
+                      repeat: Infinity,
+                      ease: "easeInOut"
+                    }}
+                  >
+                    <Compass className="w-20 h-20 text-blue-400 mx-auto" />
+                  </motion.div>
+                  
+                  <div>
+                    <h2 className="text-3xl font-bold text-white mb-2">Zooming In...</h2>
+                    <h3 className="text-2xl font-semibold text-yellow-400 mb-2">
+                      {selectedCountry.name}
+                    </h3>
+                    <p className="text-white/80 mb-4">
+                      {selectedCountry.tagline}
+                    </p>
+                    
+                    <div className="flex justify-center space-x-2">
+                      <Badge variant="secondary" className="bg-white/20 text-white">
+                        {selectedCountry.adventureLevel}
+                      </Badge>
+                      <Badge variant="secondary" className="bg-white/20 text-white">
+                        {selectedCountry.region}
+                      </Badge>
+                      <Badge variant="secondary" className={`bg-gradient-to-r ${styleInfo.color} text-white border-0`}>
+                        {travelStyle}
+                      </Badge>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </motion.div>
+          )}
+
+          {spinPhase === 'complete' && selectedCountry && (
             <motion.div
               key="complete"
               initial={{ opacity: 0, scale: 0.8 }}
@@ -362,18 +502,18 @@ const CountrySpinner: React.FC<CountrySpinnerProps> = ({ onCountrySelected, onBa
                   <div>
                     <h2 className="text-3xl font-bold text-white mb-2">{travelStyle} Destination Found!</h2>
                     <h3 className="text-2xl font-semibold text-yellow-400 mb-2">
-                      {currentCountry.name}
+                      {selectedCountry.name}
                     </h3>
                     <p className="text-white/80 mb-4">
-                      {currentCountry.tagline}
+                      {selectedCountry.tagline}
                     </p>
                     
                     <div className="flex justify-center space-x-2 mb-4">
                       <Badge variant="secondary" className="bg-white/20 text-white">
-                        {currentCountry.adventureLevel}
+                        {selectedCountry.adventureLevel}
                       </Badge>
                       <Badge variant="secondary" className="bg-white/20 text-white">
-                        {currentCountry.region}
+                        {selectedCountry.region}
                       </Badge>
                       <Badge variant="secondary" className={`bg-gradient-to-r ${styleInfo.color} text-white border-0`}>
                         {travelStyle}
@@ -391,8 +531,8 @@ const CountrySpinner: React.FC<CountrySpinnerProps> = ({ onCountrySelected, onBa
         </AnimatePresence>
       </div>
 
-      {/* Session Stats */}
-      {sessionStats && (
+      {/* Session Stats - only show when idle */}
+      {sessionStats && spinPhase === 'idle' && (
         <div className="absolute bottom-6 left-6 z-20">
           <Card className="bg-white/10 backdrop-blur-sm border-white/20">
             <CardContent className="p-4">

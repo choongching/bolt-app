@@ -26,6 +26,7 @@ const CountryGlobe: React.FC<CountryGlobeProps> = ({
   const [mapError, setMapError] = useState<string | null>(null);
   const spinningRef = useRef<number | null>(null);
   const userInteractingRef = useRef(false);
+  const [isZooming, setIsZooming] = useState(false);
 
   // Validate Mapbox token
   const isValidMapboxToken = MAPBOX_TOKEN && 
@@ -38,12 +39,12 @@ const CountryGlobe: React.FC<CountryGlobeProps> = ({
     // Set Mapbox access token
     mapboxgl.accessToken = MAPBOX_TOKEN;
 
-    // Initialize the map with globe projection
+    // Initialize the map with globe projection - start zoomed out
     map.current = new mapboxgl.Map({
       container: mapContainer.current,
       style: 'mapbox://styles/mapbox/satellite-streets-v12',
       projection: 'globe',
-      zoom: 1.5,
+      zoom: 1.2, // Start more zoomed out
       center: [0, 20],
       pitch: 0,
       bearing: 0,
@@ -69,11 +70,22 @@ const CountryGlobe: React.FC<CountryGlobeProps> = ({
           'high-color': 'rgb(36, 92, 223)',
           'horizon-blend': 0.02,
           'space-color': 'rgb(11, 11, 25)',
-          'star-intensity': 0.6,
+          'star-intensity': 0.8,
         });
 
         // Add country markers
         addCountryMarkers();
+        
+        // Start with gentle zoom in
+        setTimeout(() => {
+          if (map.current) {
+            map.current.easeTo({
+              zoom: 1.8,
+              duration: 2000,
+              easing: (t) => t * (2 - t)
+            });
+          }
+        }, 500);
         
         // Start spinning if needed
         if (isSpinning) {
@@ -129,12 +141,12 @@ const CountryGlobe: React.FC<CountryGlobeProps> = ({
     }
   }, [isSpinning]);
 
-  // Handle target country selection
+  // Handle target country selection with dramatic zoom
   useEffect(() => {
-    if (targetCountry && map.current && !mapError) {
+    if (targetCountry && map.current && !mapError && !isZooming) {
       flyToCountry(targetCountry);
     }
-  }, [targetCountry, mapError]);
+  }, [targetCountry, mapError, isZooming]);
 
   const clearMarkers = () => {
     markers.current.forEach(marker => marker.remove());
@@ -159,8 +171,8 @@ const CountryGlobe: React.FC<CountryGlobeProps> = ({
         }
 
         markerElement.style.cssText = `
-          width: 18px;
-          height: 18px;
+          width: 16px;
+          height: 16px;
           background: ${markerColor};
           border: 2px solid white;
           border-radius: 50%;
@@ -212,9 +224,6 @@ const CountryGlobe: React.FC<CountryGlobeProps> = ({
                 ${country.region}
               </span>
             </div>
-            <div style="margin-top: 6px; font-size: 10px; opacity: 0.8;">
-              Click to select this destination
-            </div>
           </div>
         `);
 
@@ -241,7 +250,7 @@ const CountryGlobe: React.FC<CountryGlobeProps> = ({
       try {
         const zoom = map.current.getZoom();
         if (!userInteractingRef.current && zoom < 5) {
-          const distancePerSecond = 360 / 60; // Complete rotation in 1 minute
+          const distancePerSecond = 360 / 90; // Complete rotation in 1.5 minutes
           const center = map.current.getCenter();
           center.lng -= distancePerSecond;
           
@@ -269,20 +278,50 @@ const CountryGlobe: React.FC<CountryGlobeProps> = ({
   };
 
   const flyToCountry = (country: Country) => {
-    if (!map.current) return;
+    if (!map.current || isZooming) return;
+
+    setIsZooming(true);
 
     try {
+      // First, add a special marker for the selected country
+      const selectedMarkerElement = document.createElement('div');
+      selectedMarkerElement.style.cssText = `
+        width: 24px;
+        height: 24px;
+        background: #ef4444;
+        border: 3px solid white;
+        border-radius: 50%;
+        box-shadow: 0 4px 16px rgba(239, 68, 68, 0.6);
+        animation: selectedCountryPulse 1s infinite;
+      `;
+
+      const selectedMarker = new mapboxgl.Marker(selectedMarkerElement)
+        .setLngLat([country.coordinates.lng, country.coordinates.lat])
+        .addTo(map.current);
+
+      // Dramatic zoom in with multiple stages
       map.current.flyTo({
         center: [country.coordinates.lng, country.coordinates.lat],
-        zoom: 6,
-        pitch: 45,
+        zoom: 8, // Much closer zoom
+        pitch: 60, // Dramatic angle
         bearing: 0,
         duration: 3000,
         essential: true,
-        easing: (t) => t < 0.5 ? 2 * t * t : -1 + (4 - 2 * t) * t
+        easing: (t) => {
+          // Custom easing for dramatic effect
+          return t < 0.5 ? 2 * t * t : -1 + (4 - 2 * t) * t;
+        }
       });
+
+      // After zoom completes, clean up
+      setTimeout(() => {
+        selectedMarker.remove();
+        setIsZooming(false);
+      }, 3000);
+
     } catch (error) {
       console.error('Error flying to country:', error);
+      setIsZooming(false);
     }
   };
 
@@ -313,12 +352,27 @@ const CountryGlobe: React.FC<CountryGlobeProps> = ({
         }}
       />
       
-      {/* Custom CSS for markers and popups */}
+      {/* Custom CSS for markers and animations */}
       <style jsx>{`
         @keyframes countryPulse {
           0% { box-shadow: 0 0 0 0 rgba(139, 92, 246, 0.7); }
           70% { box-shadow: 0 0 0 8px rgba(139, 92, 246, 0); }
           100% { box-shadow: 0 0 0 0 rgba(139, 92, 246, 0); }
+        }
+        
+        @keyframes selectedCountryPulse {
+          0% { 
+            box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.8);
+            transform: scale(1);
+          }
+          50% { 
+            box-shadow: 0 0 0 15px rgba(239, 68, 68, 0);
+            transform: scale(1.2);
+          }
+          100% { 
+            box-shadow: 0 0 0 0 rgba(239, 68, 68, 0);
+            transform: scale(1);
+          }
         }
         
         .mapboxgl-popup-content {
@@ -337,10 +391,14 @@ const CountryGlobe: React.FC<CountryGlobeProps> = ({
         <div className="bg-black/30 backdrop-blur-sm rounded-lg p-4 border border-white/20">
           <div className="flex items-center space-x-2 mb-2">
             <div className={`w-2 h-2 rounded-full animate-pulse ${
-              mapError ? 'bg-red-400' : 'bg-green-400'
+              mapError ? 'bg-red-400' : 
+              isSpinning ? 'bg-yellow-400' :
+              isZooming ? 'bg-blue-400' : 'bg-green-400'
             }`} />
             <span>
-              {mapError ? 'Fallback Mode' : 'Interactive Country Globe'}
+              {mapError ? 'Fallback Mode' : 
+               isSpinning ? 'Globe Spinning' :
+               isZooming ? 'Zooming to Destination' : 'Interactive Country Globe'}
             </span>
           </div>
           {mapError && (
@@ -350,7 +408,7 @@ const CountryGlobe: React.FC<CountryGlobeProps> = ({
             <div>• Red: Romantic destinations</div>
             <div>• Green: Family destinations</div>
             <div>• Purple: Solo destinations</div>
-            <div>• Click markers to select countries</div>
+            {!isSpinning && <div>• Click markers to select countries</div>}
           </div>
         </div>
       </div>
