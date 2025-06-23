@@ -14,22 +14,22 @@ interface WelcomeScreenProps {
 
 const travelStyles = [
   {
+    type: 'Solo' as TravelStyle,
+    title: 'Solo Explorer',
+    color: 'from-purple-500 to-indigo-500',
+    hoverColor: 'from-purple-600 to-indigo-600'
+  },
+  {
     type: 'Romantic' as TravelStyle,
-    title: 'Romantic',
+    title: 'Lovebirds',
     color: 'from-pink-500 to-red-500',
     hoverColor: 'from-pink-600 to-red-600'
   },
   {
     type: 'Family' as TravelStyle,
-    title: 'Family',
+    title: 'Family Squad',
     color: 'from-green-500 to-blue-500',
     hoverColor: 'from-green-600 to-blue-600'
-  },
-  {
-    type: 'Solo' as TravelStyle,
-    title: 'Solo',
-    color: 'from-purple-500 to-indigo-500',
-    hoverColor: 'from-purple-600 to-indigo-600'
   }
 ];
 
@@ -271,7 +271,7 @@ const WelcomeScreen: React.FC<WelcomeScreenProps> = ({ onTravelStyleSelect, isAu
             transition={{ duration: 0.8, delay: 0.3 }}
             className="text-5xl md:text-7xl font-bold text-white mb-6 leading-tight drop-shadow-2xl"
           >
-            Travel
+            Welcome to
             <motion.span
               animate={{ 
                 color: ['#ffffff', '#fbbf24', '#f59e0b', '#ffffff'],
@@ -285,7 +285,7 @@ const WelcomeScreen: React.FC<WelcomeScreenProps> = ({ onTravelStyleSelect, isAu
               transition={{ duration: 3, repeat: Infinity }}
               className="block"
             >
-              Spinner
+              GlobeWander Zap!
             </motion.span>
           </motion.h1>
 
@@ -296,7 +296,7 @@ const WelcomeScreen: React.FC<WelcomeScreenProps> = ({ onTravelStyleSelect, isAu
             transition={{ duration: 0.8, delay: 0.6 }}
             className="text-xl md:text-2xl text-white/95 mb-12 max-w-3xl mx-auto leading-relaxed drop-shadow-lg"
           >
-            Pick your crew: Solo Explorer, Lovebirds, or Family Squad
+            Hit 'Zap into Adventure' and spin the globe wild!
           </motion.p>
 
           {/* Travel Style Selection with enhanced animations */}
@@ -324,7 +324,7 @@ const WelcomeScreen: React.FC<WelcomeScreenProps> = ({ onTravelStyleSelect, isAu
                   boxShadow: "0 20px 40px rgba(0,0,0,0.3)"
                 }}
                 whileTap={{ scale: 0.95 }}
-                className={`relative overflow-hidden rounded-xl bg-gradient-to-r ${style.color} px-8 py-4 shadow-lg transition-all duration-300 border border-white/20 backdrop-blur-sm group min-w-[120px]`}
+                className={`relative overflow-hidden rounded-xl bg-gradient-to-r ${style.color} px-8 py-4 shadow-lg transition-all duration-300 border border-white/20 backdrop-blur-sm group min-w-[140px]`}
                 onClick={() => onTravelStyleSelect(style.type)}
               >
                 {/* Animated background overlay */}
@@ -363,72 +363,15 @@ const WelcomeScreen: React.FC<WelcomeScreenProps> = ({ onTravelStyleSelect, isAu
             ))}
           </motion.div>
 
-          {/* Features with updated copy and enhanced animations */}
-          <motion.div
-            initial={{ opacity: 0, y: 50 }}
+          {/* Updated copy text */}
+          <motion.p
+            initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 1.4 }}
-            className="grid md:grid-cols-3 gap-8 max-w-4xl mx-auto"
+            className="text-lg md:text-xl text-white/90 mb-8 max-w-2xl mx-auto leading-relaxed drop-shadow-lg"
           >
-            {[
-              { 
-                icon: Globe, 
-                title: "Unleash Random Wonders", 
-                desc: "Discover exciting new destinations with every spin!",
-                color: "text-blue-400"
-              },
-              { 
-                icon: Sparkles, 
-                title: "Your Journey, Your Rules", 
-                desc: "Tailored to your unique travel vibe",
-                color: "text-purple-400"
-              },
-              { 
-                icon: Plane, 
-                title: "Adventure Awaits", 
-                desc: "All the info you need, right at your fingertips",
-                color: "text-green-400"
-              }
-            ].map((feature, index) => (
-              <motion.div
-                key={index}
-                initial={{ opacity: 0, y: 30, scale: 0.9 }}
-                animate={{ opacity: 1, y: 0, scale: 1 }}
-                transition={{ 
-                  duration: 0.6, 
-                  delay: 1.6 + index * 0.1,
-                  type: "spring",
-                  stiffness: 150
-                }}
-                whileHover={{ 
-                  scale: 1.05, 
-                  y: -8,
-                  rotateX: 5,
-                  boxShadow: "0 25px 50px rgba(0,0,0,0.3)"
-                }}
-                className="bg-white/10 backdrop-blur-md rounded-2xl p-6 text-center border border-white/20 shadow-xl group cursor-pointer"
-              >
-                <motion.div
-                  whileHover={{ 
-                    scale: 1.2,
-                    rotate: 360
-                  }}
-                  transition={{ duration: 0.6 }}
-                >
-                  <feature.icon className={`w-12 h-12 ${feature.color} mx-auto mb-4 drop-shadow-lg group-hover:drop-shadow-2xl transition-all duration-300`} />
-                </motion.div>
-                <h3 className="text-lg font-semibold text-white mb-2 drop-shadow-lg group-hover:text-yellow-300 transition-colors duration-300">
-                  {feature.title}
-                </h3>
-                <p className="text-white/90 text-sm drop-shadow-lg">
-                  {feature.desc}
-                </p>
-                
-                {/* Subtle glow effect */}
-                <div className="absolute inset-0 bg-gradient-to-t from-white/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-2xl" />
-              </motion.div>
-            ))}
-          </motion.div>
+            Pick your crew: Solo Explorer, Lovebirds, or Family Squad—let's Zap off!
+          </motion.p>
 
           {!isAuthenticated && (
             <motion.p

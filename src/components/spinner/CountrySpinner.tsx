@@ -16,7 +16,8 @@ import {
   Users,
   User,
   ArrowLeft,
-  Loader2
+  Loader2,
+  Zap
 } from 'lucide-react';
 import { Country, CountryFilter, TravelStyle } from '@/types/country';
 import { useCountrySpin } from '@/hooks/useCountrySpin';
@@ -68,7 +69,7 @@ const CountrySpinner: React.FC<CountrySpinnerProps> = ({
     updateAvailableCountries({ travelStyle });
   }, [travelStyle, updateAvailableCountries]);
 
-  // Handle spin button click - FIXED: Keep globe visible throughout the entire process
+  // Handle spin button click - Keep globe visible throughout the entire process
   const handleSpin = async () => {
     // Phase 1: Show globe fading in
     setSpinPhase('globe-fade-in');
@@ -96,7 +97,7 @@ const CountrySpinner: React.FC<CountrySpinnerProps> = ({
             setTimeout(() => {
               setSpinPhase('destination-found');
               
-              // Phase 6: FIXED - Transition to reveal while keeping globe visible
+              // Phase 6: Transition to reveal while keeping globe visible
               setTimeout(() => {
                 // Don't hide the globe here - let the reveal component handle it
                 onCountrySelected(result.country);
@@ -163,7 +164,7 @@ const CountrySpinner: React.FC<CountrySpinnerProps> = ({
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-indigo-900 via-purple-900 to-black relative overflow-hidden">
-      {/* 3D Globe Background - FIXED: Shows during all spinning phases and stays visible */}
+      {/* 3D Globe Background - Shows during all spinning phases and stays visible */}
       <AnimatePresence>
         {showGlobe && (
           <motion.div
@@ -173,7 +174,6 @@ const CountrySpinner: React.FC<CountrySpinnerProps> = ({
               scale: 1, 
               z: 0 
             }}
-            // REMOVED exit animation - let the globe stay visible
             transition={{ duration: 1, ease: "easeOut" }}
             className="absolute inset-0 z-0"
           >
@@ -322,7 +322,15 @@ const CountrySpinner: React.FC<CountrySpinnerProps> = ({
               <Card className="bg-white/10 backdrop-blur-sm border-white/20 p-8">
                 <CardContent className="text-center space-y-6">
                   <div className="relative">
-                    <Globe className="w-20 h-20 text-white mx-auto mb-4" />
+                    <motion.div
+                      animate={{ 
+                        scale: [1, 1.1, 1],
+                        rotate: [0, 5, -5, 0]
+                      }}
+                      transition={{ duration: 2, repeat: Infinity }}
+                    >
+                      <Zap className="w-20 h-20 text-yellow-400 mx-auto mb-4" />
+                    </motion.div>
                     <motion.div
                       animate={{ rotate: 360 }}
                       transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
@@ -333,9 +341,9 @@ const CountrySpinner: React.FC<CountrySpinnerProps> = ({
                   </div>
                   
                   <div>
-                    <h2 className="text-3xl font-bold text-white mb-2">Ready for {travelStyle} Adventure?</h2>
+                    <h2 className="text-3xl font-bold text-white mb-2">Ready to Zap into Adventure?</h2>
                     <p className="text-white/80 mb-6">
-                      Spin the globe to discover your perfect {travelStyle.toLowerCase()} destination
+                      Globe's a-whirl! Feel the Zappy vibes as it spins to your next big thrill!
                     </p>
                     
                     <div className="flex justify-center mb-4">
@@ -351,8 +359,8 @@ const CountrySpinner: React.FC<CountrySpinnerProps> = ({
                     disabled={isSpinning || availableCountries.length === 0}
                     className={`bg-gradient-to-r ${styleInfo.color} hover:opacity-90 text-white font-bold py-4 px-8 rounded-full text-lg shadow-lg transform hover:scale-105 transition-all duration-300`}
                   >
-                    <Globe className="w-5 h-5 mr-2" />
-                    Start the Spin
+                    <Zap className="w-5 h-5 mr-2" />
+                    Zap into Adventure
                   </Button>
 
                   {availableCountries.length === 0 && (
@@ -385,7 +393,7 @@ const CountrySpinner: React.FC<CountrySpinnerProps> = ({
                   <div>
                     <h2 className="text-3xl font-bold text-white mb-2">Focusing the Globe...</h2>
                     <p className="text-white/80">
-                      Preparing your {travelStyle.toLowerCase()} adventure
+                      Preparing your Zappy {travelStyle.toLowerCase()} adventure
                     </p>
                   </div>
                 </CardContent>
@@ -411,9 +419,9 @@ const CountrySpinner: React.FC<CountrySpinnerProps> = ({
                   </motion.div>
                   
                   <div>
-                    <h2 className="text-3xl font-bold text-white mb-2">Spinning...</h2>
+                    <h2 className="text-3xl font-bold text-white mb-2">Globe's a-whirl!</h2>
                     <p className="text-white/80">
-                      Finding your perfect {travelStyle.toLowerCase()} destination
+                      Feel the Zappy vibes as it spins to your next big thrill!
                     </p>
                     <div className="mt-4 flex items-center justify-center space-x-2">
                       <div className="w-2 h-2 bg-yellow-400 rounded-full animate-bounce" style={{ animationDelay: '0ms' }} />
@@ -450,12 +458,12 @@ const CountrySpinner: React.FC<CountrySpinnerProps> = ({
                   </motion.div>
                   
                   <div>
-                    <h2 className="text-3xl font-bold text-white mb-2">Pin Dropped!</h2>
+                    <h2 className="text-3xl font-bold text-white mb-2">Boom! Pin drops—</h2>
                     <h3 className="text-2xl font-semibold text-yellow-400 mb-2">
                       {selectedCountry.name}
                     </h3>
                     <p className="text-white/80">
-                      Zooming in on your {travelStyle.toLowerCase()} destination...
+                      Zoom into your Zapped destination with a wild tagline!
                     </p>
                   </div>
                 </CardContent>
@@ -513,7 +521,7 @@ const CountrySpinner: React.FC<CountrySpinnerProps> = ({
             </motion.div>
           )}
 
-          {/* FIXED: "Destination Found!" phase with globe still visible in background */}
+          {/* "Destination Found!" phase with globe still visible in background */}
           {spinPhase === 'destination-found' && selectedCountry && (
             <motion.div
               key="destination-found"
@@ -566,7 +574,7 @@ const CountrySpinner: React.FC<CountrySpinnerProps> = ({
                     transition={{ delay: 1.2, duration: 0.8 }}
                     className="text-white/60 text-sm"
                   >
-                    Preparing your adventure details...
+                    Zap Facts Unleashed! Check budget, best times, visa, and epic activities!
                   </motion.p>
                 </CardContent>
               </Card>

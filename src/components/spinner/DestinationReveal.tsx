@@ -18,7 +18,8 @@ import {
   TrendingUp,
   Info,
   CheckCircle,
-  AlertCircle
+  AlertCircle,
+  Zap
 } from 'lucide-react';
 import { Destination } from '@/types/destination';
 import { numbeoService } from '@/services/numbeoApi';
@@ -168,7 +169,7 @@ const DestinationReveal: React.FC<DestinationRevealProps> = ({
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-900 via-blue-900 to-indigo-900 flex items-center justify-center p-6">
       <div className="max-w-6xl mx-auto">
-        {/* Pin Drop Animation */}
+        {/* Pin Drop Animation with Zap theme */}
         <motion.div
           initial={{ y: -100, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
@@ -181,7 +182,19 @@ const DestinationReveal: React.FC<DestinationRevealProps> = ({
             transition={{ delay: 0.5, duration: 0.5, ease: "easeOut" }}
             className="inline-block"
           >
-            <MapPin className="w-16 h-16 text-red-500 mx-auto mb-4 drop-shadow-lg" />
+            <div className="relative">
+              <MapPin className="w-16 h-16 text-red-500 mx-auto mb-4 drop-shadow-lg" />
+              <motion.div
+                animate={{ 
+                  scale: [1, 1.2, 1],
+                  rotate: [0, 10, -10, 0]
+                }}
+                transition={{ duration: 0.5, delay: 0.8 }}
+                className="absolute -top-2 -right-2"
+              >
+                <Zap className="w-6 h-6 text-yellow-400" />
+              </motion.div>
+            </div>
           </motion.div>
           
           <motion.h1
@@ -209,6 +222,15 @@ const DestinationReveal: React.FC<DestinationRevealProps> = ({
             className="text-white/80 text-lg"
           >
             {destination.country}
+          </motion.p>
+
+          <motion.p
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 1.4, duration: 0.8 }}
+            className="text-white/60 text-sm mt-2"
+          >
+            Zap Facts Unleashed! Check budget, best times, visa, and epic activities!
           </motion.p>
         </motion.div>
 
@@ -288,7 +310,7 @@ const DestinationReveal: React.FC<DestinationRevealProps> = ({
               <CardContent className="p-6">
                 <h3 className="text-2xl font-bold text-white mb-4 flex items-center">
                   <Users className="w-6 h-6 mr-2 text-purple-400" />
-                  Suggested Activities
+                  Epic Activities
                 </h3>
                 <div className="flex flex-wrap gap-2">
                   {destination.activities.map((activity, index) => (
@@ -341,8 +363,8 @@ const DestinationReveal: React.FC<DestinationRevealProps> = ({
             variant="outline"
             className="bg-white/10 border-white/30 text-white hover:bg-white/20 font-semibold py-3 px-8 rounded-full shadow-lg transform hover:scale-105 transition-all duration-300 backdrop-blur-sm"
           >
-            <RotateCcw className="w-5 h-5 mr-2" />
-            Spin Again
+            <Zap className="w-5 h-5 mr-2" />
+            Zap Again
           </Button>
         </motion.div>
 
