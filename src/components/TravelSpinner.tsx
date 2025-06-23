@@ -4,45 +4,32 @@ import { useAuth } from '@/contexts/AuthContext';
 import { useDestinations } from '@/hooks/useDestinations';
 import { Destination, TravelerType } from '@/types/destination';
 import { TravelStyle } from '@/types/country';
-import { getRandomCountryByStyle } from '@/data/countries';
 
 // Import components
 import WelcomeScreen from './spinner/WelcomeScreen';
+import SpinningGlobe from './globe/SpinningGlobe';
 import DestinationReveal from './spinner/DestinationReveal';
 import DestinationExplorer from './spinner/DestinationExplorer';
 import UserAccount from './spinner/UserAccount';
 import UserProfile from './auth/UserProfile';
 import UserProfilePage from './profile/UserProfilePage';
 
-type SpinnerStep = 'welcome' | 'reveal' | 'explore' | 'account' | 'profile';
+type SpinnerStep = 'welcome' | 'spinning' | 'reveal' | 'explore' | 'account' | 'profile';
 
 const TravelSpinner: React.FC = () => {
   const { user } = useAuth();
   const { saveDestination, recordSpin, isDestinationSaved } = useDestinations();
   
   const [currentStep, setCurrentStep] = useState<SpinnerStep>('welcome');
+  const [selectedTravelStyle, setSelectedTravelStyle] = useState<TravelStyle>('Solo');
   const [currentDestination, setCurrentDestination] = useState<Destination | null>(null);
 
   const handleTravelStyleSelect = (style: TravelStyle) => {
-    // Get a random country based on the selected travel style
-    const selectedCountry = getRandomCountryByStyle(style);
-    
-    // Convert country to destination format
-    const destination: Destination = {
-      id: selectedCountry.isoCode,
-      name: selectedCountry.name,
-      country: selectedCountry.name,
-      city: selectedCountry.capital,
-      latitude: selectedCountry.coordinates.lat,
-      longitude: selectedCountry.coordinates.lng,
-      tagline: selectedCountry.tagline,
-      budget_estimate: '$50-200/day',
-      best_time_to_visit: selectedCountry.bestTimeToVisit || 'Year-round',
-      visa_requirements: 'Check requirements for your nationality',
-      activities: selectedCountry.highlights || ['Sightseeing', 'Culture', 'Adventure'],
-      description: `Explore ${selectedCountry.name}, ${selectedCountry.tagline.toLowerCase()}`
-    };
-    
+    setSelectedTravelStyle(style);
+    setCurrentStep('spinning');
+  };
+
+  const handleDestinationFound = (destination: Destination) => {
     setCurrentDestination(destination);
     
     // Record the spin
@@ -52,7 +39,7 @@ const TravelSpinner: React.FC = () => {
       'Solo': 'solo'
     };
     
-    recordSpin(destination.name, travelerTypeMap[style]);
+    recordSpin(destination.name, travelerTypeMap[selectedTravelStyle]);
     setCurrentStep('reveal');
   };
 
@@ -97,6 +84,21 @@ const TravelSpinner: React.FC = () => {
             <WelcomeScreen 
               onTravelStyleSelect={handleTravelStyleSelect}
               isAuthenticated={!!user}
+            />
+          </motion.div>
+        )}
+
+        {currentStep === 'spinning' && (
+          <motion.div
+            key="spinning"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.5 }}
+          >
+            <SpinningGlobe 
+              travelStyle={selectedTravelStyle}
+              onDestinationFound={handleDestinationFound}
             />
           </motion.div>
         )}
@@ -165,7 +167,7 @@ const TravelSpinner: React.FC = () => {
       </AnimatePresence>
 
       {/* User Profile Button */}
-      {user && currentStep !== 'account' && currentStep !== 'profile' && (
+      {user && currentStep !== 'account' && currentStep !== 'profile' && currentStep !== 'spinning' && (
         <motion.div
           initial={{ opacity: 0, scale: 0 }}
           animate={{ opacity: 1, scale: 1 }}

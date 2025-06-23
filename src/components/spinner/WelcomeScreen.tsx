@@ -2,7 +2,6 @@ import React, { useRef, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import { Plane, Globe, Sparkles } from 'lucide-react';
-import SplitText from '@/components/ui/split-text';
 import mapboxgl from 'mapbox-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import { TravelStyle } from '@/types/country';
@@ -304,7 +303,7 @@ const WelcomeScreen: React.FC<WelcomeScreenProps> = ({ onTravelStyleSelect, isAu
             initial={{ opacity: 0, y: 50 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.9 }}
-            className="flex justify-center gap-6 mb-16"
+            className="flex flex-col md:flex-row justify-center gap-6 mb-16"
           >
             {travelStyles.map((style, index) => (
               <motion.button
@@ -324,7 +323,7 @@ const WelcomeScreen: React.FC<WelcomeScreenProps> = ({ onTravelStyleSelect, isAu
                   boxShadow: "0 20px 40px rgba(0,0,0,0.3)"
                 }}
                 whileTap={{ scale: 0.95 }}
-                className={`relative overflow-hidden rounded-xl bg-gradient-to-r ${style.color} px-8 py-4 shadow-lg transition-all duration-300 border border-white/20 backdrop-blur-sm group min-w-[140px]`}
+                className={`relative overflow-hidden rounded-xl bg-gradient-to-r ${style.color} px-8 py-6 shadow-lg transition-all duration-300 border border-white/20 backdrop-blur-sm group min-w-[180px]`}
                 onClick={() => onTravelStyleSelect(style.type)}
               >
                 {/* Animated background overlay */}
@@ -343,7 +342,7 @@ const WelcomeScreen: React.FC<WelcomeScreenProps> = ({ onTravelStyleSelect, isAu
                 
                 {/* Content with enhanced styling */}
                 <div className="relative z-10">
-                  <span className="text-white font-semibold text-lg">
+                  <span className="text-white font-semibold text-xl">
                     {style.title}
                   </span>
                 </div>
