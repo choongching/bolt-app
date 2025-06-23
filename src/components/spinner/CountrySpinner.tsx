@@ -52,14 +52,14 @@ const CountrySpinner: React.FC<CountrySpinnerProps> = ({
   const [showFilters, setShowFilters] = useState(false);
   const [spinPhase, setSpinPhase] = useState<'idle' | 'spinning' | 'pin-drop' | 'zooming' | 'destination-found'>('idle');
   const [selectedCountry, setSelectedCountry] = useState<Country | null>(null);
-  const [showGlobe, setShowGlobe] = useState(true); // Globe is always visible now
+  const [showGlobe, setShowGlobe] = useState(true);
 
   // Auto-start spinning when component mounts if autoStart is true
   useEffect(() => {
     if (autoStart && !isSpinning && spinPhase === 'idle') {
       setTimeout(() => {
         handleSpin();
-      }, 1500); // Slightly longer delay to ensure globe is fully loaded
+      }, 500); // Start immediately after component loads
     }
   }, [autoStart]);
 

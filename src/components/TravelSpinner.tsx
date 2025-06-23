@@ -14,7 +14,7 @@ import UserAccount from './spinner/UserAccount';
 import UserProfile from './auth/UserProfile';
 import UserProfilePage from './profile/UserProfilePage';
 
-type SpinnerStep = 'welcome' | 'country-spinner' | 'reveal' | 'explore' | 'account' | 'profile';
+type SpinnerStep = 'welcome' | 'globe-zoom' | 'country-spinner' | 'reveal' | 'explore' | 'account' | 'profile';
 
 const TravelSpinner: React.FC = () => {
   const { user } = useAuth();
@@ -25,11 +25,16 @@ const TravelSpinner: React.FC = () => {
   const [currentDestination, setCurrentDestination] = useState<Destination | null>(null);
   const [currentCountry, setCurrentCountry] = useState<Country | null>(null);
 
-  // Directly trigger the globe spinning when travel style is selected
+  // Handle travel style selection with globe zoom transition
   const handleTravelStyleSelect = (style: TravelStyle) => {
     setSelectedTravelStyle(style);
-    // Skip the intermediate screen and go directly to spinning
-    setCurrentStep('country-spinner');
+    // First trigger the globe zoom transition
+    setCurrentStep('globe-zoom');
+    
+    // After a short delay, transition to the spinning phase
+    setTimeout(() => {
+      setCurrentStep('country-spinner');
+    }, 2000); // 2 second delay for the zoom effect
   };
 
   const handleCountrySelected = (country: Country) => {
@@ -111,7 +116,7 @@ const TravelSpinner: React.FC = () => {
             key="welcome"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
+            exit={{ opacity: 0, scale: 0.8 }}
             transition={{ duration: 0.5 }}
           >
             <WelcomeScreen 
@@ -121,19 +126,62 @@ const TravelSpinner: React.FC = () => {
           </motion.div>
         )}
 
+        {currentStep === 'globe-zoom' && (
+          <motion.div
+            key="globe-zoom"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.5 }}
+            className="min-h-screen bg-gradient-to-b from-indigo-900 via-purple-900 to-black relative overflow-hidden"
+          >
+            {/* Globe Zoom Transition Effect */}
+            <motion.div
+              initial={{ scale: 0.3, opacity: 0.7, z: -100 }}
+              animate={{ scale: 1.5, opacity: 1, z: 0 }}
+              transition={{ 
+                duration: 2, 
+                ease: [0.25, 0.46, 0.45, 0.94] 
+              }}
+              className="absolute inset-0 flex items-center justify-center"
+            >
+              <div className="w-96 h-96 rounded-full bg-gradient-to-br from-blue-500 via-green-500 to-blue-700 shadow-2xl">
+                <div className="w-full h-full rounded-full bg-gradient-to-br from-transparent via-white/10 to-transparent animate-pulse" />
+              </div>
+            </motion.div>
+
+            {/* Transition Text */}
+            <div className="absolute inset-0 flex items-center justify-center z-10">
+              <motion.div
+                initial={{ opacity: 0, y: 50 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.5, duration: 0.8 }}
+                className="text-center"
+              >
+                <h2 className="text-4xl md:text-5xl font-bold text-white mb-4">
+                  Zooming into Adventure!
+                </h2>
+                <p className="text-white/80 text-xl">
+                  Preparing your {selectedTravelStyle} journey...
+                </p>
+              </motion.div>
+            </div>
+          </motion.div>
+        )}
+
         {currentStep === 'country-spinner' && (
           <motion.div
             key="country-spinner"
-            initial={{ opacity: 0, x: 100 }}
-            animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: -100 }}
+            initial={{ opacity: 0, scale: 1.2 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.8 }}
             transition={{ duration: 0.5 }}
           >
             <CountrySpinner 
               onCountrySelected={handleCountrySelected}
               onBack={handleBackToWelcome}
               travelStyle={selectedTravelStyle}
-              autoStart={true} // Add this prop to auto-start the spinning
+              autoStart={true}
             />
           </motion.div>
         )}
@@ -202,7 +250,7 @@ const TravelSpinner: React.FC = () => {
       </AnimatePresence>
 
       {/* Enhanced User Profile Button */}
-      {user && currentStep !== 'account' && currentStep !== 'profile' && (
+      {user && currentStep !== 'account' && currentStep !== 'profile' && currentStep !== 'globe-zoom' && (
         <motion.div
           initial={{ opacity: 0, scale: 0 }}
           animate={{ opacity: 1, scale: 1 }}
