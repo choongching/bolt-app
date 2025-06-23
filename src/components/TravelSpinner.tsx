@@ -7,14 +7,14 @@ import { Country, TravelStyle } from '@/types/country';
 
 // Import all spinner components
 import WelcomeScreen from './spinner/WelcomeScreen';
-import CountrySpinner from './spinner/CountrySpinner';
 import DestinationReveal from './spinner/DestinationReveal';
 import DestinationExplorer from './spinner/DestinationExplorer';
 import UserAccount from './spinner/UserAccount';
 import UserProfile from './auth/UserProfile';
 import UserProfilePage from './profile/UserProfilePage';
+import { getRandomCountryByStyle } from '@/data/countries';
 
-type SpinnerStep = 'welcome' | 'country-spinner' | 'reveal' | 'explore' | 'account' | 'profile';
+type SpinnerStep = 'welcome' | 'reveal' | 'explore' | 'account' | 'profile';
 
 const TravelSpinner: React.FC = () => {
   const { user } = useAuth();
@@ -25,30 +25,28 @@ const TravelSpinner: React.FC = () => {
   const [currentDestination, setCurrentDestination] = useState<Destination | null>(null);
   const [currentCountry, setCurrentCountry] = useState<Country | null>(null);
 
-  // Directly trigger the globe spinning when travel style is selected
+  // Directly go to destination reveal when travel style is selected
   const handleTravelStyleSelect = (style: TravelStyle) => {
     setSelectedTravelStyle(style);
-    // Go directly to spinning without intermediate step
-    setCurrentStep('country-spinner');
-  };
-
-  const handleCountrySelected = (country: Country) => {
-    setCurrentCountry(country);
+    
+    // Get a random country based on the selected travel style
+    const selectedCountry = getRandomCountryByStyle(style);
+    setCurrentCountry(selectedCountry);
     
     // Convert country to destination format for compatibility
     const destination: Destination = {
-      id: country.isoCode,
-      name: country.name,
-      country: country.name,
-      city: country.capital,
-      latitude: country.coordinates.lat,
-      longitude: country.coordinates.lng,
-      tagline: country.tagline,
+      id: selectedCountry.isoCode,
+      name: selectedCountry.name,
+      country: selectedCountry.name,
+      city: selectedCountry.capital,
+      latitude: selectedCountry.coordinates.lat,
+      longitude: selectedCountry.coordinates.lng,
+      tagline: selectedCountry.tagline,
       budget_estimate: '$50-200/day', // Default, will be updated with real data
-      best_time_to_visit: country.bestTimeToVisit || 'Year-round',
+      best_time_to_visit: selectedCountry.bestTimeToVisit || 'Year-round',
       visa_requirements: 'Check requirements for your nationality',
-      activities: country.highlights || ['Sightseeing', 'Culture', 'Adventure'],
-      description: `Explore ${country.name}, ${country.tagline.toLowerCase()}`
+      activities: selectedCountry.highlights || ['Sightseeing', 'Culture', 'Adventure'],
+      description: `Explore ${selectedCountry.name}, ${selectedCountry.tagline.toLowerCase()}`
     };
     
     setCurrentDestination(destination);
@@ -62,6 +60,7 @@ const TravelSpinner: React.FC = () => {
     
     recordSpin(destination.name, travelerTypeMap[selectedTravelStyle]);
     
+    // Go directly to reveal
     setCurrentStep('reveal');
   };
 
@@ -78,7 +77,7 @@ const TravelSpinner: React.FC = () => {
   const handleSpinAgain = () => {
     setCurrentDestination(null);
     setCurrentCountry(null);
-    setCurrentStep('country-spinner');
+    setCurrentStep('welcome');
   };
 
   const handleBackToWelcome = () => {
@@ -117,23 +116,6 @@ const TravelSpinner: React.FC = () => {
             <WelcomeScreen 
               onTravelStyleSelect={handleTravelStyleSelect}
               isAuthenticated={!!user}
-            />
-          </motion.div>
-        )}
-
-        {currentStep === 'country-spinner' && (
-          <motion.div
-            key="country-spinner"
-            initial={{ opacity: 0, scale: 1.2 }}
-            animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0, scale: 0.8 }}
-            transition={{ duration: 0.5 }}
-          >
-            <CountrySpinner 
-              onCountrySelected={handleCountrySelected}
-              onBack={handleBackToWelcome}
-              travelStyle={selectedTravelStyle}
-              autoStart={true}
             />
           </motion.div>
         )}
