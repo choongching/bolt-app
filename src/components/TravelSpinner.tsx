@@ -3,16 +3,16 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useAuth } from '@/contexts/AuthContext';
 import { useDestinations } from '@/hooks/useDestinations';
 import { Destination, TravelerType } from '@/types/destination';
-import { Country, TravelStyle } from '@/types/country';
+import { TravelStyle } from '@/types/country';
+import { getRandomCountryByStyle } from '@/data/countries';
 
-// Import all spinner components
+// Import components
 import WelcomeScreen from './spinner/WelcomeScreen';
 import DestinationReveal from './spinner/DestinationReveal';
 import DestinationExplorer from './spinner/DestinationExplorer';
 import UserAccount from './spinner/UserAccount';
 import UserProfile from './auth/UserProfile';
 import UserProfilePage from './profile/UserProfilePage';
-import { getRandomCountryByStyle } from '@/data/countries';
 
 type SpinnerStep = 'welcome' | 'reveal' | 'explore' | 'account' | 'profile';
 
@@ -21,19 +21,13 @@ const TravelSpinner: React.FC = () => {
   const { saveDestination, recordSpin, isDestinationSaved } = useDestinations();
   
   const [currentStep, setCurrentStep] = useState<SpinnerStep>('welcome');
-  const [selectedTravelStyle, setSelectedTravelStyle] = useState<TravelStyle>('Solo');
   const [currentDestination, setCurrentDestination] = useState<Destination | null>(null);
-  const [currentCountry, setCurrentCountry] = useState<Country | null>(null);
 
-  // Directly go to destination reveal when travel style is selected
   const handleTravelStyleSelect = (style: TravelStyle) => {
-    setSelectedTravelStyle(style);
-    
     // Get a random country based on the selected travel style
     const selectedCountry = getRandomCountryByStyle(style);
-    setCurrentCountry(selectedCountry);
     
-    // Convert country to destination format for compatibility
+    // Convert country to destination format
     const destination: Destination = {
       id: selectedCountry.isoCode,
       name: selectedCountry.name,
@@ -42,7 +36,7 @@ const TravelSpinner: React.FC = () => {
       latitude: selectedCountry.coordinates.lat,
       longitude: selectedCountry.coordinates.lng,
       tagline: selectedCountry.tagline,
-      budget_estimate: '$50-200/day', // Default, will be updated with real data
+      budget_estimate: '$50-200/day',
       best_time_to_visit: selectedCountry.bestTimeToVisit || 'Year-round',
       visa_requirements: 'Check requirements for your nationality',
       activities: selectedCountry.highlights || ['Sightseeing', 'Culture', 'Adventure'],
@@ -51,16 +45,14 @@ const TravelSpinner: React.FC = () => {
     
     setCurrentDestination(destination);
     
-    // Record the spin with travel style
+    // Record the spin
     const travelerTypeMap: { [key in TravelStyle]: TravelerType } = {
       'Romantic': 'couple',
       'Family': 'family',
       'Solo': 'solo'
     };
     
-    recordSpin(destination.name, travelerTypeMap[selectedTravelStyle]);
-    
-    // Go directly to reveal
+    recordSpin(destination.name, travelerTypeMap[style]);
     setCurrentStep('reveal');
   };
 
@@ -76,22 +68,11 @@ const TravelSpinner: React.FC = () => {
 
   const handleSpinAgain = () => {
     setCurrentDestination(null);
-    setCurrentCountry(null);
     setCurrentStep('welcome');
-  };
-
-  const handleBackToWelcome = () => {
-    setCurrentStep('welcome');
-    setCurrentDestination(null);
-    setCurrentCountry(null);
   };
 
   const handleBackToReveal = () => {
     setCurrentStep('reveal');
-  };
-
-  const handleShowAccount = () => {
-    setCurrentStep('account');
   };
 
   const handleShowProfile = () => {
@@ -183,7 +164,7 @@ const TravelSpinner: React.FC = () => {
         )}
       </AnimatePresence>
 
-      {/* Enhanced User Profile Button */}
+      {/* User Profile Button */}
       {user && currentStep !== 'account' && currentStep !== 'profile' && (
         <motion.div
           initial={{ opacity: 0, scale: 0 }}

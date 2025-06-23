@@ -1,6 +1,7 @@
 import React from 'react';
 import TravelSpinner from '@/components/TravelSpinner';
 import AuthContainer from '@/components/auth/AuthContainer';
+import LoadingSpinner from '@/components/common/LoadingSpinner';
 import { useAuth } from '@/contexts/AuthContext';
 
 const Index = () => {
@@ -9,10 +10,7 @@ const Index = () => {
   if (loading) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-purple-600 via-blue-600 to-teal-500 flex items-center justify-center">
-        <div className="text-center">
-          <div className="w-16 h-16 border-4 border-white border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-          <p className="text-white text-xl">Loading your travel experience...</p>
-        </div>
+        <LoadingSpinner size="lg" text="Loading your travel experience..." />
       </div>
     );
   }
@@ -26,10 +24,9 @@ const Index = () => {
           <TravelSpinner />
         </div>
         
-        {/* Auth Overlay with improved accessibility and copywriting */}
+        {/* Auth Overlay */}
         <div className="absolute inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50">
           <div className="bg-white rounded-2xl p-8 max-w-lg w-full mx-4 shadow-2xl border border-gray-200">
-            {/* Header with better contrast and new copywriting */}
             <div className="text-center mb-8">
               <div className="w-16 h-16 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center mx-auto mb-6">
                 <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -44,11 +41,9 @@ const Index = () => {
               </p>
             </div>
             
-            {/* Auth Container with improved styling */}
             <div className="space-y-6">
               <AuthContainer />
               
-              {/* Additional info with good contrast */}
               <div className="text-center pt-4 border-t border-gray-100">
                 <p className="text-xs text-gray-500">
                   By signing in, you agree to our Terms of Service and Privacy Policy
@@ -61,7 +56,6 @@ const Index = () => {
     );
   }
 
-  // User is authenticated, show the full experience
   return <TravelSpinner />;
 };
 
