@@ -29,10 +29,6 @@ const Index = () => {
         {/* Auth Overlay */}
         <div className="absolute inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50">
           <div className="bg-white/10 backdrop-blur-md rounded-2xl p-8 max-w-md w-full mx-4 border border-white/20">
-            <div className="text-center mb-6">
-              <h2 className="text-3xl font-bold text-white mb-2">Welcome to Travel Spinner</h2>
-              <p className="text-white/80">Sign in to save your discoveries and create personalized travel plans</p>
-            </div>
             <AuthContainer />
           </div>
         </div>
