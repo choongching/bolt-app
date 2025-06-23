@@ -37,7 +37,7 @@ const Index = () => {
                 </svg>
               </div>
               <h2 className="text-3xl font-bold text-gray-900 mb-3">
-                Welcome to Travel Spinner – Your Global Adventure Awaits!
+                Spin, Zap, Explore!
               </h2>
               <p className="text-gray-600 text-base leading-relaxed mb-6">
                 Turns each spin into an epic travel quest—fun and adventurous!
