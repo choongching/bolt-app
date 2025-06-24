@@ -22,11 +22,14 @@ import {
   Zap,
   Sun,
   Cloud,
-  Thermometer
+  Thermometer,
+  Droplets,
+  Wind,
+  Star
 } from 'lucide-react';
 import { Destination } from '@/types/destination';
 import { numbeoService } from '@/services/numbeoApi';
-import { weatherTravelService } from '@/services/weatherTravelService';
+import { openMeteoService } from '@/services/openMeteoService';
 import { getVisaRequirementByDestination } from '@/data/visaRequirements';
 
 interface DestinationRevealProps {
@@ -66,15 +69,16 @@ const DestinationReveal: React.FC<DestinationRevealProps> = ({
         setBudgetLoading(false);
       }
 
-      // Fetch weather/travel timing data
+      // Fetch weather/travel timing data from Open-Meteo
       setWeatherLoading(true);
       try {
-        const travelData = await weatherTravelService.getBestTimeToVisit(
+        const travelData = await openMeteoService.getBestTimeToVisit(
           destination.name,
           destination.country,
           { lat: destination.latitude, lng: destination.longitude }
         );
         setWeatherData(travelData);
+        console.log('Weather data loaded:', travelData); // Debug log
       } catch (error) {
         console.error('Failed to fetch weather data:', error);
         setWeatherData(null);
@@ -146,10 +150,8 @@ const DestinationReveal: React.FC<DestinationRevealProps> = ({
     }
 
     if (weatherData) {
-      const bestTime = weatherTravelService.formatBestTimeToVisit(weatherData);
-      const currentSeason = weatherData.seasons.find((s: any) => 
-        s.months.includes(new Date().toLocaleString('default', { month: 'long' }))
-      );
+      const bestTime = openMeteoService.formatBestTimeToVisit(weatherData);
+      const currentSeason = weatherData.currentSeason;
 
       return (
         <div>
@@ -158,42 +160,112 @@ const DestinationReveal: React.FC<DestinationRevealProps> = ({
             {bestTime}
           </div>
           
+          {/* Best months breakdown */}
+          {weatherData.bestMonths.length > 0 && (
+            <div className="mb-3">
+              <div className="flex flex-wrap gap-1 mb-2">
+                {weatherData.bestMonths.map((month: string) => (
+                  <Badge key={month} variant="secondary" className="bg-green-600 text-white text-xs">
+                    {month.slice(0, 3)}
+                  </Badge>
+                ))}
+              </div>
+              <p className="text-xs text-white/70">Best months to visit</p>
+            </div>
+          )}
+
+          {/* Current season info */}
           {currentSeason && (
             <div className="mb-3 p-3 bg-white/10 rounded-lg">
               <div className="flex items-center justify-between mb-2">
-                <span className="font-medium capitalize">{currentSeason.season} (Current)</span>
+                <span className="font-medium capitalize flex items-center">
+                  {currentSeason.season === 'spring' && <span className="mr-1">🌸</span>}
+                  {currentSeason.season === 'summer' && <span className="mr-1">☀️</span>}
+                  {currentSeason.season === 'autumn' && <span className="mr-1">🍂</span>}
+                  {currentSeason.season === 'winter' && <span className="mr-1">❄️</span>}
+                  {currentSeason.season} (Current)
+                </span>
                 <div className="flex items-center text-sm">
                   <Thermometer className="w-4 h-4 mr-1" />
                   {Math.round(currentSeason.weather.temperature.average)}°C
                 </div>
               </div>
-              <div className="text-sm text-white/80">
-                <div className="flex items-center mb-1">
+              
+              <div className="grid grid-cols-2 gap-2 text-sm text-white/80 mb-2">
+                <div className="flex items-center">
                   <Users className="w-3 h-3 mr-1" />
-                  Crowds: {currentSeason.crowdLevel}
+                  <span className="capitalize">{currentSeason.crowdLevel} crowds</span>
                 </div>
                 <div className="flex items-center">
                   <DollarSign className="w-3 h-3 mr-1" />
-                  Prices: {currentSeason.priceLevel}
+                  <span className="capitalize">{currentSeason.priceLevel} prices</span>
+                </div>
+                <div className="flex items-center">
+                  <Droplets className="w-3 h-3 mr-1" />
+                  <span>{Math.round(currentSeason.weather.precipitation)}mm rain</span>
+                </div>
+                <div className="flex items-center">
+                  <Star className="w-3 h-3 mr-1" />
+                  <span>{currentSeason.travelScore}/10 score</span>
+                </div>
+              </div>
+
+              {/* Pros and cons */}
+              <div className="grid grid-cols-2 gap-2 text-xs">
+                <div>
+                  <p className="font-medium text-green-400 mb-1">Pros:</p>
+                  <ul className="text-white/70 space-y-0.5">
+                    {currentSeason.pros.slice(0, 2).map((pro: string, index: number) => (
+                      <li key={index}>• {pro}</li>
+                    ))}
+                  </ul>
+                </div>
+                <div>
+                  <p className="font-medium text-orange-400 mb-1">Cons:</p>
+                  <ul className="text-white/70 space-y-0.5">
+                    {currentSeason.cons.slice(0, 2).map((con: string, index: number) => (
+                      <li key={index}>• {con}</li>
+                    ))}
+                  </ul>
                 </div>
               </div>
             </div>
           )}
 
+          {/* Special events */}
           {weatherData.specialEvents && weatherData.specialEvents.length > 0 && (
             <div className="mt-3">
-              <p className="text-sm font-medium mb-2">Special Events:</p>
+              <p className="text-sm font-medium mb-2 flex items-center">
+                <Calendar className="w-4 h-4 mr-1" />
+                Special Events:
+              </p>
               {weatherData.specialEvents.slice(0, 2).map((event: any, index: number) => (
-                <div key={index} className="text-xs text-white/70 mb-1">
-                  <span className="font-medium">{event.name}</span> ({event.months.join(', ')})
+                <div key={index} className="text-xs text-white/70 mb-1 p-2 bg-white/5 rounded">
+                  <div className="font-medium text-white/90">{event.name}</div>
+                  <div className="text-white/60">{event.months.join(', ')}</div>
+                  <div className="text-white/50 mt-1">{event.description}</div>
                 </div>
               ))}
             </div>
           )}
 
+          {/* Avoid months */}
+          {weatherData.avoidMonths && weatherData.avoidMonths.length > 0 && (
+            <div className="mt-3">
+              <p className="text-sm font-medium mb-1 text-orange-400">Consider avoiding:</p>
+              <div className="flex flex-wrap gap-1">
+                {weatherData.avoidMonths.map((month: string) => (
+                  <Badge key={month} variant="secondary" className="bg-red-600/30 text-red-300 text-xs">
+                    {month.slice(0, 3)}
+                  </Badge>
+                ))}
+              </div>
+            </div>
+          )}
+
           <div className="mt-3 text-xs text-white/50 flex items-center">
             <Cloud className="w-3 h-3 mr-1" />
-            Weather data from Open-Meteo
+            Weather data from {weatherData.dataSource}
           </div>
         </div>
       );
