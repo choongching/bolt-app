@@ -1,9 +1,9 @@
+/* Mapbox GL CSS import */
+@import 'mapbox-gl/dist/mapbox-gl.css';
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-
-/* Mapbox GL CSS import */
-@import 'mapbox-gl/dist/mapbox-gl.css';
 
 @layer base {
   :root {

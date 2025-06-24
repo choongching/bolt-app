@@ -58,3 +58,5 @@ const Index = () => {
 
   return <TravelSpinner />;
 };
+
+export default Index;
