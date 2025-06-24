@@ -15,9 +15,11 @@ import {
   Star,
   DollarSign,
   Users,
-  Plane
+  Plane,
+  Images
 } from 'lucide-react';
 import { Destination } from '@/types/destination';
+import ImageGallery from '@/components/gallery/ImageGallery';
 
 interface DestinationExplorerProps {
   destination: Destination;
@@ -147,8 +149,12 @@ const DestinationExplorer: React.FC<DestinationExplorerProps> = ({
 
       {/* Content */}
       <div className="container mx-auto px-6 py-12">
-        <Tabs defaultValue="itinerary" className="space-y-8">
-          <TabsList className="grid w-full grid-cols-3 bg-white/10 backdrop-blur-sm">
+        <Tabs defaultValue="gallery" className="space-y-8">
+          <TabsList className="grid w-full grid-cols-4 bg-white/10 backdrop-blur-sm">
+            <TabsTrigger value="gallery" className="text-white data-[state=active]:bg-white/20">
+              <Images className="w-4 h-4 mr-2" />
+              Photo Gallery
+            </TabsTrigger>
             <TabsTrigger value="itinerary" className="text-white data-[state=active]:bg-white/20">
               3-Day Itinerary
             </TabsTrigger>
@@ -159,6 +165,15 @@ const DestinationExplorer: React.FC<DestinationExplorerProps> = ({
               Dining
             </TabsTrigger>
           </TabsList>
+
+          {/* Photo Gallery Tab */}
+          <TabsContent value="gallery" className="space-y-6">
+            <ImageGallery 
+              destination={destination.name}
+              country={destination.country}
+              className="bg-white/5 backdrop-blur-sm rounded-xl p-6 border border-white/10"
+            />
+          </TabsContent>
 
           {/* Itinerary Tab */}
           <TabsContent value="itinerary" className="space-y-6">
