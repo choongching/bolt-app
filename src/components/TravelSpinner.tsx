@@ -30,7 +30,6 @@ const TravelSpinner: React.FC = () => {
   };
 
   const handleDestinationFound = (destination: Destination) => {
-    console.log('Destination found:', destination); // Debug log
     setCurrentDestination(destination);
     
     // Record the spin
@@ -45,7 +44,7 @@ const TravelSpinner: React.FC = () => {
     // Transition to reveal step
     setTimeout(() => {
       setCurrentStep('reveal');
-    }, 1500); // Give a bit more time for the "Preparing..." message
+    }, 1500);
   };
 
   const handleSaveDestination = async () => {

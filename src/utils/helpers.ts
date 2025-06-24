@@ -10,6 +10,26 @@ export const getTravelerTypeFromStyle = (style: TravelStyle): TravelerType => {
   return mapping[style];
 };
 
+export const getTravelStyleDisplay = (style: TravelStyle): string => {
+  const mapping: { [key in TravelStyle]: string } = {
+    'Solo': 'Chill Trip',
+    'Romantic': 'Casual Adventure',
+    'Family': 'Offbeat Journey'
+  };
+  return mapping[style] || 'Adventure';
+};
+
+export const getTravelerTypeDisplay = (type: TravelerType): string => {
+  const mapping: { [key in TravelerType]: string } = {
+    'solo': 'Chill Trip',
+    'couple': 'Casual Adventure',
+    'family': 'Offbeat Journey',
+    'friends': 'Group Adventure',
+    'business': 'Business Travel'
+  };
+  return mapping[type] || 'Adventure';
+};
+
 export const formatCurrency = (amount: number, currency = 'USD'): string => {
   return new Intl.NumberFormat('en-US', {
     style: 'currency',

@@ -2,6 +2,7 @@ import React, { useRef, useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { Destination, TravelerType } from '@/types/destination';
 import { getDestinationsByTravelerType, getRandomDestination } from '@/data/destinations';
+import { getTravelerTypeDisplay } from '@/utils/helpers';
 import mapboxgl from 'mapbox-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
 
@@ -25,18 +26,6 @@ const SpinningGlobe: React.FC<SpinningGlobeProps> = ({ travelerType, onDestinati
   const hasValidMapboxToken = MAPBOX_TOKEN && 
                              MAPBOX_TOKEN !== 'YOUR_ACTUAL_MAPBOX_TOKEN_HERE' &&
                              MAPBOX_TOKEN.startsWith('pk.');
-
-  // Get travel style display name
-  const getTravelStyleDisplay = (type: TravelerType): string => {
-    const mapping: { [key in TravelerType]: string } = {
-      'solo': 'Chill Trip',
-      'couple': 'Casual Adventure',
-      'family': 'Offbeat Journey',
-      'friends': 'Group Adventure',
-      'business': 'Business Travel'
-    };
-    return mapping[type] || 'Adventure';
-  };
 
   useEffect(() => {
     if (!hasValidMapboxToken) {
@@ -390,7 +379,7 @@ const SpinningGlobe: React.FC<SpinningGlobeProps> = ({ travelerType, onDestinati
       
       {/* Custom CSS for markers and popups */}
       <style jsx>{`
-        @keyframes pulse {
+        @keyframes markerPulse {
           0% { box-shadow: 0 0 0 0 rgba(255, 107, 107, 0.7); }
           70% { box-shadow: 0 0 0 10px rgba(255, 107, 107, 0); }
           100% { box-shadow: 0 0 0 0 rgba(255, 107, 107, 0); }
@@ -457,7 +446,7 @@ const SpinningGlobe: React.FC<SpinningGlobeProps> = ({ travelerType, onDestinati
                 {mapError ? 'Selecting Destination...' : 'Spinning the Globe...'}
               </h2>
               <p className="text-white/80 text-xl">
-                Finding your perfect {getTravelStyleDisplay(travelerType)} destination
+                Finding your perfect {getTravelerTypeDisplay(travelerType)} destination
               </p>
             </motion.div>
           )}
