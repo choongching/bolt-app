@@ -109,20 +109,90 @@ const SpinningGlobe: React.FC<SpinningGlobeProps> = ({ travelStyle, onDestinatio
   }, [travelStyle, hasValidMapboxToken, onDestinationFound]);
 
   const createDestinationFromCountry = (country: any) => {
+    // Create a complete destination object with all required properties
     return {
-      id: country.isoCode,
-      name: country.name,
-      country: country.name,
-      city: country.capital,
-      latitude: country.coordinates.lat,
-      longitude: country.coordinates.lng,
-      tagline: country.tagline,
-      budget_estimate: '$50-200/day',
+      id: country.isoCode || country.id || `dest-${Date.now()}`,
+      name: country.name || 'Unknown Destination',
+      country: country.name || 'Unknown Country',
+      city: country.capital || country.city || 'Main City',
+      latitude: country.coordinates?.lat || 0,
+      longitude: country.coordinates?.lng || 0,
+      tagline: country.tagline || 'Discover this amazing destination',
+      budget_estimate: getBudgetEstimate(country),
       best_time_to_visit: country.bestTimeToVisit || 'Year-round',
       visa_requirements: 'Check requirements for your nationality',
-      activities: country.highlights || ['Sightseeing', 'Culture', 'Adventure'],
-      description: `Explore ${country.name}, ${country.tagline.toLowerCase()}`
+      activities: country.highlights || ['Sightseeing', 'Culture', 'Adventure', 'Photography'],
+      description: `Explore ${country.name}, ${country.tagline?.toLowerCase() || 'an amazing destination waiting to be discovered'}`,
+      image_url: getDestinationImage(country)
     };
+  };
+
+  const getBudgetEstimate = (country: any) => {
+    // Generate budget estimate based on region and adventure level
+    const { region, adventureLevel } = country;
+    
+    let baseBudget = 50;
+    
+    // Adjust by region
+    switch (region) {
+      case 'Europe':
+        baseBudget = 100;
+        break;
+      case 'North America':
+        baseBudget = 120;
+        break;
+      case 'Oceania':
+        baseBudget = 110;
+        break;
+      case 'Asia':
+        baseBudget = 60;
+        break;
+      case 'South America':
+        baseBudget = 70;
+        break;
+      case 'Africa':
+        baseBudget = 80;
+        break;
+      default:
+        baseBudget = 75;
+    }
+    
+    // Adjust by adventure level
+    switch (adventureLevel) {
+      case 'Casual Explorer':
+        baseBudget *= 1.2;
+        break;
+      case 'Extreme Wanderer':
+        baseBudget *= 0.8;
+        break;
+      default:
+        baseBudget *= 1.0;
+    }
+    
+    const lowBudget = Math.round(baseBudget * 0.7);
+    const highBudget = Math.round(baseBudget * 1.8);
+    
+    return `$${lowBudget}-${highBudget}/day`;
+  };
+
+  const getDestinationImage = (country: any) => {
+    // Map of country names to Pexels images
+    const imageMap: { [key: string]: string } = {
+      'Greece': 'https://images.pexels.com/photos/161815/santorini-oia-greece-water-161815.jpeg',
+      'Italy': 'https://images.pexels.com/photos/2064827/pexels-photo-2064827.jpeg',
+      'France': 'https://images.pexels.com/photos/161853/eiffel-tower-paris-france-tower-161853.jpeg',
+      'Maldives': 'https://images.pexels.com/photos/1591373/pexels-photo-1591373.jpeg',
+      'United States': 'https://images.pexels.com/photos/2422915/pexels-photo-2422915.jpeg',
+      'Australia': 'https://images.pexels.com/photos/552779/pexels-photo-552779.jpeg',
+      'Canada': 'https://images.pexels.com/photos/417074/pexels-photo-417074.jpeg',
+      'Singapore': 'https://images.pexels.com/photos/2265876/pexels-photo-2265876.jpeg',
+      'Thailand': 'https://images.pexels.com/photos/2474690/pexels-photo-2474690.jpeg',
+      'Iceland': 'https://images.pexels.com/photos/1433052/pexels-photo-1433052.jpeg',
+      'Peru': 'https://images.pexels.com/photos/259967/pexels-photo-259967.jpeg',
+      'Japan': 'https://images.pexels.com/photos/2070033/pexels-photo-2070033.jpeg'
+    };
+
+    return imageMap[country.name] || 'https://images.pexels.com/photos/1591373/pexels-photo-1591373.jpeg';
   };
 
   const handleFallbackFlow = () => {
@@ -135,6 +205,7 @@ const SpinningGlobe: React.FC<SpinningGlobeProps> = ({ travelStyle, onDestinatio
         setStatus('zooming');
         setTimeout(() => {
           const destination = createDestinationFromCountry(country);
+          console.log('Destination being passed:', destination); // Debug log
           onDestinationFound(destination);
         }, 2000);
       }, 2000);
@@ -159,6 +230,7 @@ const SpinningGlobe: React.FC<SpinningGlobeProps> = ({ travelStyle, onDestinatio
         // Phase 3: Transition to details page
         setStatus('zooming');
         const destination = createDestinationFromCountry(country);
+        console.log('Destination being passed:', destination); // Debug log
         onDestinationFound(destination);
       }, 3000);
     }, 3000);
