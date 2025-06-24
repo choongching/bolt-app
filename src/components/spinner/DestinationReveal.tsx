@@ -19,10 +19,14 @@ import {
   Info,
   CheckCircle,
   AlertCircle,
-  Zap
+  Zap,
+  Sun,
+  Cloud,
+  Thermometer
 } from 'lucide-react';
 import { Destination } from '@/types/destination';
 import { numbeoService } from '@/services/numbeoApi';
+import { weatherTravelService } from '@/services/weatherTravelService';
 import { getVisaRequirementByDestination } from '@/data/visaRequirements';
 
 interface DestinationRevealProps {
@@ -43,10 +47,13 @@ const DestinationReveal: React.FC<DestinationRevealProps> = ({
   const [imageLoaded, setImageLoaded] = useState(false);
   const [budgetData, setBudgetData] = useState<any>(null);
   const [budgetLoading, setBudgetLoading] = useState(true);
+  const [weatherData, setWeatherData] = useState<any>(null);
+  const [weatherLoading, setWeatherLoading] = useState(true);
   const [visaInfo, setVisaInfo] = useState<any>(null);
 
   useEffect(() => {
-    const fetchBudgetData = async () => {
+    const fetchData = async () => {
+      // Fetch budget data
       setBudgetLoading(true);
       try {
         const city = destination.city || destination.name;
@@ -58,13 +65,29 @@ const DestinationReveal: React.FC<DestinationRevealProps> = ({
       } finally {
         setBudgetLoading(false);
       }
+
+      // Fetch weather/travel timing data
+      setWeatherLoading(true);
+      try {
+        const travelData = await weatherTravelService.getBestTimeToVisit(
+          destination.name,
+          destination.country,
+          { lat: destination.latitude, lng: destination.longitude }
+        );
+        setWeatherData(travelData);
+      } catch (error) {
+        console.error('Failed to fetch weather data:', error);
+        setWeatherData(null);
+      } finally {
+        setWeatherLoading(false);
+      }
     };
 
     // Get detailed visa information
     const visaRequirement = getVisaRequirementByDestination(destination.country, destination.city);
     setVisaInfo(visaRequirement);
 
-    fetchBudgetData();
+    fetchData();
   }, [destination]);
 
   const formatBudgetDisplay = () => {
@@ -110,6 +133,73 @@ const DestinationReveal: React.FC<DestinationRevealProps> = ({
     }
 
     return destination.budget_estimate;
+  };
+
+  const formatWeatherDisplay = () => {
+    if (weatherLoading) {
+      return (
+        <div className="flex items-center">
+          <Loader2 className="w-4 h-4 animate-spin mr-2" />
+          <span>Loading weather data...</span>
+        </div>
+      );
+    }
+
+    if (weatherData) {
+      const bestTime = weatherTravelService.formatBestTimeToVisit(weatherData);
+      const currentSeason = weatherData.seasons.find((s: any) => 
+        s.months.includes(new Date().toLocaleString('default', { month: 'long' }))
+      );
+
+      return (
+        <div>
+          <div className="text-lg font-semibold mb-3 flex items-center">
+            <Sun className="w-5 h-5 mr-2 text-yellow-400" />
+            {bestTime}
+          </div>
+          
+          {currentSeason && (
+            <div className="mb-3 p-3 bg-white/10 rounded-lg">
+              <div className="flex items-center justify-between mb-2">
+                <span className="font-medium capitalize">{currentSeason.season} (Current)</span>
+                <div className="flex items-center text-sm">
+                  <Thermometer className="w-4 h-4 mr-1" />
+                  {Math.round(currentSeason.weather.temperature.average)}°C
+                </div>
+              </div>
+              <div className="text-sm text-white/80">
+                <div className="flex items-center mb-1">
+                  <Users className="w-3 h-3 mr-1" />
+                  Crowds: {currentSeason.crowdLevel}
+                </div>
+                <div className="flex items-center">
+                  <DollarSign className="w-3 h-3 mr-1" />
+                  Prices: {currentSeason.priceLevel}
+                </div>
+              </div>
+            </div>
+          )}
+
+          {weatherData.specialEvents && weatherData.specialEvents.length > 0 && (
+            <div className="mt-3">
+              <p className="text-sm font-medium mb-2">Special Events:</p>
+              {weatherData.specialEvents.slice(0, 2).map((event: any, index: number) => (
+                <div key={index} className="text-xs text-white/70 mb-1">
+                  <span className="font-medium">{event.name}</span> ({event.months.join(', ')})
+                </div>
+              ))}
+            </div>
+          )}
+
+          <div className="mt-3 text-xs text-white/50 flex items-center">
+            <Cloud className="w-3 h-3 mr-1" />
+            Weather data from Open-Meteo
+          </div>
+        </div>
+      );
+    }
+
+    return destination.best_time_to_visit;
   };
 
   const formatVisaDisplay = () => {
@@ -292,7 +382,9 @@ const DestinationReveal: React.FC<DestinationRevealProps> = ({
                   <Calendar className="w-6 h-6 mr-2 text-blue-400" />
                   Best Time to Visit
                 </h3>
-                <p className="text-white/90 text-lg">{destination.best_time_to_visit}</p>
+                <div className="text-white/90">
+                  {formatWeatherDisplay()}
+                </div>
               </CardContent>
             </Card>
 
@@ -377,7 +469,7 @@ const DestinationReveal: React.FC<DestinationRevealProps> = ({
         >
           <p className="text-white/60 text-sm">
             <Clock className="w-4 h-4 inline mr-1" />
-            Budget estimates updated with real-time data • Visa information verified from official sources
+            Budget estimates updated with real-time data • Weather data from Open-Meteo • Visa information verified from official sources
           </p>
         </motion.div>
       </div>
