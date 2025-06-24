@@ -116,19 +116,42 @@
   display: none !important;
 }
 
-/* Custom marker animations */
+/* MUCH MORE ENERGETIC marker animations */
 @keyframes markerPulse {
   0% { 
-    box-shadow: 0 0 0 0 rgba(255, 107, 107, 0.7);
+    box-shadow: 0 0 0 0 rgba(255, 107, 107, 0.9);
     transform: scale(1);
   }
-  70% { 
-    box-shadow: 0 0 0 10px rgba(255, 107, 107, 0);
-    transform: scale(1.1);
+  50% { 
+    box-shadow: 0 0 0 20px rgba(255, 107, 107, 0);
+    transform: scale(1.4);
   }
   100% { 
     box-shadow: 0 0 0 0 rgba(255, 107, 107, 0);
     transform: scale(1);
+  }
+}
+
+@keyframes energeticPulse {
+  0% { 
+    box-shadow: 0 0 0 0 rgba(255, 107, 107, 0.9);
+    transform: scale(1) rotate(0deg);
+  }
+  25% { 
+    box-shadow: 0 0 0 15px rgba(255, 107, 107, 0.5);
+    transform: scale(1.3) rotate(90deg);
+  }
+  50% { 
+    box-shadow: 0 0 0 25px rgba(255, 107, 107, 0);
+    transform: scale(1.5) rotate(180deg);
+  }
+  75% { 
+    box-shadow: 0 0 0 15px rgba(255, 107, 107, 0.3);
+    transform: scale(1.2) rotate(270deg);
+  }
+  100% { 
+    box-shadow: 0 0 0 0 rgba(255, 107, 107, 0);
+    transform: scale(1) rotate(360deg);
   }
 }
 
@@ -138,8 +161,8 @@
     transform: scale(1);
   }
   50% { 
-    box-shadow: 0 0 0 25px rgba(255, 107, 107, 0);
-    transform: scale(1.2);
+    box-shadow: 0 0 0 35px rgba(255, 107, 107, 0);
+    transform: scale(1.5);
   }
   100% { 
     box-shadow: 0 0 0 0 rgba(255, 107, 107, 0);
@@ -147,15 +170,50 @@
   }
 }
 
-.destination-marker {
-  animation: markerPulse 2s infinite;
+@keyframes explosiveEntry {
+  0% { 
+    transform: scale(0) rotate(-180deg);
+    opacity: 0;
+  }
+  50% { 
+    transform: scale(1.3) rotate(0deg);
+    opacity: 0.8;
+  }
+  100% { 
+    transform: scale(1) rotate(0deg);
+    opacity: 1;
+  }
 }
 
-/* Custom popup styles */
+@keyframes bounceIn {
+  0% { 
+    transform: scale(0.3) translateY(-100px);
+    opacity: 0;
+  }
+  50% { 
+    transform: scale(1.1) translateY(0px);
+    opacity: 0.8;
+  }
+  70% { 
+    transform: scale(0.9) translateY(-10px);
+    opacity: 0.9;
+  }
+  100% { 
+    transform: scale(1) translateY(0px);
+    opacity: 1;
+  }
+}
+
+.destination-marker {
+  animation: energeticPulse 1s infinite;
+}
+
+/* Custom popup styles with MORE ENERGY */
 .mapboxgl-popup-content {
   background: transparent !important;
   box-shadow: none !important;
   padding: 0 !important;
+  animation: explosiveEntry 0.5s ease-out;
 }
 
 .destination-popup .mapboxgl-popup-content {
@@ -172,16 +230,74 @@
   }
 }
 
-/* Smooth transitions for all elements */
+/* MUCH MORE ENERGETIC transitions for all elements */
 * {
-  transition: transform 0.2s ease, opacity 0.2s ease;
+  transition: transform 0.15s ease, opacity 0.15s ease, box-shadow 0.15s ease;
 }
 
-/* Enhanced button hover effects */
+/* Enhanced button hover effects with MORE ENERGY */
 button:hover {
-  transform: translateY(-1px);
+  transform: translateY(-3px) scale(1.02);
+  box-shadow: 0 8px 25px rgba(0,0,0,0.2);
 }
 
 button:active {
-  transform: translateY(0);
+  transform: translateY(-1px) scale(0.98);
+}
+
+/* Add energetic glow effects */
+.energetic-glow {
+  animation: energeticGlow 2s ease-in-out infinite alternate;
+}
+
+@keyframes energeticGlow {
+  from {
+    box-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
+  }
+  to {
+    box-shadow: 0 0 40px rgba(255, 215, 0, 0.8), 0 0 60px rgba(255, 215, 0, 0.4);
+  }
+}
+
+/* Energetic text animations */
+.energetic-text {
+  animation: energeticText 3s ease-in-out infinite;
+}
+
+@keyframes energeticText {
+  0%, 100% {
+    text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+    transform: scale(1);
+  }
+  50% {
+    text-shadow: 0 0 20px rgba(255, 215, 0, 0.8), 0 0 30px rgba(255, 215, 0, 0.6);
+    transform: scale(1.02);
+  }
+}
+
+/* Spinning animations with MORE ENERGY */
+.energetic-spin {
+  animation: energeticSpin 1s linear infinite;
+}
+
+@keyframes energeticSpin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+/* Bounce animations with MORE ENERGY */
+.energetic-bounce {
+  animation: energeticBounce 1s ease-in-out infinite;
+}
+
+@keyframes energeticBounce {
+  0%, 20%, 50%, 80%, 100% {
+    transform: translateY(0);
+  }
+  40% {
+    transform: translateY(-15px);
+  }
+  60% {
+    transform: translateY(-7px);
+  }
 }
