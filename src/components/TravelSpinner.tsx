@@ -7,7 +7,7 @@ import { TravelStyle } from '@/types/country';
 
 // Import components
 import WelcomeScreen from './spinner/WelcomeScreen';
-import SpinningGlobe from './globe/SpinningGlobe';
+import SpinningGlobe from './spinner/SpinningGlobe';
 import DestinationReveal from './spinner/DestinationReveal';
 import DestinationExplorer from './spinner/DestinationExplorer';
 import UserAccount from './spinner/UserAccount';
@@ -30,6 +30,7 @@ const TravelSpinner: React.FC = () => {
   };
 
   const handleDestinationFound = (destination: Destination) => {
+    console.log('Destination found:', destination); // Debug log
     setCurrentDestination(destination);
     
     // Record the spin
@@ -40,7 +41,11 @@ const TravelSpinner: React.FC = () => {
     };
     
     recordSpin(destination.name, travelerTypeMap[selectedTravelStyle]);
-    setCurrentStep('reveal');
+    
+    // Transition to reveal step
+    setTimeout(() => {
+      setCurrentStep('reveal');
+    }, 1500); // Give a bit more time for the "Preparing..." message
   };
 
   const handleSaveDestination = async () => {
@@ -70,6 +75,16 @@ const TravelSpinner: React.FC = () => {
     setCurrentStep('welcome');
   };
 
+  // Convert TravelStyle to TravelerType for SpinningGlobe
+  const getTravelerType = (style: TravelStyle): TravelerType => {
+    const mapping: { [key in TravelStyle]: TravelerType } = {
+      'Romantic': 'couple',
+      'Family': 'family',
+      'Solo': 'solo'
+    };
+    return mapping[style];
+  };
+
   return (
     <div className="relative min-h-screen overflow-hidden">
       <AnimatePresence mode="wait">
@@ -97,8 +112,8 @@ const TravelSpinner: React.FC = () => {
             transition={{ duration: 0.5 }}
           >
             <SpinningGlobe 
-              travelStyle={selectedTravelStyle}
-              onDestinationFound={handleDestinationFound}
+              travelerType={getTravelerType(selectedTravelStyle)}
+              onDestinationSelected={handleDestinationFound}
             />
           </motion.div>
         )}
