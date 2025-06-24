@@ -24,7 +24,7 @@ This application features:
 - **Atmospheric Effects**: Beautiful space-like atmosphere around the globe
 
 ### 🎯 Smart Destination Selection
-- **Traveler Type Filtering**: Destinations tailored to comfort seekers, easy explorers, or wild wanderers
+- **Traveler Type Filtering**: Destinations tailored to chill trips, casual adventures, or offbeat journeys
 - **Animated Selection**: Smooth camera transitions to selected destinations
 - **Detailed Information**: Comprehensive destination details with itineraries
 
@@ -207,4 +207,4 @@ This project is built with:
 
 For more information, visit the [project repository](https://github.com/your-repo/wanderspin).
 
-<!-- Force deploy trigger: Updated with WanderSpin branding and copy -->
+<!-- Force deploy trigger: Updated with new tagline -->

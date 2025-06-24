@@ -288,14 +288,14 @@ const WelcomeScreen: React.FC<WelcomeScreenProps> = ({ onTravelStyleSelect, isAu
             </motion.span>
           </motion.h1>
 
-          {/* Subtitle with bounce animation */}
+          {/* Updated subtitle */}
           <motion.p
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.6 }}
             className="text-xl md:text-2xl text-white/95 mb-12 max-w-3xl mx-auto leading-relaxed drop-shadow-lg"
           >
-            Spin the globe, pick your style, and unlock your next adventure.
+            Log in to spin and find your perfect escape
           </motion.p>
 
           {/* Body copy */}

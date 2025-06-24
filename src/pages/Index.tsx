@@ -37,7 +37,7 @@ const Index = () => {
                 Welcome to WanderSpin!
               </h2>
               <p className="text-gray-600 text-sm leading-relaxed mb-4">
-                Spin the globe, pick your style, and unlock your next adventure.
+                Log in to spin and find your perfect escape
               </p>
             </div>
             
