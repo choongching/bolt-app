@@ -25,7 +25,10 @@ import {
   Thermometer,
   Droplets,
   Wind,
-  Star
+  Star,
+  Plane,
+  Globe,
+  Activity
 } from 'lucide-react';
 import { Destination } from '@/types/destination';
 import { numbeoService } from '@/services/numbeoApi';
@@ -107,10 +110,10 @@ const DestinationReveal: React.FC<DestinationRevealProps> = ({
     if (budgetData) {
       return (
         <div>
-          <div className="text-lg font-semibold mb-2">
+          <div className="text-2xl font-bold mb-3">
             ${budgetData.daily_budget_low}-${budgetData.daily_budget_high}/day
           </div>
-          <div className="text-sm text-white/80 space-y-1">
+          <div className="text-sm text-white/80 space-y-2">
             <div className="flex justify-between">
               <span>Accommodation:</span>
               <span>${budgetData.breakdown.accommodation.low}-${budgetData.breakdown.accommodation.high}</span>
@@ -128,7 +131,7 @@ const DestinationReveal: React.FC<DestinationRevealProps> = ({
               <span>${budgetData.breakdown.activities.low}-${budgetData.breakdown.activities.high}</span>
             </div>
           </div>
-          <div className="mt-2 text-xs text-white/60 flex items-center">
+          <div className="mt-3 text-xs text-white/60 flex items-center">
             <TrendingUp className="w-3 h-3 mr-1" />
             Real-time data from Numbeo
           </div>
@@ -155,7 +158,7 @@ const DestinationReveal: React.FC<DestinationRevealProps> = ({
 
       return (
         <div>
-          <div className="text-lg font-semibold mb-3 flex items-center">
+          <div className="text-xl font-bold mb-3 flex items-center">
             <Sun className="w-5 h-5 mr-2 text-yellow-400" />
             {bestTime}
           </div>
@@ -232,37 +235,6 @@ const DestinationReveal: React.FC<DestinationRevealProps> = ({
             </div>
           )}
 
-          {/* Special events */}
-          {weatherData.specialEvents && weatherData.specialEvents.length > 0 && (
-            <div className="mt-3">
-              <p className="text-sm font-medium mb-2 flex items-center">
-                <Calendar className="w-4 h-4 mr-1" />
-                Special Events:
-              </p>
-              {weatherData.specialEvents.slice(0, 2).map((event: any, index: number) => (
-                <div key={index} className="text-xs text-white/70 mb-1 p-2 bg-white/5 rounded">
-                  <div className="font-medium text-white/90">{event.name}</div>
-                  <div className="text-white/60">{event.months.join(', ')}</div>
-                  <div className="text-white/50 mt-1">{event.description}</div>
-                </div>
-              ))}
-            </div>
-          )}
-
-          {/* Avoid months */}
-          {weatherData.avoidMonths && weatherData.avoidMonths.length > 0 && (
-            <div className="mt-3">
-              <p className="text-sm font-medium mb-1 text-orange-400">Consider avoiding:</p>
-              <div className="flex flex-wrap gap-1">
-                {weatherData.avoidMonths.map((month: string) => (
-                  <Badge key={month} variant="secondary" className="bg-red-600/30 text-red-300 text-xs">
-                    {month.slice(0, 3)}
-                  </Badge>
-                ))}
-              </div>
-            </div>
-          )}
-
           <div className="mt-3 text-xs text-white/50 flex items-center">
             <Cloud className="w-3 h-3 mr-1" />
             Weather data from {weatherData.dataSource}
@@ -329,32 +301,32 @@ const DestinationReveal: React.FC<DestinationRevealProps> = ({
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-900 via-blue-900 to-indigo-900 flex items-center justify-center p-6">
-      <div className="max-w-6xl mx-auto">
-        {/* Pin Drop Animation with Zap theme */}
+    <div className="min-h-screen bg-gradient-to-br from-purple-900 via-blue-900 to-indigo-900 p-4 md:p-6 lg:p-8">
+      <div className="max-w-7xl mx-auto">
+        {/* Header Section */}
         <motion.div
-          initial={{ y: -100, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          transition={{ duration: 1, ease: "easeOut" }}
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8 }}
           className="text-center mb-8"
         >
           <motion.div
             initial={{ scale: 0 }}
             animate={{ scale: 1 }}
-            transition={{ delay: 0.5, duration: 0.5, ease: "easeOut" }}
-            className="inline-block"
+            transition={{ delay: 0.3, duration: 0.5 }}
+            className="inline-block mb-4"
           >
             <div className="relative">
-              <MapPin className="w-16 h-16 text-red-500 mx-auto mb-4 drop-shadow-lg" />
+              <MapPin className="w-12 h-12 text-red-500 mx-auto drop-shadow-lg" />
               <motion.div
                 animate={{ 
                   scale: [1, 1.2, 1],
                   rotate: [0, 10, -10, 0]
                 }}
-                transition={{ duration: 0.5, delay: 0.8 }}
-                className="absolute -top-2 -right-2"
+                transition={{ duration: 0.5, delay: 0.5 }}
+                className="absolute -top-1 -right-1"
               >
-                <Zap className="w-6 h-6 text-yellow-400" />
+                <Zap className="w-4 h-4 text-yellow-400" />
               </motion.div>
             </div>
           </motion.div>
@@ -362,8 +334,8 @@ const DestinationReveal: React.FC<DestinationRevealProps> = ({
           <motion.h1
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.8, duration: 0.8 }}
-            className="text-5xl md:text-7xl font-bold text-white mb-4"
+            transition={{ delay: 0.6, duration: 0.8 }}
+            className="text-4xl md:text-6xl lg:text-7xl font-bold text-white mb-4 font-['Inter']"
           >
             {destination.name}
           </motion.h1>
@@ -371,8 +343,8 @@ const DestinationReveal: React.FC<DestinationRevealProps> = ({
           <motion.p
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 1, duration: 0.8 }}
-            className="text-2xl md:text-3xl text-yellow-400 font-semibold mb-2"
+            transition={{ delay: 0.8, duration: 0.8 }}
+            className="text-xl md:text-2xl text-yellow-400 font-semibold mb-2 font-['Inter']"
           >
             {destination.tagline}
           </motion.p>
@@ -380,8 +352,8 @@ const DestinationReveal: React.FC<DestinationRevealProps> = ({
           <motion.p
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            transition={{ delay: 1.2, duration: 0.8 }}
-            className="text-white/80 text-lg"
+            transition={{ delay: 1, duration: 0.8 }}
+            className="text-white/80 text-lg font-['Inter']"
           >
             {destination.country}
           </motion.p>
@@ -389,27 +361,27 @@ const DestinationReveal: React.FC<DestinationRevealProps> = ({
           <motion.p
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            transition={{ delay: 1.4, duration: 0.8 }}
-            className="text-white/60 text-sm mt-2"
+            transition={{ delay: 1.2, duration: 0.8 }}
+            className="text-white/60 text-sm mt-2 font-['Inter']"
           >
             Adventure unlocked! Check budget, best times, visa, and epic activities!
           </motion.p>
         </motion.div>
 
-        {/* Main Content */}
-        <div className="grid lg:grid-cols-2 gap-8 mb-8">
-          {/* Image */}
-          <motion.div
-            initial={{ opacity: 0, x: -50 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ delay: 1.4, duration: 0.8 }}
-            className="relative"
-          >
-            <div className="aspect-video rounded-2xl overflow-hidden shadow-2xl">
+        {/* Bento Grid Layout */}
+        <motion.div
+          initial={{ opacity: 0, y: 50 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 1.4, duration: 0.8 }}
+          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 mb-8"
+        >
+          {/* Hero Image - Large Card */}
+          <Card className="lg:col-span-2 lg:row-span-2 bg-white/10 backdrop-blur-sm border-white/20 overflow-hidden group hover:bg-white/15 transition-all duration-300">
+            <div className="relative h-64 md:h-80 lg:h-full">
               <img
                 src={destination.image_url || 'https://images.pexels.com/photos/1591373/pexels-photo-1591373.jpeg'}
                 alt={destination.name}
-                className={`w-full h-full object-cover transition-opacity duration-500 ${
+                className={`w-full h-full object-cover transition-all duration-500 group-hover:scale-105 ${
                   imageLoaded ? 'opacity-100' : 'opacity-0'
                 }`}
                 onLoad={() => setImageLoaded(true)}
@@ -417,87 +389,84 @@ const DestinationReveal: React.FC<DestinationRevealProps> = ({
               {!imageLoaded && (
                 <div className="absolute inset-0 bg-gradient-to-br from-purple-600 to-blue-600 animate-pulse" />
               )}
-            </div>
-            
-            {/* Image overlay */}
-            <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent rounded-2xl" />
-            <div className="absolute bottom-4 left-4 text-white">
-              <div className="flex items-center space-x-2">
-                <Camera className="w-5 h-5" />
-                <span className="text-sm">Stunning views await</span>
+              
+              <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
+              <div className="absolute bottom-4 left-4 text-white">
+                <div className="flex items-center space-x-2">
+                  <Camera className="w-5 h-5" />
+                  <span className="text-sm font-medium">Stunning views await</span>
+                </div>
               </div>
             </div>
-          </motion.div>
+          </Card>
 
-          {/* Info Panel */}
-          <motion.div
-            initial={{ opacity: 0, x: 50 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ delay: 1.6, duration: 0.8 }}
-            className="space-y-6"
-          >
-            <Card className="bg-white/10 backdrop-blur-sm border-white/20">
-              <CardContent className="p-6">
-                <h3 className="text-2xl font-bold text-white mb-4 flex items-center">
-                  <DollarSign className="w-6 h-6 mr-2 text-green-400" />
-                  Daily Budget Estimate
-                </h3>
-                <div className="text-white/90">
-                  {formatBudgetDisplay()}
-                </div>
-              </CardContent>
-            </Card>
+          {/* Budget Card */}
+          <Card className="bg-white/10 backdrop-blur-sm border-white/20 hover:bg-white/15 transition-all duration-300">
+            <CardContent className="p-4 md:p-6 h-full flex flex-col">
+              <div className="flex items-center mb-3">
+                <DollarSign className="w-5 h-5 mr-2 text-green-400" />
+                <h3 className="text-lg font-bold text-white font-['Inter']">Daily Budget</h3>
+              </div>
+              <div className="text-white/90 flex-1 flex flex-col justify-center">
+                {formatBudgetDisplay()}
+              </div>
+            </CardContent>
+          </Card>
 
-            <Card className="bg-white/10 backdrop-blur-sm border-white/20">
-              <CardContent className="p-6">
-                <h3 className="text-2xl font-bold text-white mb-4 flex items-center">
-                  <Calendar className="w-6 h-6 mr-2 text-blue-400" />
-                  Best Time to Visit
-                </h3>
-                <div className="text-white/90">
-                  {formatWeatherDisplay()}
-                </div>
-              </CardContent>
-            </Card>
+          {/* Weather/Best Time Card */}
+          <Card className="bg-white/10 backdrop-blur-sm border-white/20 hover:bg-white/15 transition-all duration-300">
+            <CardContent className="p-4 md:p-6 h-full flex flex-col">
+              <div className="flex items-center mb-3">
+                <Calendar className="w-5 h-5 mr-2 text-blue-400" />
+                <h3 className="text-lg font-bold text-white font-['Inter']">Best Time</h3>
+              </div>
+              <div className="text-white/90 flex-1">
+                {formatWeatherDisplay()}
+              </div>
+            </CardContent>
+          </Card>
 
-            <Card className="bg-white/10 backdrop-blur-sm border-white/20">
-              <CardContent className="p-6">
-                <h3 className="text-2xl font-bold text-white mb-4 flex items-center">
-                  <FileText className="w-6 h-6 mr-2 text-yellow-400" />
-                  Visa Requirements
-                </h3>
+          {/* Visa Requirements Card */}
+          <Card className="lg:col-span-2 bg-white/10 backdrop-blur-sm border-white/20 hover:bg-white/15 transition-all duration-300">
+            <CardContent className="p-4 md:p-6 h-full">
+              <div className="flex items-center mb-4">
+                <FileText className="w-5 h-5 mr-2 text-yellow-400" />
+                <h3 className="text-lg font-bold text-white font-['Inter']">Visa Requirements</h3>
+              </div>
+              <div className="text-white/90">
                 {formatVisaDisplay()}
-              </CardContent>
-            </Card>
+              </div>
+            </CardContent>
+          </Card>
 
-            <Card className="bg-white/10 backdrop-blur-sm border-white/20">
-              <CardContent className="p-6">
-                <h3 className="text-2xl font-bold text-white mb-4 flex items-center">
-                  <Users className="w-6 h-6 mr-2 text-purple-400" />
-                  Epic Activities
-                </h3>
-                <div className="flex flex-wrap gap-2">
-                  {destination.activities.map((activity, index) => (
-                    <Badge 
-                      key={index} 
-                      variant="secondary" 
-                      className="bg-white/20 text-white border-white/30"
-                    >
-                      {activity}
-                    </Badge>
-                  ))}
-                </div>
-              </CardContent>
-            </Card>
-          </motion.div>
-        </div>
+          {/* Activities Card */}
+          <Card className="lg:col-span-2 bg-white/10 backdrop-blur-sm border-white/20 hover:bg-white/15 transition-all duration-300">
+            <CardContent className="p-4 md:p-6 h-full">
+              <div className="flex items-center mb-4">
+                <Activity className="w-5 h-5 mr-2 text-purple-400" />
+                <h3 className="text-lg font-bold text-white font-['Inter']">Epic Activities</h3>
+              </div>
+              <div className="flex flex-wrap gap-2">
+                {destination.activities.map((activity, index) => (
+                  <Badge 
+                    key={index} 
+                    variant="secondary" 
+                    className="bg-white/20 text-white border-white/30 font-['Inter']"
+                  >
+                    {activity}
+                  </Badge>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+        </motion.div>
 
         {/* Action Buttons */}
         <motion.div
           initial={{ opacity: 0, y: 50 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 2, duration: 0.8 }}
-          className="flex flex-wrap justify-center gap-4"
+          className="flex flex-col sm:flex-row justify-center gap-4 mb-8"
         >
           <Button
             onClick={onSave}
@@ -506,7 +475,7 @@ const DestinationReveal: React.FC<DestinationRevealProps> = ({
               isSaved 
                 ? 'bg-green-600 hover:bg-green-700' 
                 : 'bg-red-600 hover:bg-red-700'
-            } text-white font-semibold py-3 px-8 rounded-full shadow-lg transform hover:scale-105 transition-all duration-300`}
+            } text-white font-semibold py-4 px-8 rounded-2xl shadow-lg transform hover:scale-105 transition-all duration-300 font-['Inter']`}
           >
             <Heart className={`w-5 h-5 mr-2 ${isSaved ? 'fill-current' : ''}`} />
             {isSaved ? 'Saved!' : 'Save Destination'}
@@ -515,7 +484,7 @@ const DestinationReveal: React.FC<DestinationRevealProps> = ({
           <Button
             onClick={onExplore}
             size="lg"
-            className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-8 rounded-full shadow-lg transform hover:scale-105 transition-all duration-300"
+            className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-4 px-8 rounded-2xl shadow-lg transform hover:scale-105 transition-all duration-300 font-['Inter']"
           >
             <ExternalLink className="w-5 h-5 mr-2" />
             Explore Deeper
@@ -525,21 +494,21 @@ const DestinationReveal: React.FC<DestinationRevealProps> = ({
             onClick={onSpinAgain}
             size="lg"
             variant="outline"
-            className="bg-white/10 border-white/30 text-white hover:bg-white/20 font-semibold py-3 px-8 rounded-full shadow-lg transform hover:scale-105 transition-all duration-300 backdrop-blur-sm"
+            className="bg-white/10 border-white/30 text-white hover:bg-white/20 font-semibold py-4 px-8 rounded-2xl shadow-lg transform hover:scale-105 transition-all duration-300 backdrop-blur-sm font-['Inter']"
           >
             <Zap className="w-5 h-5 mr-2" />
             Spin Again
           </Button>
         </motion.div>
 
-        {/* Additional Info */}
+        {/* Footer Info */}
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 2.5, duration: 0.8 }}
-          className="text-center mt-8"
+          className="text-center"
         >
-          <p className="text-white/60 text-sm">
+          <p className="text-white/60 text-sm font-['Inter']">
             <Clock className="w-4 h-4 inline mr-1" />
             Budget estimates updated with real-time data • Weather data from Open-Meteo • Visa information verified from official sources
           </p>
