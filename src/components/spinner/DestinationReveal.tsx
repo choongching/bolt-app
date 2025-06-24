@@ -301,7 +301,7 @@ const DestinationReveal: React.FC<DestinationRevealProps> = ({
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-900 via-blue-900 to-indigo-900 p-4 md:p-6 lg:p-8">
+    <div className="min-h-screen bg-gradient-to-br from-purple-900 via-blue-900 to-indigo-900 p-4 md:p-6 lg:p-8" style={{ fontFamily: 'ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"' }}>
       <div className="max-w-7xl mx-auto">
         {/* Header Section */}
         <motion.div
@@ -335,7 +335,7 @@ const DestinationReveal: React.FC<DestinationRevealProps> = ({
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.6, duration: 0.8 }}
-            className="text-4xl md:text-6xl lg:text-7xl font-bold text-white mb-4 font-['Inter']"
+            className="text-4xl md:text-6xl lg:text-7xl font-bold text-white mb-4"
           >
             {destination.name}
           </motion.h1>
@@ -344,7 +344,7 @@ const DestinationReveal: React.FC<DestinationRevealProps> = ({
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.8, duration: 0.8 }}
-            className="text-xl md:text-2xl text-yellow-400 font-semibold mb-2 font-['Inter']"
+            className="text-xl md:text-2xl text-yellow-400 font-semibold mb-2"
           >
             {destination.tagline}
           </motion.p>
@@ -353,7 +353,7 @@ const DestinationReveal: React.FC<DestinationRevealProps> = ({
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 1, duration: 0.8 }}
-            className="text-white/80 text-lg font-['Inter']"
+            className="text-white/80 text-lg"
           >
             {destination.country}
           </motion.p>
@@ -362,7 +362,7 @@ const DestinationReveal: React.FC<DestinationRevealProps> = ({
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 1.2, duration: 0.8 }}
-            className="text-white/60 text-sm mt-2 font-['Inter']"
+            className="text-white/60 text-sm mt-2"
           >
             Adventure unlocked! Check budget, best times, visa, and epic activities!
           </motion.p>
@@ -405,7 +405,7 @@ const DestinationReveal: React.FC<DestinationRevealProps> = ({
             <CardContent className="p-4 md:p-6 h-full flex flex-col">
               <div className="flex items-center mb-3">
                 <DollarSign className="w-5 h-5 mr-2 text-green-400" />
-                <h3 className="text-lg font-bold text-white font-['Inter']">Daily Budget</h3>
+                <h3 className="text-lg font-bold text-white">Daily Budget</h3>
               </div>
               <div className="text-white/90 flex-1 flex flex-col justify-center">
                 {formatBudgetDisplay()}
@@ -418,7 +418,7 @@ const DestinationReveal: React.FC<DestinationRevealProps> = ({
             <CardContent className="p-4 md:p-6 h-full flex flex-col">
               <div className="flex items-center mb-3">
                 <Calendar className="w-5 h-5 mr-2 text-blue-400" />
-                <h3 className="text-lg font-bold text-white font-['Inter']">Best Time</h3>
+                <h3 className="text-lg font-bold text-white">Best Time</h3>
               </div>
               <div className="text-white/90 flex-1">
                 {formatWeatherDisplay()}
@@ -431,7 +431,7 @@ const DestinationReveal: React.FC<DestinationRevealProps> = ({
             <CardContent className="p-4 md:p-6 h-full">
               <div className="flex items-center mb-4">
                 <FileText className="w-5 h-5 mr-2 text-yellow-400" />
-                <h3 className="text-lg font-bold text-white font-['Inter']">Visa Requirements</h3>
+                <h3 className="text-lg font-bold text-white">Visa Requirements</h3>
               </div>
               <div className="text-white/90">
                 {formatVisaDisplay()}
@@ -444,14 +444,14 @@ const DestinationReveal: React.FC<DestinationRevealProps> = ({
             <CardContent className="p-4 md:p-6 h-full">
               <div className="flex items-center mb-4">
                 <Activity className="w-5 h-5 mr-2 text-purple-400" />
-                <h3 className="text-lg font-bold text-white font-['Inter']">Epic Activities</h3>
+                <h3 className="text-lg font-bold text-white">Epic Activities</h3>
               </div>
               <div className="flex flex-wrap gap-2">
                 {destination.activities.map((activity, index) => (
                   <Badge 
                     key={index} 
                     variant="secondary" 
-                    className="bg-white/20 text-white border-white/30 font-['Inter']"
+                    className="bg-white/20 text-white border-white/30"
                   >
                     {activity}
                   </Badge>
@@ -475,7 +475,7 @@ const DestinationReveal: React.FC<DestinationRevealProps> = ({
               isSaved 
                 ? 'bg-green-600 hover:bg-green-700' 
                 : 'bg-red-600 hover:bg-red-700'
-            } text-white font-semibold py-4 px-8 rounded-2xl shadow-lg transform hover:scale-105 transition-all duration-300 font-['Inter']`}
+            } text-white font-semibold py-4 px-8 rounded-2xl shadow-lg transform hover:scale-105 transition-all duration-300`}
           >
             <Heart className={`w-5 h-5 mr-2 ${isSaved ? 'fill-current' : ''}`} />
             {isSaved ? 'Saved!' : 'Save Destination'}
@@ -484,7 +484,7 @@ const DestinationReveal: React.FC<DestinationRevealProps> = ({
           <Button
             onClick={onExplore}
             size="lg"
-            className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-4 px-8 rounded-2xl shadow-lg transform hover:scale-105 transition-all duration-300 font-['Inter']"
+            className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-4 px-8 rounded-2xl shadow-lg transform hover:scale-105 transition-all duration-300"
           >
             <ExternalLink className="w-5 h-5 mr-2" />
             Explore Deeper
@@ -494,7 +494,7 @@ const DestinationReveal: React.FC<DestinationRevealProps> = ({
             onClick={onSpinAgain}
             size="lg"
             variant="outline"
-            className="bg-white/10 border-white/30 text-white hover:bg-white/20 font-semibold py-4 px-8 rounded-2xl shadow-lg transform hover:scale-105 transition-all duration-300 backdrop-blur-sm font-['Inter']"
+            className="bg-white/10 border-white/30 text-white hover:bg-white/20 font-semibold py-4 px-8 rounded-2xl shadow-lg transform hover:scale-105 transition-all duration-300 backdrop-blur-sm"
           >
             <Zap className="w-5 h-5 mr-2" />
             Spin Again
@@ -508,7 +508,7 @@ const DestinationReveal: React.FC<DestinationRevealProps> = ({
           transition={{ delay: 2.5, duration: 0.8 }}
           className="text-center"
         >
-          <p className="text-white/60 text-sm font-['Inter']">
+          <p className="text-white/60 text-sm">
             <Clock className="w-4 h-4 inline mr-1" />
             Budget estimates updated with real-time data • Weather data from Open-Meteo • Visa information verified from official sources
           </p>
