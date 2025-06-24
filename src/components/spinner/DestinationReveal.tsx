@@ -28,7 +28,11 @@ import {
   Star,
   Plane,
   Globe,
-  Activity
+  Activity,
+  Grid,
+  X,
+  ChevronLeft,
+  ChevronRight
 } from 'lucide-react';
 import { Destination } from '@/types/destination';
 import { numbeoService } from '@/services/numbeoApi';
@@ -43,6 +47,194 @@ interface DestinationRevealProps {
   isSaved?: boolean;
 }
 
+// Mini Gallery Component
+const MiniGallery: React.FC<{ destination: Destination }> = ({ destination }) => {
+  const [selectedImage, setSelectedImage] = useState<number>(0);
+  const [showLightbox, setShowLightbox] = useState(false);
+
+  // Sample gallery images - in a real app, these would come from an API
+  const galleryImages = [
+    {
+      id: 1,
+      url: destination.image_url || 'https://images.pexels.com/photos/1591373/pexels-photo-1591373.jpeg',
+      alt: `${destination.name} - Main view`,
+      thumbnail: destination.image_url || 'https://images.pexels.com/photos/1591373/pexels-photo-1591373.jpeg'
+    },
+    {
+      id: 2,
+      url: 'https://images.pexels.com/photos/2070033/pexels-photo-2070033.jpeg',
+      alt: `${destination.name} - Architecture`,
+      thumbnail: 'https://images.pexels.com/photos/2070033/pexels-photo-2070033.jpeg'
+    },
+    {
+      id: 3,
+      url: 'https://images.pexels.com/photos/259967/pexels-photo-259967.jpeg',
+      alt: `${destination.name} - Landscape`,
+      thumbnail: 'https://images.pexels.com/photos/259967/pexels-photo-259967.jpeg'
+    },
+    {
+      id: 4,
+      url: 'https://images.pexels.com/photos/2474690/pexels-photo-2474690.jpeg',
+      alt: `${destination.name} - Culture`,
+      thumbnail: 'https://images.pexels.com/photos/2474690/pexels-photo-2474690.jpeg'
+    },
+    {
+      id: 5,
+      url: 'https://images.pexels.com/photos/1433052/pexels-photo-1433052.jpeg',
+      alt: `${destination.name} - Nature`,
+      thumbnail: 'https://images.pexels.com/photos/1433052/pexels-photo-1433052.jpeg'
+    }
+  ];
+
+  const openLightbox = (index: number) => {
+    setSelectedImage(index);
+    setShowLightbox(true);
+  };
+
+  const navigateImage = (direction: 'prev' | 'next') => {
+    if (direction === 'prev') {
+      setSelectedImage((prev) => (prev - 1 + galleryImages.length) % galleryImages.length);
+    } else {
+      setSelectedImage((prev) => (prev + 1) % galleryImages.length);
+    }
+  };
+
+  return (
+    <>
+      {/* Mini Gallery Grid */}
+      <div className="grid grid-cols-4 gap-2 h-full">
+        {/* Main large image */}
+        <div 
+          className="col-span-2 row-span-2 relative overflow-hidden rounded-lg cursor-pointer group"
+          onClick={() => openLightbox(0)}
+        >
+          <img
+            src={galleryImages[0].url}
+            alt={galleryImages[0].alt}
+            className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+          />
+          <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-all duration-300" />
+        </div>
+
+        {/* Top right images */}
+        <div 
+          className="relative overflow-hidden rounded-lg cursor-pointer group"
+          onClick={() => openLightbox(1)}
+        >
+          <img
+            src={galleryImages[1].thumbnail}
+            alt={galleryImages[1].alt}
+            className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+          />
+          <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-all duration-300" />
+        </div>
+
+        <div 
+          className="relative overflow-hidden rounded-lg cursor-pointer group"
+          onClick={() => openLightbox(2)}
+        >
+          <img
+            src={galleryImages[2].thumbnail}
+            alt={galleryImages[2].alt}
+            className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+          />
+          <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-all duration-300" />
+        </div>
+
+        {/* Bottom right images */}
+        <div 
+          className="relative overflow-hidden rounded-lg cursor-pointer group"
+          onClick={() => openLightbox(3)}
+        >
+          <img
+            src={galleryImages[3].thumbnail}
+            alt={galleryImages[3].alt}
+            className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+          />
+          <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-all duration-300" />
+        </div>
+
+        <div 
+          className="relative overflow-hidden rounded-lg cursor-pointer group"
+          onClick={() => openLightbox(4)}
+        >
+          <img
+            src={galleryImages[4].thumbnail}
+            alt={galleryImages[4].alt}
+            className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+          />
+          <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-all duration-300 flex items-center justify-center" />
+          
+          {/* "Show all photos" overlay */}
+          <div className="absolute inset-0 bg-black/40 flex items-center justify-center">
+            <div className="text-white text-center">
+              <Grid className="w-6 h-6 mx-auto mb-1" />
+              <span className="text-sm font-medium">Show all</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Lightbox Modal */}
+      {showLightbox && (
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          className="fixed inset-0 z-50 bg-black/90 backdrop-blur-sm flex items-center justify-center p-4"
+          onClick={() => setShowLightbox(false)}
+        >
+          <div className="relative max-w-4xl max-h-full" onClick={(e) => e.stopPropagation()}>
+            {/* Close Button */}
+            <Button
+              variant="outline"
+              size="icon"
+              className="absolute top-4 right-4 z-10 bg-black/50 border-white/30 text-white hover:bg-black/70"
+              onClick={() => setShowLightbox(false)}
+            >
+              <X className="w-4 h-4" />
+            </Button>
+
+            {/* Navigation Buttons */}
+            <Button
+              variant="outline"
+              size="icon"
+              className="absolute left-4 top-1/2 -translate-y-1/2 z-10 bg-black/50 border-white/30 text-white hover:bg-black/70"
+              onClick={() => navigateImage('prev')}
+            >
+              <ChevronLeft className="w-4 h-4" />
+            </Button>
+            <Button
+              variant="outline"
+              size="icon"
+              className="absolute right-4 top-1/2 -translate-y-1/2 z-10 bg-black/50 border-white/30 text-white hover:bg-black/70"
+              onClick={() => navigateImage('next')}
+            >
+              <ChevronRight className="w-4 h-4" />
+            </Button>
+
+            {/* Image */}
+            <motion.img
+              key={selectedImage}
+              initial={{ scale: 0.8, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              transition={{ duration: 0.3 }}
+              src={galleryImages[selectedImage].url}
+              alt={galleryImages[selectedImage].alt}
+              className="max-w-full max-h-full object-contain rounded-lg"
+            />
+
+            {/* Image Counter */}
+            <div className="absolute bottom-4 left-1/2 -translate-x-1/2 bg-black/50 text-white px-3 py-1 rounded-full text-sm">
+              {selectedImage + 1} / {galleryImages.length}
+            </div>
+          </div>
+        </motion.div>
+      )}
+    </>
+  );
+};
+
 const DestinationReveal: React.FC<DestinationRevealProps> = ({
   destination,
   onSave,
@@ -50,7 +242,6 @@ const DestinationReveal: React.FC<DestinationRevealProps> = ({
   onSpinAgain,
   isSaved = false
 }) => {
-  const [imageLoaded, setImageLoaded] = useState(false);
   const [budgetData, setBudgetData] = useState<any>(null);
   const [budgetLoading, setBudgetLoading] = useState(true);
   const [weatherData, setWeatherData] = useState<any>(null);
@@ -380,26 +571,15 @@ const DestinationReveal: React.FC<DestinationRevealProps> = ({
           transition={{ delay: 1.4, duration: 0.8 }}
           className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 mb-8"
         >
-          {/* Hero Image - Large Card */}
+          {/* Photo Gallery - Large Card */}
           <Card className="lg:col-span-2 lg:row-span-2 bg-white/10 backdrop-blur-sm border-white/20 overflow-hidden group hover:bg-white/15 transition-all duration-300">
             <div className="relative h-64 md:h-80 lg:h-full">
-              <img
-                src={destination.image_url || 'https://images.pexels.com/photos/1591373/pexels-photo-1591373.jpeg'}
-                alt={destination.name}
-                className={`w-full h-full object-cover transition-all duration-500 group-hover:scale-105 ${
-                  imageLoaded ? 'opacity-100' : 'opacity-0'
-                }`}
-                onLoad={() => setImageLoaded(true)}
-              />
-              {!imageLoaded && (
-                <div className="absolute inset-0 bg-gradient-to-br from-purple-600 to-blue-600 animate-pulse" />
-              )}
+              <MiniGallery destination={destination} />
               
-              <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
               <div className="absolute bottom-4 left-4 text-white">
                 <div className="flex items-center space-x-2">
                   <Camera className="w-5 h-5" />
-                  <span className="text-sm font-medium">Stunning views await</span>
+                  <span className="text-sm font-medium">Photo Gallery</span>
                 </div>
               </div>
             </div>
