@@ -301,7 +301,12 @@ const DestinationReveal: React.FC<DestinationRevealProps> = ({
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-900 via-blue-900 to-indigo-900 p-4 md:p-6 lg:p-8" style={{ fontFamily: 'ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"' }}>
+    <div 
+      className="min-h-screen bg-gradient-to-br from-purple-900 via-blue-900 to-indigo-900 p-4 md:p-6 lg:p-8" 
+      style={{ 
+        fontFamily: 'ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"'
+      }}
+    >
       <div className="max-w-7xl mx-auto">
         {/* Header Section */}
         <motion.div
