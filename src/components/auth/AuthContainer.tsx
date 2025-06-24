@@ -34,27 +34,27 @@ const AuthContainer: React.FC = () => {
         <div className="space-y-6">
           <GoogleSignInButton />
           
-          {/* Benefits section with updated copywriting */}
+          {/* Simplified benefits section */}
           <div className="bg-gray-50 rounded-lg p-4">
-            <h3 className="text-sm font-semibold text-gray-900 mb-3">Why Join the Adventure?</h3>
+            <h3 className="text-sm font-semibold text-gray-900 mb-3">Why Sign In?</h3>
             <ul className="space-y-2 text-xs text-gray-700">
               <li className="flex items-center">
                 <svg className="w-4 h-4 text-blue-500 mr-2 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                 </svg>
-                Unleash Random Wonders: Discover exciting new destinations with every spin!
+                Discover new places with every spin
               </li>
               <li className="flex items-center">
                 <svg className="w-4 h-4 text-blue-500 mr-2 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                 </svg>
-                Save Your Treasures: Pin your favorite spots and build a personal travel map.
+                Save your favorite destinations
               </li>
               <li className="flex items-center">
                 <svg className="w-4 h-4 text-blue-500 mr-2 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                 </svg>
-                Craft Epic Plans: Create customized itineraries for your next big adventure.
+                Plan your next adventure
               </li>
             </ul>
           </div>
