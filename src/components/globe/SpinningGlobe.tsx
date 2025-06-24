@@ -21,7 +21,6 @@ const SpinningGlobe: React.FC<SpinningGlobeProps> = ({ travelStyle, onDestinatio
   const [mapError, setMapError] = useState<string | null>(null);
   const spinningRef = useRef<number | null>(null);
   const destinationMarker = useRef<mapboxgl.Marker | null>(null);
-  const destinationPopup = useRef<mapboxgl.Popup | null>(null);
 
   // Check if Mapbox token is available and valid
   const hasValidMapboxToken = MAPBOX_TOKEN && 
@@ -103,9 +102,6 @@ const SpinningGlobe: React.FC<SpinningGlobeProps> = ({ travelStyle, onDestinatio
       if (destinationMarker.current) {
         destinationMarker.current.remove();
       }
-      if (destinationPopup.current) {
-        destinationPopup.current.remove();
-      }
       if (map.current) {
         map.current.remove();
       }
@@ -150,19 +146,20 @@ const SpinningGlobe: React.FC<SpinningGlobeProps> = ({ travelStyle, onDestinatio
     startSpinning();
     
     setTimeout(() => {
-      // Phase 2: Stop spinning and show destination on map (2 seconds)
+      // Phase 2: Stop spinning and show destination pin (3 seconds)
       stopSpinning();
       const country = getRandomCountryByStyle(travelStyle);
       setSelectedCountry(country);
       setStatus('found');
       
-      // Show destination directly on the map
-      showDestinationOnMap(country);
+      // Show simple destination pin on map
+      showDestinationPin(country);
       
       setTimeout(() => {
-        // Phase 3: Zoom to destination and show detailed card (3 seconds)
+        // Phase 3: Transition to details page
         setStatus('zooming');
-        zoomToDestination(country);
+        const destination = createDestinationFromCountry(country);
+        onDestinationFound(destination);
       }, 3000);
     }, 3000);
   };
@@ -213,32 +210,41 @@ const SpinningGlobe: React.FC<SpinningGlobeProps> = ({ travelStyle, onDestinatio
     }
   };
 
-  const showDestinationOnMap = (country: any) => {
+  const showDestinationPin = (country: any) => {
     if (!map.current || mapError) return;
 
     try {
-      // Create custom marker element with pulsing animation
+      // Zoom to the destination first
+      map.current.flyTo({
+        center: [country.coordinates.lng, country.coordinates.lat],
+        zoom: 6,
+        pitch: 30,
+        bearing: 0,
+        duration: 2000,
+        essential: true
+      });
+
+      // Create simple pin marker
       const markerElement = document.createElement('div');
       markerElement.className = 'destination-marker-found';
       markerElement.style.cssText = `
-        width: 60px;
-        height: 60px;
-        background: linear-gradient(135deg, #10b981, #059669);
+        width: 40px;
+        height: 40px;
+        background: linear-gradient(135deg, #ff6b6b, #ffd93d);
         border: 4px solid white;
         border-radius: 50%;
-        box-shadow: 0 8px 30px rgba(16, 185, 129, 0.6);
+        box-shadow: 0 8px 30px rgba(255, 107, 107, 0.8);
         display: flex;
         align-items: center;
         justify-content: center;
         animation: destinationFoundPulse 2s infinite;
         cursor: pointer;
-        position: relative;
       `;
 
-      // Add location icon inside the marker
+      // Add location icon
       markerElement.innerHTML = `
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z" fill="white"/>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="white">
+          <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
         </svg>
       `;
 
@@ -247,287 +253,8 @@ const SpinningGlobe: React.FC<SpinningGlobeProps> = ({ travelStyle, onDestinatio
         .setLngLat([country.coordinates.lng, country.coordinates.lat])
         .addTo(map.current);
 
-      // Create initial popup with "Destination Found" message
-      const initialPopupContent = `
-        <div style="
-          background: linear-gradient(135deg, rgba(0,0,0,0.9), rgba(0,0,0,0.8));
-          backdrop-filter: blur(10px);
-          border: 1px solid rgba(255,255,255,0.2);
-          border-radius: 16px;
-          padding: 24px;
-          text-align: center;
-          min-width: 280px;
-          box-shadow: 0 20px 40px rgba(0,0,0,0.3);
-        ">
-          <div style="
-            width: 60px;
-            height: 60px;
-            background: linear-gradient(135deg, #10b981, #059669);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 0 auto 16px auto;
-            animation: destinationFoundScale 1s ease-out;
-          ">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="white">
-              <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
-            </svg>
-          </div>
-          <h2 style="
-            color: white;
-            font-size: 24px;
-            font-weight: bold;
-            margin: 0 0 8px 0;
-            font-family: system-ui, -apple-system, sans-serif;
-          ">Destination Found!</h2>
-          <h3 style="
-            color: #fbbf24;
-            font-size: 20px;
-            font-weight: 600;
-            margin: 0 0 4px 0;
-            font-family: system-ui, -apple-system, sans-serif;
-          ">${country.name}</h3>
-          <p style="
-            color: rgba(255,255,255,0.8);
-            font-size: 14px;
-            margin: 0;
-            font-family: system-ui, -apple-system, sans-serif;
-          ">${country.tagline}</p>
-        </div>
-      `;
-
-      destinationPopup.current = new mapboxgl.Popup({
-        offset: [0, -80],
-        closeButton: false,
-        closeOnClick: false,
-        className: 'destination-found-popup'
-      })
-        .setLngLat([country.coordinates.lng, country.coordinates.lat])
-        .setHTML(initialPopupContent)
-        .addTo(map.current);
-
     } catch (error) {
-      console.error('Error showing destination on map:', error);
-    }
-  };
-
-  const zoomToDestination = (country: any) => {
-    if (map.current && !mapError) {
-      try {
-        // Dramatic zoom to the destination
-        map.current.flyTo({
-          center: [country.coordinates.lng, country.coordinates.lat],
-          zoom: 8,
-          pitch: 45,
-          bearing: 0,
-          duration: 3000,
-          essential: true,
-          easing: (t) => {
-            // Custom easing for dramatic effect
-            return t < 0.5 ? 2 * t * t : -1 + (4 - 2 * t) * t;
-          }
-        });
-
-        // Update popup with detailed destination card after zoom starts
-        setTimeout(() => {
-          if (destinationPopup.current && map.current) {
-            const destination = createDestinationFromCountry(country);
-            
-            const detailedPopupContent = `
-              <div style="
-                background: linear-gradient(135deg, rgba(0,0,0,0.95), rgba(0,0,0,0.9));
-                backdrop-filter: blur(15px);
-                border: 1px solid rgba(255,255,255,0.2);
-                border-radius: 20px;
-                padding: 0;
-                min-width: 320px;
-                max-width: 400px;
-                box-shadow: 0 25px 50px rgba(0,0,0,0.4);
-                overflow: hidden;
-                font-family: system-ui, -apple-system, sans-serif;
-              ">
-                <!-- Header with image placeholder -->
-                <div style="
-                  height: 160px;
-                  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-                  position: relative;
-                  display: flex;
-                  align-items: center;
-                  justify-content: center;
-                ">
-                  <div style="
-                    width: 80px;
-                    height: 80px;
-                    background: rgba(255,255,255,0.2);
-                    border-radius: 50%;
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;
-                    backdrop-filter: blur(10px);
-                  ">
-                    <svg width="32" height="32" viewBox="0 0 24 24" fill="white">
-                      <path d="M14,6L10.25,11L13.1,14.8L11.5,16C9.81,13.75 7,10 7,10L1,18H23L14,6Z"/>
-                    </svg>
-                  </div>
-                </div>
-                
-                <!-- Content -->
-                <div style="padding: 24px;">
-                  <h2 style="
-                    color: white;
-                    font-size: 28px;
-                    font-weight: bold;
-                    margin: 0 0 8px 0;
-                    text-align: center;
-                  ">${destination.name}</h2>
-                  
-                  <p style="
-                    color: #fbbf24;
-                    font-size: 16px;
-                    font-weight: 500;
-                    margin: 0 0 20px 0;
-                    text-align: center;
-                  ">${destination.tagline}</p>
-                  
-                  <!-- Info Grid -->
-                  <div style="
-                    display: grid;
-                    grid-template-columns: 1fr 1fr;
-                    gap: 16px;
-                    margin-bottom: 20px;
-                  ">
-                    <div style="
-                      background: rgba(255,255,255,0.1);
-                      padding: 12px;
-                      border-radius: 12px;
-                      text-align: center;
-                    ">
-                      <div style="color: #10b981; font-size: 12px; font-weight: 600; margin-bottom: 4px;">BUDGET</div>
-                      <div style="color: white; font-size: 14px; font-weight: 600;">${destination.budget_estimate}</div>
-                    </div>
-                    <div style="
-                      background: rgba(255,255,255,0.1);
-                      padding: 12px;
-                      border-radius: 12px;
-                      text-align: center;
-                    ">
-                      <div style="color: #3b82f6; font-size: 12px; font-weight: 600; margin-bottom: 4px;">BEST TIME</div>
-                      <div style="color: white; font-size: 14px; font-weight: 600;">${destination.best_time_to_visit}</div>
-                    </div>
-                  </div>
-                  
-                  <!-- Activities -->
-                  <div style="margin-bottom: 24px;">
-                    <div style="color: #a855f7; font-size: 12px; font-weight: 600; margin-bottom: 8px;">TOP ACTIVITIES</div>
-                    <div style="display: flex; flex-wrap: gap: 6px;">
-                      ${destination.activities.slice(0, 3).map(activity => `
-                        <span style="
-                          background: rgba(168, 85, 247, 0.2);
-                          color: #c084fc;
-                          padding: 4px 8px;
-                          border-radius: 6px;
-                          font-size: 11px;
-                          font-weight: 500;
-                        ">${activity}</span>
-                      `).join('')}
-                    </div>
-                  </div>
-                  
-                  <!-- Action Buttons -->
-                  <div style="display: flex; gap: 8px;">
-                    <button onclick="window.handleSaveDestination && window.handleSaveDestination()" style="
-                      flex: 1;
-                      background: linear-gradient(135deg, #ef4444, #dc2626);
-                      color: white;
-                      border: none;
-                      padding: 12px;
-                      border-radius: 12px;
-                      font-weight: 600;
-                      font-size: 14px;
-                      cursor: pointer;
-                      transition: all 0.2s;
-                    " onmouseover="this.style.transform='translateY(-1px)'" onmouseout="this.style.transform='translateY(0)'">
-                      ❤️ Save
-                    </button>
-                    <button onclick="window.handleExploreDestination && window.handleExploreDestination()" style="
-                      flex: 1;
-                      background: linear-gradient(135deg, #3b82f6, #2563eb);
-                      color: white;
-                      border: none;
-                      padding: 12px;
-                      border-radius: 12px;
-                      font-weight: 600;
-                      font-size: 14px;
-                      cursor: pointer;
-                      transition: all 0.2s;
-                    " onmouseover="this.style.transform='translateY(-1px)'" onmouseout="this.style.transform='translateY(0)'">
-                      🔍 Explore
-                    </button>
-                  </div>
-                  
-                  <button onclick="window.handleSpinAgain && window.handleSpinAgain()" style="
-                    width: 100%;
-                    background: rgba(255,255,255,0.1);
-                    color: white;
-                    border: 1px solid rgba(255,255,255,0.2);
-                    padding: 12px;
-                    border-radius: 12px;
-                    font-weight: 600;
-                    font-size: 14px;
-                    cursor: pointer;
-                    margin-top: 8px;
-                    transition: all 0.2s;
-                  " onmouseover="this.style.background='rgba(255,255,255,0.2)'" onmouseout="this.style.background='rgba(255,255,255,0.1)'">
-                    ⚡ Spin Again
-                  </button>
-                </div>
-              </div>
-            `;
-
-            destinationPopup.current.setHTML(detailedPopupContent);
-
-            // Set up global handlers for the buttons
-            window.handleSaveDestination = () => {
-              console.log('Save destination clicked');
-              // You can add save functionality here
-            };
-
-            window.handleExploreDestination = () => {
-              console.log('Explore destination clicked');
-              onDestinationFound(destination);
-            };
-
-            window.handleSpinAgain = () => {
-              console.log('Spin again clicked');
-              // Reset the experience
-              if (destinationPopup.current) {
-                destinationPopup.current.remove();
-              }
-              if (destinationMarker.current) {
-                destinationMarker.current.remove();
-              }
-              setStatus('spinning');
-              setSelectedCountry(null);
-              startGlobeSequence();
-            };
-          }
-        }, 1500);
-
-      } catch (error) {
-        console.error('Error flying to destination:', error);
-        // Fallback: just trigger destination selection
-        setTimeout(() => {
-          const destination = createDestinationFromCountry(country);
-          onDestinationFound(destination);
-        }, 1000);
-      }
-    } else {
-      // No map available, just trigger destination selection
-      setTimeout(() => {
-        const destination = createDestinationFromCountry(country);
-        onDestinationFound(destination);
-      }, 2000);
+      console.error('Error showing destination pin:', error);
     }
   };
 
@@ -573,9 +300,9 @@ const SpinningGlobe: React.FC<SpinningGlobeProps> = ({ travelStyle, onDestinatio
         </div>
       )}
       
-      {/* Status Overlay - Only show during spinning */}
-      {status === 'spinning' && (
-        <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-10">
+      {/* Status Overlay */}
+      <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-10">
+        {status === 'spinning' && (
           <motion.div
             initial={{ opacity: 0, scale: 0.8 }}
             animate={{ opacity: 1, scale: 1 }}
@@ -600,8 +327,98 @@ const SpinningGlobe: React.FC<SpinningGlobeProps> = ({ travelStyle, onDestinatio
               <div className="w-2 h-2 bg-yellow-400 rounded-full animate-bounce" style={{ animationDelay: '300ms' }} />
             </div>
           </motion.div>
-        </div>
-      )}
+        )}
+
+        {status === 'found' && selectedCountry && (
+          <motion.div
+            initial={{ opacity: 0, y: 50 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -50 }}
+            transition={{ duration: 0.8 }}
+            className="text-center bg-black/40 backdrop-blur-sm rounded-2xl p-8 border border-white/20"
+          >
+            <motion.div
+              initial={{ scale: 0, rotate: -180 }}
+              animate={{ scale: 1, rotate: 0 }}
+              transition={{ duration: 0.8, ease: "easeOut" }}
+              className="w-24 h-24 bg-green-500 rounded-full flex items-center justify-center mx-auto mb-6 shadow-lg"
+            >
+              <motion.svg 
+                className="w-12 h-12 text-white" 
+                fill="none" 
+                stroke="currentColor" 
+                viewBox="0 0 24 24"
+                initial={{ scale: 0 }}
+                animate={{ scale: 1 }}
+                transition={{ delay: 0.3, duration: 0.5 }}
+              >
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+              </motion.svg>
+            </motion.div>
+            <motion.h2 
+              className="text-4xl md:text-5xl font-bold text-white mb-4"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.5, duration: 0.8 }}
+            >
+              Destination Found!
+            </motion.h2>
+            <motion.h3 
+              className="text-2xl md:text-3xl font-semibold text-yellow-400 mb-2"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.7, duration: 0.8 }}
+            >
+              {selectedCountry.name}
+            </motion.h3>
+            <motion.p 
+              className="text-white/80 text-xl"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.9, duration: 0.8 }}
+            >
+              {selectedCountry.tagline}
+            </motion.p>
+          </motion.div>
+        )}
+
+        {status === 'zooming' && selectedCountry && (
+          <motion.div
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 1.2 }}
+            transition={{ duration: 0.8 }}
+            className="text-center bg-black/40 backdrop-blur-sm rounded-2xl p-8 border border-white/20"
+          >
+            <motion.div
+              animate={{ 
+                scale: [1, 1.2, 1],
+                rotate: [0, 180, 360]
+              }}
+              transition={{ 
+                duration: 2, 
+                repeat: Infinity,
+                ease: "easeInOut"
+              }}
+              className="w-24 h-24 bg-blue-500 rounded-full flex items-center justify-center mx-auto mb-6 shadow-lg"
+            >
+              <svg className="w-12 h-12 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9v-9m0-9v9" />
+              </svg>
+            </motion.div>
+            <h2 className="text-4xl md:text-5xl font-bold text-white mb-4">
+              Loading Details...
+            </h2>
+            <h3 className="text-2xl md:text-3xl font-semibold text-yellow-400 mb-2">
+              {selectedCountry.name}
+            </h3>
+            <p className="text-white/80 text-xl">
+              Preparing your adventure details
+            </p>
+          </motion.div>
+        )}
+      </div>
 
       {/* Travel Style Indicator */}
       <div className="absolute top-8 left-8 z-20">
