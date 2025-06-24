@@ -169,95 +169,56 @@ const DestinationReveal: React.FC<DestinationRevealProps> = ({
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-900 via-blue-900 to-indigo-900 flex items-center justify-center p-6">
       <div className="max-w-6xl mx-auto">
-        {/* Pin Drop Animation with EXPLOSIVE Zap theme */}
+        {/* Pin Drop Animation with Zap theme */}
         <motion.div
-          initial={{ y: -200, opacity: 0, scale: 0.5, rotate: -180 }}
-          animate={{ y: 0, opacity: 1, scale: 1, rotate: 0 }}
-          transition={{ duration: 0.8, ease: "easeOut", type: "spring", stiffness: 150 }}
+          initial={{ y: -100, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          transition={{ duration: 1, ease: "easeOut" }}
           className="text-center mb-8"
         >
           <motion.div
             initial={{ scale: 0 }}
             animate={{ scale: 1 }}
-            transition={{ delay: 0.3, duration: 0.5, ease: "easeOut", type: "spring", stiffness: 200 }}
+            transition={{ delay: 0.5, duration: 0.5, ease: "easeOut" }}
             className="inline-block"
           >
             <div className="relative">
+              <MapPin className="w-16 h-16 text-red-500 mx-auto mb-4 drop-shadow-lg" />
               <motion.div
                 animate={{ 
-                  y: [0, -10, 0],
-                  rotate: [0, 5, -5, 0]
+                  scale: [1, 1.2, 1],
+                  rotate: [0, 10, -10, 0]
                 }}
-                transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
-              >
-                <MapPin className="w-16 h-16 text-red-500 mx-auto mb-4 drop-shadow-lg" />
-              </motion.div>
-              <motion.div
-                animate={{ 
-                  scale: [1, 1.5, 1],
-                  rotate: [0, 180, 360],
-                  opacity: [1, 0.7, 1]
-                }}
-                transition={{ duration: 1, delay: 0.5, repeat: Infinity }}
+                transition={{ duration: 0.5, delay: 0.8 }}
                 className="absolute -top-2 -right-2"
               >
                 <Zap className="w-6 h-6 text-yellow-400" />
-              </motion.div>
-              {/* Additional energy effects */}
-              <motion.div
-                animate={{ 
-                  scale: [0, 1.2, 0],
-                  rotate: [0, -180, -360]
-                }}
-                transition={{ duration: 1.5, repeat: Infinity, delay: 0.8 }}
-                className="absolute -bottom-1 -left-1"
-              >
-                <Zap className="w-4 h-4 text-pink-400" />
               </motion.div>
             </div>
           </motion.div>
           
           <motion.h1
-            initial={{ opacity: 0, y: 50, scale: 0.8 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            transition={{ delay: 0.6, duration: 0.6, type: "spring", stiffness: 120 }}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.8, duration: 0.8 }}
             className="text-5xl md:text-7xl font-bold text-white mb-4"
           >
-            <motion.span
-              animate={{ 
-                textShadow: [
-                  '0 0 20px rgba(255, 255, 255, 0.5)',
-                  '0 0 40px rgba(255, 215, 0, 0.8)',
-                  '0 0 20px rgba(255, 255, 255, 0.5)'
-                ]
-              }}
-              transition={{ duration: 2, repeat: Infinity }}
-            >
-              {destination.name}
-            </motion.span>
+            {destination.name}
           </motion.h1>
           
           <motion.p
-            initial={{ opacity: 0, y: 30, scale: 0.9 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            transition={{ delay: 0.8, duration: 0.6, type: "spring", stiffness: 100 }}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 1, duration: 0.8 }}
             className="text-2xl md:text-3xl text-yellow-400 font-semibold mb-2"
           >
-            <motion.span
-              animate={{ 
-                scale: [1, 1.05, 1],
-                color: ['#fbbf24', '#f59e0b', '#fbbf24']
-              }}
-              transition={{ duration: 2, repeat: Infinity }}
-            >
-              {destination.tagline}
-            </motion.span>
+            {destination.tagline}
           </motion.p>
           
           <motion.p
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            transition={{ delay: 1, duration: 0.6 }}
+            transition={{ delay: 1.2, duration: 0.8 }}
             className="text-white/80 text-lg"
           >
             {destination.country}
@@ -266,38 +227,23 @@ const DestinationReveal: React.FC<DestinationRevealProps> = ({
           <motion.p
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            transition={{ delay: 1.2, duration: 0.6 }}
+            transition={{ delay: 1.4, duration: 0.8 }}
             className="text-white/60 text-sm mt-2"
           >
-            <motion.span
-              animate={{ 
-                scale: [1, 1.1, 1],
-                color: ['rgba(255,255,255,0.6)', '#fbbf24', 'rgba(255,255,255,0.6)']
-              }}
-              transition={{ duration: 3, repeat: Infinity }}
-            >
-              Adventure unlocked! Check budget, best times, visa, and epic activities!
-            </motion.span>
+            Adventure unlocked! Check budget, best times, visa, and epic activities!
           </motion.p>
         </motion.div>
 
-        {/* Main Content with ENERGETIC staggered animations */}
+        {/* Main Content */}
         <div className="grid lg:grid-cols-2 gap-8 mb-8">
-          {/* Image with EXPLOSIVE reveal */}
+          {/* Image */}
           <motion.div
-            initial={{ opacity: 0, x: -100, rotateY: -90 }}
-            animate={{ opacity: 1, x: 0, rotateY: 0 }}
-            transition={{ delay: 1.2, duration: 0.8, type: "spring", stiffness: 100 }}
+            initial={{ opacity: 0, x: -50 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ delay: 1.4, duration: 0.8 }}
             className="relative"
           >
-            <motion.div 
-              className="aspect-video rounded-2xl overflow-hidden shadow-2xl"
-              whileHover={{ 
-                scale: 1.05,
-                rotateY: 5,
-                transition: { duration: 0.3 }
-              }}
-            >
+            <div className="aspect-video rounded-2xl overflow-hidden shadow-2xl">
               <img
                 src={destination.image_url || 'https://images.pexels.com/photos/1591373/pexels-photo-1591373.jpeg'}
                 alt={destination.name}
@@ -307,274 +253,132 @@ const DestinationReveal: React.FC<DestinationRevealProps> = ({
                 onLoad={() => setImageLoaded(true)}
               />
               {!imageLoaded && (
-                <motion.div 
-                  className="absolute inset-0 bg-gradient-to-br from-purple-600 to-blue-600"
-                  animate={{ opacity: [0.5, 1, 0.5] }}
-                  transition={{ duration: 1.5, repeat: Infinity }}
-                />
+                <div className="absolute inset-0 bg-gradient-to-br from-purple-600 to-blue-600 animate-pulse" />
               )}
-            </motion.div>
+            </div>
             
-            {/* Image overlay with ENERGETIC animation */}
+            {/* Image overlay */}
             <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent rounded-2xl" />
-            <motion.div 
-              className="absolute bottom-4 left-4 text-white"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 1.8, duration: 0.5 }}
-            >
+            <div className="absolute bottom-4 left-4 text-white">
               <div className="flex items-center space-x-2">
-                <motion.div
-                  animate={{ rotate: [0, 15, -15, 0] }}
-                  transition={{ duration: 2, repeat: Infinity }}
-                >
-                  <Camera className="w-5 h-5" />
-                </motion.div>
+                <Camera className="w-5 h-5" />
                 <span className="text-sm">Stunning views await</span>
               </div>
-            </motion.div>
+            </div>
           </motion.div>
 
-          {/* Info Panel with STAGGERED EXPLOSIVE animations */}
+          {/* Info Panel */}
           <motion.div
-            initial={{ opacity: 0, x: 100, rotateY: 90 }}
-            animate={{ opacity: 1, x: 0, rotateY: 0 }}
-            transition={{ delay: 1.4, duration: 0.8, type: "spring", stiffness: 100 }}
+            initial={{ opacity: 0, x: 50 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ delay: 1.6, duration: 0.8 }}
             className="space-y-6"
           >
-            {/* Budget Card */}
-            <motion.div
-              initial={{ opacity: 0, y: 50, scale: 0.8 }}
-              animate={{ opacity: 1, y: 0, scale: 1 }}
-              transition={{ delay: 1.6, duration: 0.6, type: "spring", stiffness: 120 }}
-              whileHover={{ 
-                scale: 1.02,
-                y: -5,
-                transition: { duration: 0.2 }
-              }}
-            >
-              <Card className="bg-white/10 backdrop-blur-sm border-white/20">
-                <CardContent className="p-6">
-                  <h3 className="text-2xl font-bold text-white mb-4 flex items-center">
-                    <motion.div
-                      animate={{ rotate: [0, 360] }}
-                      transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
-                    >
-                      <DollarSign className="w-6 h-6 mr-2 text-green-400" />
-                    </motion.div>
-                    Daily Budget Estimate
-                  </h3>
-                  <div className="text-white/90">
-                    {formatBudgetDisplay()}
-                  </div>
-                </CardContent>
-              </Card>
-            </motion.div>
+            <Card className="bg-white/10 backdrop-blur-sm border-white/20">
+              <CardContent className="p-6">
+                <h3 className="text-2xl font-bold text-white mb-4 flex items-center">
+                  <DollarSign className="w-6 h-6 mr-2 text-green-400" />
+                  Daily Budget Estimate
+                </h3>
+                <div className="text-white/90">
+                  {formatBudgetDisplay()}
+                </div>
+              </CardContent>
+            </Card>
 
-            {/* Best Time Card */}
-            <motion.div
-              initial={{ opacity: 0, y: 50, scale: 0.8 }}
-              animate={{ opacity: 1, y: 0, scale: 1 }}
-              transition={{ delay: 1.8, duration: 0.6, type: "spring", stiffness: 120 }}
-              whileHover={{ 
-                scale: 1.02,
-                y: -5,
-                transition: { duration: 0.2 }
-              }}
-            >
-              <Card className="bg-white/10 backdrop-blur-sm border-white/20">
-                <CardContent className="p-6">
-                  <h3 className="text-2xl font-bold text-white mb-4 flex items-center">
-                    <motion.div
-                      animate={{ scale: [1, 1.2, 1] }}
-                      transition={{ duration: 2, repeat: Infinity }}
-                    >
-                      <Calendar className="w-6 h-6 mr-2 text-blue-400" />
-                    </motion.div>
-                    Best Time to Visit
-                  </h3>
-                  <p className="text-white/90 text-lg">{destination.best_time_to_visit}</p>
-                </CardContent>
-              </Card>
-            </motion.div>
+            <Card className="bg-white/10 backdrop-blur-sm border-white/20">
+              <CardContent className="p-6">
+                <h3 className="text-2xl font-bold text-white mb-4 flex items-center">
+                  <Calendar className="w-6 h-6 mr-2 text-blue-400" />
+                  Best Time to Visit
+                </h3>
+                <p className="text-white/90 text-lg">{destination.best_time_to_visit}</p>
+              </CardContent>
+            </Card>
 
-            {/* Visa Card */}
-            <motion.div
-              initial={{ opacity: 0, y: 50, scale: 0.8 }}
-              animate={{ opacity: 1, y: 0, scale: 1 }}
-              transition={{ delay: 2, duration: 0.6, type: "spring", stiffness: 120 }}
-              whileHover={{ 
-                scale: 1.02,
-                y: -5,
-                transition: { duration: 0.2 }
-              }}
-            >
-              <Card className="bg-white/10 backdrop-blur-sm border-white/20">
-                <CardContent className="p-6">
-                  <h3 className="text-2xl font-bold text-white mb-4 flex items-center">
-                    <motion.div
-                      animate={{ rotateY: [0, 180, 360] }}
-                      transition={{ duration: 3, repeat: Infinity }}
-                    >
-                      <FileText className="w-6 h-6 mr-2 text-yellow-400" />
-                    </motion.div>
-                    Visa Requirements
-                  </h3>
-                  {formatVisaDisplay()}
-                </CardContent>
-              </Card>
-            </motion.div>
+            <Card className="bg-white/10 backdrop-blur-sm border-white/20">
+              <CardContent className="p-6">
+                <h3 className="text-2xl font-bold text-white mb-4 flex items-center">
+                  <FileText className="w-6 h-6 mr-2 text-yellow-400" />
+                  Visa Requirements
+                </h3>
+                {formatVisaDisplay()}
+              </CardContent>
+            </Card>
 
-            {/* Activities Card */}
-            <motion.div
-              initial={{ opacity: 0, y: 50, scale: 0.8 }}
-              animate={{ opacity: 1, y: 0, scale: 1 }}
-              transition={{ delay: 2.2, duration: 0.6, type: "spring", stiffness: 120 }}
-              whileHover={{ 
-                scale: 1.02,
-                y: -5,
-                transition: { duration: 0.2 }
-              }}
-            >
-              <Card className="bg-white/10 backdrop-blur-sm border-white/20">
-                <CardContent className="p-6">
-                  <h3 className="text-2xl font-bold text-white mb-4 flex items-center">
-                    <motion.div
-                      animate={{ 
-                        rotate: [0, 10, -10, 0],
-                        scale: [1, 1.1, 1]
-                      }}
-                      transition={{ duration: 2, repeat: Infinity }}
+            <Card className="bg-white/10 backdrop-blur-sm border-white/20">
+              <CardContent className="p-6">
+                <h3 className="text-2xl font-bold text-white mb-4 flex items-center">
+                  <Users className="w-6 h-6 mr-2 text-purple-400" />
+                  Epic Activities
+                </h3>
+                <div className="flex flex-wrap gap-2">
+                  {destination.activities.map((activity, index) => (
+                    <Badge 
+                      key={index} 
+                      variant="secondary" 
+                      className="bg-white/20 text-white border-white/30"
                     >
-                      <Users className="w-6 h-6 mr-2 text-purple-400" />
-                    </motion.div>
-                    Epic Activities
-                  </h3>
-                  <div className="flex flex-wrap gap-2">
-                    {destination.activities.map((activity, index) => (
-                      <motion.div
-                        key={index}
-                        initial={{ opacity: 0, scale: 0 }}
-                        animate={{ opacity: 1, scale: 1 }}
-                        transition={{ 
-                          delay: 2.4 + index * 0.1, 
-                          duration: 0.4,
-                          type: "spring",
-                          stiffness: 200
-                        }}
-                        whileHover={{ 
-                          scale: 1.1,
-                          y: -2,
-                          transition: { duration: 0.2 }
-                        }}
-                      >
-                        <Badge 
-                          variant="secondary" 
-                          className="bg-white/20 text-white border-white/30"
-                        >
-                          {activity}
-                        </Badge>
-                      </motion.div>
-                    ))}
-                  </div>
-                </CardContent>
-              </Card>
-            </motion.div>
+                      {activity}
+                    </Badge>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
           </motion.div>
         </div>
 
-        {/* Action Buttons with EXPLOSIVE entrance */}
+        {/* Action Buttons */}
         <motion.div
-          initial={{ opacity: 0, y: 100, scale: 0.8 }}
-          animate={{ opacity: 1, y: 0, scale: 1 }}
-          transition={{ delay: 2.6, duration: 0.8, type: "spring", stiffness: 120 }}
+          initial={{ opacity: 0, y: 50 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 2, duration: 0.8 }}
           className="flex flex-wrap justify-center gap-4"
         >
-          <motion.div
-            whileHover={{ 
-              scale: 1.1, 
-              y: -5,
-              transition: { duration: 0.2 }
-            }}
-            whileTap={{ scale: 0.95 }}
+          <Button
+            onClick={onSave}
+            size="lg"
+            className={`${
+              isSaved 
+                ? 'bg-green-600 hover:bg-green-700' 
+                : 'bg-red-600 hover:bg-red-700'
+            } text-white font-semibold py-3 px-8 rounded-full shadow-lg transform hover:scale-105 transition-all duration-300`}
           >
-            <Button
-              onClick={onSave}
-              size="lg"
-              className={`${
-                isSaved 
-                  ? 'bg-green-600 hover:bg-green-700' 
-                  : 'bg-red-600 hover:bg-red-700'
-              } text-white font-semibold py-3 px-8 rounded-full shadow-lg transform transition-all duration-300`}
-            >
-              <motion.div
-                animate={isSaved ? { scale: [1, 1.2, 1] } : {}}
-                transition={{ duration: 0.5 }}
-              >
-                <Heart className={`w-5 h-5 mr-2 ${isSaved ? 'fill-current' : ''}`} />
-              </motion.div>
-              {isSaved ? 'Saved!' : 'Save Destination'}
-            </Button>
-          </motion.div>
+            <Heart className={`w-5 h-5 mr-2 ${isSaved ? 'fill-current' : ''}`} />
+            {isSaved ? 'Saved!' : 'Save Destination'}
+          </Button>
 
-          <motion.div
-            whileHover={{ 
-              scale: 1.1, 
-              y: -5,
-              transition: { duration: 0.2 }
-            }}
-            whileTap={{ scale: 0.95 }}
+          <Button
+            onClick={onExplore}
+            size="lg"
+            className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-8 rounded-full shadow-lg transform hover:scale-105 transition-all duration-300"
           >
-            <Button
-              onClick={onExplore}
-              size="lg"
-              className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-8 rounded-full shadow-lg transform transition-all duration-300"
-            >
-              <ExternalLink className="w-5 h-5 mr-2" />
-              Explore Deeper
-            </Button>
-          </motion.div>
+            <ExternalLink className="w-5 h-5 mr-2" />
+            Explore Deeper
+          </Button>
 
-          <motion.div
-            whileHover={{ 
-              scale: 1.1, 
-              y: -5,
-              transition: { duration: 0.2 }
-            }}
-            whileTap={{ scale: 0.95 }}
+          <Button
+            onClick={onSpinAgain}
+            size="lg"
+            variant="outline"
+            className="bg-white/10 border-white/30 text-white hover:bg-white/20 font-semibold py-3 px-8 rounded-full shadow-lg transform hover:scale-105 transition-all duration-300 backdrop-blur-sm"
           >
-            <Button
-              onClick={onSpinAgain}
-              size="lg"
-              variant="outline"
-              className="bg-white/10 border-white/30 text-white hover:bg-white/20 font-semibold py-3 px-8 rounded-full shadow-lg transform transition-all duration-300 backdrop-blur-sm"
-            >
-              <motion.div
-                animate={{ rotate: [0, 360] }}
-                transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
-              >
-                <Zap className="w-5 h-5 mr-2" />
-              </motion.div>
-              Spin Again
-            </Button>
-          </motion.div>
+            <Zap className="w-5 h-5 mr-2" />
+            Spin Again
+          </Button>
         </motion.div>
 
-        {/* Additional Info with BOUNCE animation */}
+        {/* Additional Info */}
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ delay: 3, duration: 0.8 }}
+          transition={{ delay: 2.5, duration: 0.8 }}
           className="text-center mt-8"
         >
-          <motion.p
-            animate={{ y: [0, -5, 0] }}
-            transition={{ duration: 2, repeat: Infinity }}
-            className="text-white/60 text-sm"
-          >
+          <p className="text-white/60 text-sm">
             <Clock className="w-4 h-4 inline mr-1" />
             Budget estimates updated with real-time data • Visa information verified from official sources
-          </motion.p>
+          </p>
         </motion.div>
       </div>
     </div>

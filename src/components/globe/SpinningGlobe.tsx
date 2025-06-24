@@ -28,7 +28,7 @@ const SpinningGlobe: React.FC<SpinningGlobeProps> = ({ travelerType, onDestinati
 
   useEffect(() => {
     if (!hasValidMapboxToken) {
-      // Fallback behavior without Mapbox - MUCH FASTER
+      // Fallback behavior without Mapbox
       const timer = setTimeout(() => {
         setZoomPhase('spinning');
         setTimeout(() => {
@@ -42,9 +42,9 @@ const SpinningGlobe: React.FC<SpinningGlobeProps> = ({ travelerType, onDestinati
             : getRandomDestination();
           
           setSelectedDestination(destination);
-          setTimeout(() => onDestinationSelected(destination), 500); // Much faster (was 1000)
-        }, 1500); // Much faster (was 3000)
-      }, 1000); // Much faster (was 2000)
+          setTimeout(() => onDestinationSelected(destination), 1000);
+        }, 3000);
+      }, 2000);
 
       return () => clearTimeout(timer);
     }
@@ -73,7 +73,7 @@ const SpinningGlobe: React.FC<SpinningGlobeProps> = ({ travelerType, onDestinati
       console.error('Mapbox GL JS Error:', e);
       setMapError('Failed to load map. Using fallback experience.');
       
-      // Fallback to non-map experience - MUCH FASTER
+      // Fallback to non-map experience
       setTimeout(() => {
         setZoomPhase('spinning');
         setTimeout(() => {
@@ -87,9 +87,9 @@ const SpinningGlobe: React.FC<SpinningGlobeProps> = ({ travelerType, onDestinati
             : getRandomDestination();
           
           setSelectedDestination(destination);
-          setTimeout(() => onDestinationSelected(destination), 500);
-        }, 1000); // Much faster (was 2000)
-      }, 500); // Much faster (was 1000)
+          setTimeout(() => onDestinationSelected(destination), 1000);
+        }, 2000);
+      }, 1000);
     });
 
     map.current.on('style.load', () => {
@@ -105,13 +105,13 @@ const SpinningGlobe: React.FC<SpinningGlobeProps> = ({ travelerType, onDestinati
           'star-intensity': 0.8,
         });
 
-        // Start the transition sequence - MUCH FASTER
+        // Start the transition sequence
         startGlobeTransition();
       } catch (error) {
         console.error('Error setting up map:', error);
         setMapError('Map setup failed. Using fallback experience.');
         
-        // Fallback behavior - MUCH FASTER
+        // Fallback behavior
         setTimeout(() => {
           setZoomPhase('spinning');
           setTimeout(() => {
@@ -125,9 +125,9 @@ const SpinningGlobe: React.FC<SpinningGlobeProps> = ({ travelerType, onDestinati
               : getRandomDestination();
             
             setSelectedDestination(destination);
-            setTimeout(() => onDestinationSelected(destination), 500);
-          }, 1000);
-        }, 500);
+            setTimeout(() => onDestinationSelected(destination), 1000);
+          }, 2000);
+        }, 1000);
       }
     });
 
@@ -145,31 +145,31 @@ const SpinningGlobe: React.FC<SpinningGlobeProps> = ({ travelerType, onDestinati
     if (!map.current) return;
 
     try {
-      // Phase 1: Zoom in to make globe the main focus - MUCH FASTER
+      // Phase 1: Zoom in to make globe the main focus (2 seconds)
       setTimeout(() => {
         if (!map.current) return;
         
         map.current.easeTo({
           zoom: 2.5,
           pitch: 15,
-          duration: 1000, // Much faster (was 2000)
+          duration: 2000,
           easing: (t) => t * (2 - t)
         });
 
         setZoomPhase('spinning');
-      }, 200); // Much faster (was 500)
+      }, 500);
 
-      // Phase 2: Add destinations and start spinning - MUCH FASTER
+      // Phase 2: Add destinations and start spinning (after zoom completes)
       setTimeout(() => {
         addDestinationMarkers();
         startSpinning();
-      }, 1200); // Much faster (was 2500)
+      }, 2500);
 
-      // Phase 3: Select destination - MUCH FASTER
+      // Phase 3: Select destination (after spinning for 3 seconds)
       setTimeout(() => {
         stopSpinning();
         selectRandomDestination();
-      }, 3000); // Much faster (was 6000)
+      }, 6000);
     } catch (error) {
       console.error('Error in globe transition:', error);
       setMapError('Globe transition failed. Using fallback experience.');
@@ -183,7 +183,7 @@ const SpinningGlobe: React.FC<SpinningGlobeProps> = ({ travelerType, onDestinati
       const availableDestinations = getDestinationsByTravelerType(travelerType);
       
       availableDestinations.forEach((destination) => {
-        // Create custom marker element with MORE ENERGETIC animation
+        // Create custom marker element
         const markerElement = document.createElement('div');
         markerElement.className = 'destination-marker';
         markerElement.style.cssText = `
@@ -194,21 +194,19 @@ const SpinningGlobe: React.FC<SpinningGlobeProps> = ({ travelerType, onDestinati
           border-radius: 50%;
           cursor: pointer;
           box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-          transition: all 0.2s ease;
-          animation: energeticPulse 1s infinite;
+          transition: all 0.3s ease;
+          animation: markerPulse 2s infinite;
         `;
 
-        // Add hover effects with MORE ENERGY
+        // Add hover effects
         markerElement.addEventListener('mouseenter', () => {
-          markerElement.style.transform = 'scale(2)';
+          markerElement.style.transform = 'scale(1.5)';
           markerElement.style.zIndex = '1000';
-          markerElement.style.boxShadow = '0 8px 25px rgba(255, 107, 107, 0.8)';
         });
 
         markerElement.addEventListener('mouseleave', () => {
           markerElement.style.transform = 'scale(1)';
           markerElement.style.zIndex = '1';
-          markerElement.style.boxShadow = '0 4px 12px rgba(0,0,0,0.3)';
         });
 
         // Create marker and add to map
@@ -216,7 +214,7 @@ const SpinningGlobe: React.FC<SpinningGlobeProps> = ({ travelerType, onDestinati
           .setLngLat([destination.longitude, destination.latitude])
           .addTo(map.current!);
 
-        // Add popup on click with ENERGETIC styling
+        // Add popup on click
         const popup = new mapboxgl.Popup({
           offset: 25,
           closeButton: false,
@@ -230,7 +228,6 @@ const SpinningGlobe: React.FC<SpinningGlobeProps> = ({ travelerType, onDestinati
             text-align: center;
             font-family: system-ui, -apple-system, sans-serif;
             box-shadow: 0 8px 32px rgba(0,0,0,0.3);
-            animation: popupBounce 0.3s ease-out;
           ">
             <h3 style="margin: 0 0 4px 0; font-size: 16px; font-weight: bold;">${destination.name}</h3>
             <p style="margin: 0; font-size: 12px; opacity: 0.9;">${destination.country}</p>
@@ -256,18 +253,18 @@ const SpinningGlobe: React.FC<SpinningGlobeProps> = ({ travelerType, onDestinati
       map.current.on('mouseup', () => { userInteracting = false; });
       map.current.on('dragend', () => { userInteracting = false; });
 
-      // MUCH FASTER spinning animation function
+      // Spinning animation function
       function spinGlobe() {
         if (!map.current || !spinEnabled) return;
 
         try {
           const zoom = map.current.getZoom();
           if (spinEnabled && !userInteracting && zoom < 5) {
-            let distancePerSecond = 360 / 30; // MUCH FASTER - complete rotation in 30 seconds (was 90)
+            let distancePerSecond = 360 / 90;
             const center = map.current.getCenter();
             center.lng -= distancePerSecond;
             
-            map.current.easeTo({ center, duration: 500, easing: (t) => t }); // Much faster (was 1000)
+            map.current.easeTo({ center, duration: 1000, easing: (t) => t });
           }
         } catch (error) {
           console.error('Error during spinning animation:', error);
@@ -300,7 +297,7 @@ const SpinningGlobe: React.FC<SpinningGlobeProps> = ({ travelerType, onDestinati
 
     setSelectedDestination(destination);
 
-    // Animate to the selected destination if map is available - MUCH FASTER
+    // Animate to the selected destination if map is available
     if (map.current && !mapError) {
       try {
         map.current.flyTo({
@@ -308,19 +305,19 @@ const SpinningGlobe: React.FC<SpinningGlobeProps> = ({ travelerType, onDestinati
           zoom: 12, // Increased zoom level for much closer view (was 4, now 12)
           pitch: 45,
           bearing: 0,
-          duration: 1500, // Much faster (was 3000)
+          duration: 3000,
           essential: true
         });
 
         setTimeout(() => {
           onDestinationSelected(destination);
-        }, 1800); // Much faster (was 3500)
+        }, 3500);
       } catch (error) {
         console.error('Error flying to destination:', error);
         // Fallback: just trigger destination selection
         setTimeout(() => {
           onDestinationSelected(destination);
-        }, 500);
+        }, 1000);
       }
     } else {
       // No map available, just trigger destination selection
@@ -346,7 +343,7 @@ const SpinningGlobe: React.FC<SpinningGlobeProps> = ({ travelerType, onDestinati
               ? 'blur(0px) brightness(1)' 
               : 'blur(0px) brightness(1)' 
           }}
-          transition={{ duration: 1 }} // Much faster (was 2)
+          transition={{ duration: 2 }}
           style={{ 
             background: 'linear-gradient(to bottom, #0f0f23, #1a1a2e, #16213e)',
           }}
@@ -354,12 +351,12 @@ const SpinningGlobe: React.FC<SpinningGlobeProps> = ({ travelerType, onDestinati
       ) : (
         // Fallback background for when Mapbox token is not available or there's an error
         <div className="absolute inset-0 bg-gradient-to-b from-indigo-900 via-purple-900 to-black">
-          {/* MUCH MORE ENERGETIC animated background for fallback */}
+          {/* Animated background for fallback */}
           <div className="absolute inset-0">
-            {[...Array(30)].map((_, i) => (
+            {[...Array(20)].map((_, i) => (
               <motion.div
                 key={i}
-                className="absolute w-1 h-1 bg-white/30 rounded-full"
+                className="absolute w-1 h-1 bg-white/20 rounded-full"
                 initial={{ 
                   x: Math.random() * (typeof window !== 'undefined' ? window.innerWidth : 1000),
                   y: Math.random() * (typeof window !== 'undefined' ? window.innerHeight : 1000),
@@ -369,7 +366,7 @@ const SpinningGlobe: React.FC<SpinningGlobeProps> = ({ travelerType, onDestinati
                   y: Math.random() * (typeof window !== 'undefined' ? window.innerHeight : 1000),
                 }}
                 transition={{
-                  duration: Math.random() * 5 + 3, // Much faster (was 20 + 15)
+                  duration: Math.random() * 20 + 15,
                   repeat: Infinity,
                   ease: "linear"
                 }}
@@ -379,36 +376,12 @@ const SpinningGlobe: React.FC<SpinningGlobeProps> = ({ travelerType, onDestinati
         </div>
       )}
       
-      {/* Custom CSS for markers and popups with MORE ENERGETIC animations */}
+      {/* Custom CSS for markers and popups */}
       <style jsx>{`
-        @keyframes energeticPulse {
-          0% { 
-            box-shadow: 0 0 0 0 rgba(255, 107, 107, 0.9);
-            transform: scale(1);
-          }
-          50% { 
-            box-shadow: 0 0 0 15px rgba(255, 107, 107, 0);
-            transform: scale(1.3);
-          }
-          100% { 
-            box-shadow: 0 0 0 0 rgba(255, 107, 107, 0);
-            transform: scale(1);
-          }
-        }
-        
-        @keyframes popupBounce {
-          0% { 
-            transform: scale(0) rotate(-180deg);
-            opacity: 0;
-          }
-          50% { 
-            transform: scale(1.2) rotate(0deg);
-            opacity: 0.8;
-          }
-          100% { 
-            transform: scale(1) rotate(0deg);
-            opacity: 1;
-          }
+        @keyframes pulse {
+          0% { box-shadow: 0 0 0 0 rgba(255, 107, 107, 0.7); }
+          70% { box-shadow: 0 0 0 10px rgba(255, 107, 107, 0); }
+          100% { box-shadow: 0 0 0 0 rgba(255, 107, 107, 0); }
         }
         
         .mapboxgl-popup-content {
@@ -422,129 +395,81 @@ const SpinningGlobe: React.FC<SpinningGlobeProps> = ({ travelerType, onDestinati
         }
       `}</style>
       
-      {/* Overlay Content with MUCH MORE ENERGETIC animations */}
+      {/* Overlay Content */}
       <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-10">
         <div className="text-center">
-          {/* Zoom in phase - MORE ENERGETIC */}
+          {/* Zoom in phase */}
           {zoomPhase === 'zooming' && (
             <motion.div
-              initial={{ opacity: 0, scale: 0.5, rotateY: -180 }}
-              animate={{ opacity: 1, scale: 1, rotateY: 0 }}
-              transition={{ duration: 0.6, type: "spring", stiffness: 200 }}
+              initial={{ opacity: 0, scale: 0.8 }}
+              animate={{ opacity: 1, scale: 1 }}
               className="mb-8"
             >
               <div className="relative">
                 <motion.div
                   animate={{ rotate: 360 }}
-                  transition={{ duration: 1, repeat: Infinity, ease: "linear" }} // Much faster (was 2)
+                  transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
                   className="w-16 h-16 border-4 border-yellow-400 border-t-transparent rounded-full mx-auto mb-4"
                 />
                 <div className="absolute inset-0 flex items-center justify-center">
-                  <motion.div 
-                    className="w-8 h-8 bg-yellow-400 rounded-full"
-                    animate={{ scale: [1, 1.5, 1] }}
-                    transition={{ duration: 0.8, repeat: Infinity }}
-                  />
+                  <div className="w-8 h-8 bg-yellow-400 rounded-full animate-pulse" />
                 </div>
               </div>
-              <motion.h2 
-                className="text-3xl md:text-4xl font-bold text-white mb-2"
-                animate={{ scale: [1, 1.05, 1] }}
-                transition={{ duration: 1, repeat: Infinity }}
-              >
+              <h2 className="text-3xl md:text-4xl font-bold text-white mb-2">
                 {mapError ? 'Preparing Experience...' : 'Focusing the Globe...'}
-              </motion.h2>
+              </h2>
               <p className="text-white/80 text-lg">
                 {mapError ? 'Setting up your adventure' : 'Preparing your personalized adventure'}
               </p>
             </motion.div>
           )}
 
-          {/* Spinning indicator - MUCH MORE ENERGETIC */}
+          {/* Spinning indicator */}
           {zoomPhase === 'spinning' && isSpinning && (
             <motion.div
-              initial={{ opacity: 0, scale: 0.5, y: 50 }}
-              animate={{ opacity: 1, scale: 1, y: 0 }}
-              transition={{ duration: 0.5, type: "spring", stiffness: 150 }}
+              initial={{ opacity: 0, scale: 0.8 }}
+              animate={{ opacity: 1, scale: 1 }}
               className="mb-8"
             >
               <div className="relative">
                 <motion.div
                   animate={{ rotate: 360 }}
-                  transition={{ duration: 0.8, repeat: Infinity, ease: "linear" }} // Much faster (was 1.5)
+                  transition={{ duration: 1.5, repeat: Infinity, ease: "linear" }}
                   className="w-20 h-20 border-4 border-yellow-400 border-t-transparent rounded-full mx-auto mb-4"
                 />
                 <div className="absolute inset-0 flex items-center justify-center">
-                  <motion.div 
-                    className="w-10 h-10 bg-yellow-400 rounded-full"
-                    animate={{ 
-                      scale: [1, 1.8, 1],
-                      rotate: [0, 180, 360]
-                    }}
-                    transition={{ duration: 1, repeat: Infinity }}
-                  />
+                  <div className="w-10 h-10 bg-yellow-400 rounded-full animate-pulse" />
                 </div>
               </div>
-              <motion.h2 
-                className="text-4xl md:text-5xl font-bold text-white mb-2"
-                animate={{ 
-                  scale: [1, 1.1, 1],
-                  color: ['#ffffff', '#fbbf24', '#ffffff']
-                }}
-                transition={{ duration: 1, repeat: Infinity }}
-              >
+              <h2 className="text-4xl md:text-5xl font-bold text-white mb-2">
                 {mapError ? 'Selecting Destination...' : 'Spinning the Globe...'}
-              </motion.h2>
-              <motion.p 
-                className="text-white/80 text-xl"
-                animate={{ y: [0, -5, 0] }}
-                transition={{ duration: 1, repeat: Infinity }}
-              >
+              </h2>
+              <p className="text-white/80 text-xl">
                 Finding your perfect {travelerType} destination
-              </motion.p>
+              </p>
             </motion.div>
           )}
 
-          {/* Destination found text - EXPLOSIVE animation */}
+          {/* Destination found text */}
           {zoomPhase === 'selecting' && showText && !isSpinning && selectedDestination && (
             <motion.div
-              initial={{ opacity: 0, y: 100, scale: 0.5, rotateX: -90 }}
-              animate={{ opacity: 1, y: 0, scale: 1, rotateX: 0 }}
-              transition={{ duration: 0.8, type: "spring", stiffness: 120 }}
+              initial={{ opacity: 0, y: 50 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 1 }}
               className="text-center bg-black/30 backdrop-blur-sm rounded-2xl p-8 border border-white/20"
             >
-              <motion.h2 
-                className="text-4xl md:text-5xl font-bold text-white mb-4"
-                initial={{ scale: 0 }}
-                animate={{ scale: 1 }}
-                transition={{ delay: 0.2, duration: 0.6, type: "spring", stiffness: 200 }}
-              >
+              <h2 className="text-4xl md:text-5xl font-bold text-white mb-4">
                 Destination Found!
-              </motion.h2>
-              <motion.h3 
-                className="text-2xl md:text-3xl font-semibold text-yellow-400 mb-2"
-                initial={{ opacity: 0, x: -50 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: 0.4, duration: 0.6, type: "spring", stiffness: 150 }}
-              >
+              </h2>
+              <h3 className="text-2xl md:text-3xl font-semibold text-yellow-400 mb-2">
                 {selectedDestination.name}
-              </motion.h3>
-              <motion.p 
-                className="text-white/80 text-xl mb-4"
-                initial={{ opacity: 0, x: 50 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: 0.6, duration: 0.6, type: "spring", stiffness: 150 }}
-              >
+              </h3>
+              <p className="text-white/80 text-xl mb-4">
                 {selectedDestination.country}
-              </motion.p>
-              <motion.p 
-                className="text-white/70"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 0.8, duration: 0.5 }}
-              >
+              </p>
+              <p className="text-white/70">
                 Preparing your adventure details...
-              </motion.p>
+              </p>
             </motion.div>
           )}
         </div>
@@ -554,14 +479,10 @@ const SpinningGlobe: React.FC<SpinningGlobeProps> = ({ travelerType, onDestinati
       <div className="absolute bottom-8 left-8 text-white/60 text-sm z-10">
         <div className="bg-black/30 backdrop-blur-sm rounded-lg p-4 border border-white/20">
           <div className="flex items-center space-x-2 mb-2">
-            <motion.div 
-              className={`w-2 h-2 rounded-full ${
-                mapError ? 'bg-red-400' : 
-                !hasValidMapboxToken ? 'bg-orange-400' : 'bg-green-400'
-              }`}
-              animate={{ scale: [1, 1.5, 1] }}
-              transition={{ duration: 1, repeat: Infinity }}
-            />
+            <div className={`w-2 h-2 rounded-full animate-pulse ${
+              mapError ? 'bg-red-400' : 
+              !hasValidMapboxToken ? 'bg-orange-400' : 'bg-green-400'
+            }`} />
             <span>
               {mapError ? 'Fallback Mode' :
                !hasValidMapboxToken ? 'Basic Mode' : 'Interactive Globe'}
