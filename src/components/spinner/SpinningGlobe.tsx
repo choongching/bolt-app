@@ -26,6 +26,18 @@ const SpinningGlobe: React.FC<SpinningGlobeProps> = ({ travelerType, onDestinati
                              MAPBOX_TOKEN !== 'YOUR_ACTUAL_MAPBOX_TOKEN_HERE' &&
                              MAPBOX_TOKEN.startsWith('pk.');
 
+  // Get travel style display name
+  const getTravelStyleDisplay = (type: TravelerType): string => {
+    const mapping: { [key in TravelerType]: string } = {
+      'solo': 'Chill Trip',
+      'couple': 'Casual Adventure',
+      'family': 'Offbeat Journey',
+      'friends': 'Group Adventure',
+      'business': 'Business Travel'
+    };
+    return mapping[type] || 'Adventure';
+  };
+
   useEffect(() => {
     if (!hasValidMapboxToken) {
       // Fallback behavior without Mapbox
@@ -195,7 +207,7 @@ const SpinningGlobe: React.FC<SpinningGlobeProps> = ({ travelerType, onDestinati
           cursor: pointer;
           box-shadow: 0 4px 12px rgba(0,0,0,0.3);
           transition: all 0.3s ease;
-          animation: pulse 2s infinite;
+          animation: markerPulse 2s infinite;
         `;
 
         // Add hover effects
@@ -445,7 +457,7 @@ const SpinningGlobe: React.FC<SpinningGlobeProps> = ({ travelerType, onDestinati
                 {mapError ? 'Selecting Destination...' : 'Spinning the Globe...'}
               </h2>
               <p className="text-white/80 text-xl">
-                Finding your perfect {travelerType} destination
+                Finding your perfect {getTravelStyleDisplay(travelerType)} destination
               </p>
             </motion.div>
           )}

@@ -2,7 +2,7 @@ import { Country } from '@/types/country';
 
 // Curated database of countries organized by the three travel categories
 export const countries: Country[] = [
-  // ROMANTIC DESTINATIONS
+  // CASUAL ADVENTURE DESTINATIONS (formerly Romantic)
   {
     id: 'GR',
     name: 'Greece',
@@ -76,7 +76,7 @@ export const countries: Country[] = [
     difficulty: 1
   },
 
-  // FAMILY DESTINATIONS
+  // OFFBEAT JOURNEY DESTINATIONS (formerly Family)
   {
     id: 'US',
     name: 'United States',
@@ -150,7 +150,7 @@ export const countries: Country[] = [
     difficulty: 1
   },
 
-  // SOLO DESTINATIONS
+  // CHILL TRIP DESTINATIONS (formerly Solo)
   {
     id: 'TH',
     name: 'Thailand',

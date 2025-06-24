@@ -14,19 +14,19 @@ interface WelcomeScreenProps {
 const travelStyles = [
   {
     type: 'Solo' as TravelStyle,
-    title: 'Comfort Seeker',
+    title: 'Chill Trip',
     color: 'from-purple-500 to-indigo-500',
     hoverColor: 'from-purple-600 to-indigo-600'
   },
   {
     type: 'Romantic' as TravelStyle,
-    title: 'Easy Explorer',
+    title: 'Casual Adventure',
     color: 'from-pink-500 to-red-500',
     hoverColor: 'from-pink-600 to-red-600'
   },
   {
     type: 'Family' as TravelStyle,
-    title: 'Wild Wanderer',
+    title: 'Offbeat Journey',
     color: 'from-green-500 to-blue-500',
     hoverColor: 'from-green-600 to-blue-600'
   }
