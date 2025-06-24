@@ -1,5 +1,5 @@
 import React, { useRef, useEffect, useState } from 'react';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import mapboxgl from 'mapbox-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import { TravelStyle } from '@/types/country';
@@ -20,7 +20,6 @@ const SpinningGlobe: React.FC<SpinningGlobeProps> = ({ travelStyle, onDestinatio
   const [selectedCountry, setSelectedCountry] = useState<any>(null);
   const [mapError, setMapError] = useState<string | null>(null);
   const spinningRef = useRef<number | null>(null);
-  const destinationMarker = useRef<mapboxgl.Marker | null>(null);
 
   // Check if Mapbox token is available and valid
   const hasValidMapboxToken = MAPBOX_TOKEN && 
@@ -99,9 +98,6 @@ const SpinningGlobe: React.FC<SpinningGlobeProps> = ({ travelStyle, onDestinatio
       if (spinningRef.current) {
         cancelAnimationFrame(spinningRef.current);
       }
-      if (destinationMarker.current) {
-        destinationMarker.current.remove();
-      }
       if (map.current) {
         map.current.remove();
       }
@@ -109,90 +105,20 @@ const SpinningGlobe: React.FC<SpinningGlobeProps> = ({ travelStyle, onDestinatio
   }, [travelStyle, hasValidMapboxToken, onDestinationFound]);
 
   const createDestinationFromCountry = (country: any) => {
-    // Create a complete destination object with all required properties
     return {
-      id: country.isoCode || country.id || `dest-${Date.now()}`,
-      name: country.name || 'Unknown Destination',
-      country: country.name || 'Unknown Country',
-      city: country.capital || country.city || 'Main City',
-      latitude: country.coordinates?.lat || 0,
-      longitude: country.coordinates?.lng || 0,
-      tagline: country.tagline || 'Discover this amazing destination',
-      budget_estimate: getBudgetEstimate(country),
+      id: country.isoCode,
+      name: country.name,
+      country: country.name,
+      city: country.capital,
+      latitude: country.coordinates.lat,
+      longitude: country.coordinates.lng,
+      tagline: country.tagline,
+      budget_estimate: '$50-200/day',
       best_time_to_visit: country.bestTimeToVisit || 'Year-round',
       visa_requirements: 'Check requirements for your nationality',
-      activities: country.highlights || ['Sightseeing', 'Culture', 'Adventure', 'Photography'],
-      description: `Explore ${country.name}, ${country.tagline?.toLowerCase() || 'an amazing destination waiting to be discovered'}`,
-      image_url: getDestinationImage(country)
+      activities: country.highlights || ['Sightseeing', 'Culture', 'Adventure'],
+      description: `Explore ${country.name}, ${country.tagline.toLowerCase()}`
     };
-  };
-
-  const getBudgetEstimate = (country: any) => {
-    // Generate budget estimate based on region and adventure level
-    const { region, adventureLevel } = country;
-    
-    let baseBudget = 50;
-    
-    // Adjust by region
-    switch (region) {
-      case 'Europe':
-        baseBudget = 100;
-        break;
-      case 'North America':
-        baseBudget = 120;
-        break;
-      case 'Oceania':
-        baseBudget = 110;
-        break;
-      case 'Asia':
-        baseBudget = 60;
-        break;
-      case 'South America':
-        baseBudget = 70;
-        break;
-      case 'Africa':
-        baseBudget = 80;
-        break;
-      default:
-        baseBudget = 75;
-    }
-    
-    // Adjust by adventure level
-    switch (adventureLevel) {
-      case 'Casual Explorer':
-        baseBudget *= 1.2;
-        break;
-      case 'Extreme Wanderer':
-        baseBudget *= 0.8;
-        break;
-      default:
-        baseBudget *= 1.0;
-    }
-    
-    const lowBudget = Math.round(baseBudget * 0.7);
-    const highBudget = Math.round(baseBudget * 1.8);
-    
-    return `$${lowBudget}-${highBudget}/day`;
-  };
-
-  const getDestinationImage = (country: any) => {
-    // Map of country names to Pexels images
-    const imageMap: { [key: string]: string } = {
-      'Greece': 'https://images.pexels.com/photos/161815/santorini-oia-greece-water-161815.jpeg',
-      'Italy': 'https://images.pexels.com/photos/2064827/pexels-photo-2064827.jpeg',
-      'France': 'https://images.pexels.com/photos/161853/eiffel-tower-paris-france-tower-161853.jpeg',
-      'Maldives': 'https://images.pexels.com/photos/1591373/pexels-photo-1591373.jpeg',
-      'United States': 'https://images.pexels.com/photos/2422915/pexels-photo-2422915.jpeg',
-      'Australia': 'https://images.pexels.com/photos/552779/pexels-photo-552779.jpeg',
-      'Canada': 'https://images.pexels.com/photos/417074/pexels-photo-417074.jpeg',
-      'Singapore': 'https://images.pexels.com/photos/2265876/pexels-photo-2265876.jpeg',
-      'Thailand': 'https://images.pexels.com/photos/2474690/pexels-photo-2474690.jpeg',
-      'Iceland': 'https://images.pexels.com/photos/1433052/pexels-photo-1433052.jpeg',
-      'Peru': 'https://images.pexels.com/photos/259967/pexels-photo-259967.jpeg',
-      'Japan': 'https://images.pexels.com/photos/2070033/pexels-photo-2070033.jpeg'
-    };
-
-    return imageMap[country.name] || 'https://images.pexels.com/photos/1591373/pexels-photo-1591373.jpeg';
   };
 
   const handleFallbackFlow = () => {
@@ -205,7 +131,6 @@ const SpinningGlobe: React.FC<SpinningGlobeProps> = ({ travelStyle, onDestinatio
         setStatus('zooming');
         setTimeout(() => {
           const destination = createDestinationFromCountry(country);
-          console.log('Destination being passed:', destination); // Debug log
           onDestinationFound(destination);
         }, 2000);
       }, 2000);
@@ -217,22 +142,17 @@ const SpinningGlobe: React.FC<SpinningGlobeProps> = ({ travelStyle, onDestinatio
     startSpinning();
     
     setTimeout(() => {
-      // Phase 2: Stop spinning and show destination pin (3 seconds)
+      // Phase 2: Stop spinning and show "Destination Found" (2 seconds)
       stopSpinning();
       const country = getRandomCountryByStyle(travelStyle);
       setSelectedCountry(country);
       setStatus('found');
       
-      // Show simple destination pin on map
-      showDestinationPin(country);
-      
       setTimeout(() => {
-        // Phase 3: Transition to details page
+        // Phase 3: Zoom to destination (3 seconds)
         setStatus('zooming');
-        const destination = createDestinationFromCountry(country);
-        console.log('Destination being passed:', destination); // Debug log
-        onDestinationFound(destination);
-      }, 3000);
+        zoomToDestination(country);
+      }, 2000);
     }, 3000);
   };
 
@@ -282,51 +202,42 @@ const SpinningGlobe: React.FC<SpinningGlobeProps> = ({ travelStyle, onDestinatio
     }
   };
 
-  const showDestinationPin = (country: any) => {
-    if (!map.current || mapError) return;
+  const zoomToDestination = (country: any) => {
+    if (map.current && !mapError) {
+      try {
+        // Dramatic zoom to the destination
+        map.current.flyTo({
+          center: [country.coordinates.lng, country.coordinates.lat],
+          zoom: 8,
+          pitch: 60,
+          bearing: 0,
+          duration: 3000,
+          essential: true,
+          easing: (t) => {
+            // Custom easing for dramatic effect
+            return t < 0.5 ? 2 * t * t : -1 + (4 - 2 * t) * t;
+          }
+        });
 
-    try {
-      // Zoom to the destination first
-      map.current.flyTo({
-        center: [country.coordinates.lng, country.coordinates.lat],
-        zoom: 6,
-        pitch: 30,
-        bearing: 0,
-        duration: 2000,
-        essential: true
-      });
-
-      // Create simple pin marker
-      const markerElement = document.createElement('div');
-      markerElement.className = 'destination-marker-found';
-      markerElement.style.cssText = `
-        width: 40px;
-        height: 40px;
-        background: linear-gradient(135deg, #ff6b6b, #ffd93d);
-        border: 4px solid white;
-        border-radius: 50%;
-        box-shadow: 0 8px 30px rgba(255, 107, 107, 0.8);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        animation: destinationFoundPulse 2s infinite;
-        cursor: pointer;
-      `;
-
-      // Add location icon
-      markerElement.innerHTML = `
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="white">
-          <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
-        </svg>
-      `;
-
-      // Create the marker
-      destinationMarker.current = new mapboxgl.Marker(markerElement)
-        .setLngLat([country.coordinates.lng, country.coordinates.lat])
-        .addTo(map.current);
-
-    } catch (error) {
-      console.error('Error showing destination pin:', error);
+        // After zoom completes, transition to destination details
+        setTimeout(() => {
+          const destination = createDestinationFromCountry(country);
+          onDestinationFound(destination);
+        }, 3500);
+      } catch (error) {
+        console.error('Error flying to destination:', error);
+        // Fallback: just trigger destination selection
+        setTimeout(() => {
+          const destination = createDestinationFromCountry(country);
+          onDestinationFound(destination);
+        }, 1000);
+      }
+    } else {
+      // No map available, just trigger destination selection
+      setTimeout(() => {
+        const destination = createDestinationFromCountry(country);
+        onDestinationFound(destination);
+      }, 2000);
     }
   };
 
@@ -374,122 +285,127 @@ const SpinningGlobe: React.FC<SpinningGlobeProps> = ({ travelStyle, onDestinatio
       
       {/* Status Overlay */}
       <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-10">
-        {status === 'spinning' && (
-          <motion.div
-            initial={{ opacity: 0, scale: 0.8 }}
-            animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0, scale: 0.8 }}
-            transition={{ duration: 0.5 }}
-            className="text-center bg-black/40 backdrop-blur-sm rounded-2xl p-8 border border-white/20"
-          >
+        <AnimatePresence mode="wait">
+          {status === 'spinning' && (
             <motion.div
-              animate={{ rotate: 360 }}
-              transition={{ duration: 1.2, repeat: Infinity, ease: "linear" }}
-              className="w-24 h-24 border-4 border-yellow-400 border-t-transparent rounded-full mx-auto mb-6"
-            />
-            <h2 className="text-4xl md:text-5xl font-bold text-white mb-4">
-              Spinning...
-            </h2>
-            <p className="text-white/80 text-xl">
-              Finding your perfect adventure destination
-            </p>
-            <div className="mt-4 flex items-center justify-center space-x-2">
-              <div className="w-2 h-2 bg-yellow-400 rounded-full animate-bounce" style={{ animationDelay: '0ms' }} />
-              <div className="w-2 h-2 bg-yellow-400 rounded-full animate-bounce" style={{ animationDelay: '150ms' }} />
-              <div className="w-2 h-2 bg-yellow-400 rounded-full animate-bounce" style={{ animationDelay: '300ms' }} />
-            </div>
-          </motion.div>
-        )}
-
-        {status === 'found' && selectedCountry && (
-          <motion.div
-            initial={{ opacity: 0, y: 50 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -50 }}
-            transition={{ duration: 0.8 }}
-            className="text-center bg-black/40 backdrop-blur-sm rounded-2xl p-8 border border-white/20"
-          >
-            <motion.div
-              initial={{ scale: 0, rotate: -180 }}
-              animate={{ scale: 1, rotate: 0 }}
-              transition={{ duration: 0.8, ease: "easeOut" }}
-              className="w-24 h-24 bg-green-500 rounded-full flex items-center justify-center mx-auto mb-6 shadow-lg"
+              key="spinning"
+              initial={{ opacity: 0, scale: 0.8 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.8 }}
+              transition={{ duration: 0.5 }}
+              className="text-center bg-black/40 backdrop-blur-sm rounded-2xl p-8 border border-white/20"
             >
-              <motion.svg 
-                className="w-12 h-12 text-white" 
-                fill="none" 
-                stroke="currentColor" 
-                viewBox="0 0 24 24"
-                initial={{ scale: 0 }}
-                animate={{ scale: 1 }}
-                transition={{ delay: 0.3, duration: 0.5 }}
+              <motion.div
+                animate={{ rotate: 360 }}
+                transition={{ duration: 1.2, repeat: Infinity, ease: "linear" }}
+                className="w-24 h-24 border-4 border-yellow-400 border-t-transparent rounded-full mx-auto mb-6"
+              />
+              <h2 className="text-4xl md:text-5xl font-bold text-white mb-4">
+                Spinning...
+              </h2>
+              <p className="text-white/80 text-xl">
+                Finding your perfect adventure destination
+              </p>
+              <div className="mt-4 flex items-center justify-center space-x-2">
+                <div className="w-2 h-2 bg-yellow-400 rounded-full animate-bounce" style={{ animationDelay: '0ms' }} />
+                <div className="w-2 h-2 bg-yellow-400 rounded-full animate-bounce" style={{ animationDelay: '150ms' }} />
+                <div className="w-2 h-2 bg-yellow-400 rounded-full animate-bounce" style={{ animationDelay: '300ms' }} />
+              </div>
+            </motion.div>
+          )}
+
+          {status === 'found' && selectedCountry && (
+            <motion.div
+              key="found"
+              initial={{ opacity: 0, y: 50 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -50 }}
+              transition={{ duration: 0.8 }}
+              className="text-center bg-black/40 backdrop-blur-sm rounded-2xl p-8 border border-white/20"
+            >
+              <motion.div
+                initial={{ scale: 0, rotate: -180 }}
+                animate={{ scale: 1, rotate: 0 }}
+                transition={{ duration: 0.8, ease: "easeOut" }}
+                className="w-24 h-24 bg-green-500 rounded-full flex items-center justify-center mx-auto mb-6 shadow-lg"
               >
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-              </motion.svg>
+                <motion.svg 
+                  className="w-12 h-12 text-white" 
+                  fill="none" 
+                  stroke="currentColor" 
+                  viewBox="0 0 24 24"
+                  initial={{ scale: 0 }}
+                  animate={{ scale: 1 }}
+                  transition={{ delay: 0.3, duration: 0.5 }}
+                >
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                </motion.svg>
+              </motion.div>
+              <motion.h2 
+                className="text-4xl md:text-5xl font-bold text-white mb-4"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.5, duration: 0.8 }}
+              >
+                Destination Found!
+              </motion.h2>
+              <motion.h3 
+                className="text-2xl md:text-3xl font-semibold text-yellow-400 mb-2"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.7, duration: 0.8 }}
+              >
+                {selectedCountry.name}
+              </motion.h3>
+              <motion.p 
+                className="text-white/80 text-xl"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 0.9, duration: 0.8 }}
+              >
+                {selectedCountry.tagline}
+              </motion.p>
             </motion.div>
-            <motion.h2 
-              className="text-4xl md:text-5xl font-bold text-white mb-4"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.5, duration: 0.8 }}
-            >
-              Destination Found!
-            </motion.h2>
-            <motion.h3 
-              className="text-2xl md:text-3xl font-semibold text-yellow-400 mb-2"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.7, duration: 0.8 }}
-            >
-              {selectedCountry.name}
-            </motion.h3>
-            <motion.p 
-              className="text-white/80 text-xl"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.9, duration: 0.8 }}
-            >
-              {selectedCountry.tagline}
-            </motion.p>
-          </motion.div>
-        )}
+          )}
 
-        {status === 'zooming' && selectedCountry && (
-          <motion.div
-            initial={{ opacity: 0, scale: 0.8 }}
-            animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0, scale: 1.2 }}
-            transition={{ duration: 0.8 }}
-            className="text-center bg-black/40 backdrop-blur-sm rounded-2xl p-8 border border-white/20"
-          >
+          {status === 'zooming' && selectedCountry && (
             <motion.div
-              animate={{ 
-                scale: [1, 1.2, 1],
-                rotate: [0, 180, 360]
-              }}
-              transition={{ 
-                duration: 2, 
-                repeat: Infinity,
-                ease: "easeInOut"
-              }}
-              className="w-24 h-24 bg-blue-500 rounded-full flex items-center justify-center mx-auto mb-6 shadow-lg"
+              key="zooming"
+              initial={{ opacity: 0, scale: 0.8 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 1.2 }}
+              transition={{ duration: 0.8 }}
+              className="text-center bg-black/40 backdrop-blur-sm rounded-2xl p-8 border border-white/20"
             >
-              <svg className="w-12 h-12 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9v-9m0-9v9" />
-              </svg>
+              <motion.div
+                animate={{ 
+                  scale: [1, 1.2, 1],
+                  rotate: [0, 180, 360]
+                }}
+                transition={{ 
+                  duration: 2, 
+                  repeat: Infinity,
+                  ease: "easeInOut"
+                }}
+                className="w-24 h-24 bg-blue-500 rounded-full flex items-center justify-center mx-auto mb-6 shadow-lg"
+              >
+                <svg className="w-12 h-12 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9v-9m0-9v9" />
+                </svg>
+              </motion.div>
+              <h2 className="text-4xl md:text-5xl font-bold text-white mb-4">
+                Zooming In...
+              </h2>
+              <h3 className="text-2xl md:text-3xl font-semibold text-yellow-400 mb-2">
+                {selectedCountry.name}
+              </h3>
+              <p className="text-white/80 text-xl">
+                Preparing your adventure details
+              </p>
             </motion.div>
-            <h2 className="text-4xl md:text-5xl font-bold text-white mb-4">
-              Loading Details...
-            </h2>
-            <h3 className="text-2xl md:text-3xl font-semibold text-yellow-400 mb-2">
-              {selectedCountry.name}
-            </h3>
-            <p className="text-white/80 text-xl">
-              Preparing your adventure details
-            </p>
-          </motion.div>
-        )}
+          )}
+        </AnimatePresence>
       </div>
 
       {/* Travel Style Indicator */}

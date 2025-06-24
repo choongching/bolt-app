@@ -1,9 +1,9 @@
-/* Mapbox GL CSS import */
-@import 'mapbox-gl/dist/mapbox-gl.css';
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* Mapbox GL CSS import */
+@import 'mapbox-gl/dist/mapbox-gl.css';
 
 @layer base {
   :root {
@@ -147,42 +147,8 @@
   }
 }
 
-/* New animations for destination found */
-@keyframes destinationFoundPulse {
-  0% { 
-    box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.8);
-    transform: scale(1);
-  }
-  50% { 
-    box-shadow: 0 0 0 20px rgba(16, 185, 129, 0);
-    transform: scale(1.1);
-  }
-  100% { 
-    box-shadow: 0 0 0 0 rgba(16, 185, 129, 0);
-    transform: scale(1);
-  }
-}
-
-@keyframes destinationFoundScale {
-  0% { 
-    transform: scale(0);
-    opacity: 0;
-  }
-  50% { 
-    transform: scale(1.2);
-  }
-  100% { 
-    transform: scale(1);
-    opacity: 1;
-  }
-}
-
 .destination-marker {
   animation: markerPulse 2s infinite;
-}
-
-.destination-marker-found {
-  animation: destinationFoundPulse 2s infinite;
 }
 
 /* Custom popup styles */
@@ -190,48 +156,19 @@
   background: transparent !important;
   box-shadow: none !important;
   padding: 0 !important;
-  border-radius: 0 !important;
 }
 
-.mapboxgl-popup-tip {
-  border-top-color: rgba(0,0,0,0.95) !important;
-  border-width: 8px !important;
-}
-
-.destination-found-popup .mapboxgl-popup-content {
-  border-radius: 20px !important;
+.destination-popup .mapboxgl-popup-content {
+  border-radius: 12px !important;
   overflow: hidden !important;
-}
-
-/* Enhanced popup animations */
-.mapboxgl-popup {
-  animation: popupSlideIn 0.5s ease-out;
-}
-
-@keyframes popupSlideIn {
-  0% {
-    opacity: 0;
-    transform: translateY(20px) scale(0.9);
-  }
-  100% {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-  }
 }
 
 /* Responsive adjustments */
 @media (max-width: 768px) {
-  .destination-marker,
-  .destination-marker-found {
-    width: 50px !important;
-    height: 50px !important;
-    border-width: 3px !important;
-  }
-  
-  .destination-marker svg,
-  .destination-marker-found svg {
-    width: 20px !important;
-    height: 20px !important;
+  .destination-marker {
+    width: 16px !important;
+    height: 16px !important;
+    border-width: 2px !important;
   }
 }
 
