@@ -14,19 +14,19 @@ interface WelcomeScreenProps {
 const travelStyles = [
   {
     type: 'Solo' as TravelStyle,
-    title: 'Solo Explorer',
+    title: 'Comfort Seeker',
     color: 'from-purple-500 to-indigo-500',
     hoverColor: 'from-purple-600 to-indigo-600'
   },
   {
     type: 'Romantic' as TravelStyle,
-    title: 'Lovebirds',
+    title: 'Easy Explorer',
     color: 'from-pink-500 to-red-500',
     hoverColor: 'from-pink-600 to-red-600'
   },
   {
     type: 'Family' as TravelStyle,
-    title: 'Family Squad',
+    title: 'Wild Wanderer',
     color: 'from-green-500 to-blue-500',
     hoverColor: 'from-green-600 to-blue-600'
   }
@@ -284,7 +284,7 @@ const WelcomeScreen: React.FC<WelcomeScreenProps> = ({ onTravelStyleSelect, isAu
               transition={{ duration: 3, repeat: Infinity }}
               className="block"
             >
-              GlobeWander Zap!
+              WanderSpin!
             </motion.span>
           </motion.h1>
 
@@ -295,7 +295,17 @@ const WelcomeScreen: React.FC<WelcomeScreenProps> = ({ onTravelStyleSelect, isAu
             transition={{ duration: 0.8, delay: 0.6 }}
             className="text-xl md:text-2xl text-white/95 mb-12 max-w-3xl mx-auto leading-relaxed drop-shadow-lg"
           >
-            Hit 'Zap into Adventure' and spin the globe wild!
+            Spin the globe, pick your style, and unlock your next adventure.
+          </motion.p>
+
+          {/* Body copy */}
+          <motion.p
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.8 }}
+            className="text-lg md:text-xl text-white/90 mb-8 max-w-2xl mx-auto leading-relaxed drop-shadow-lg"
+          >
+            What's your travel vibe today?
           </motion.p>
 
           {/* Travel Style Selection with enhanced animations */}
@@ -369,7 +379,7 @@ const WelcomeScreen: React.FC<WelcomeScreenProps> = ({ onTravelStyleSelect, isAu
             transition={{ duration: 0.8, delay: 1.4 }}
             className="text-lg md:text-xl text-white/90 mb-8 max-w-2xl mx-auto leading-relaxed drop-shadow-lg"
           >
-            Pick your crew: Solo Explorer, Lovebirds, or Family Squad—let's Zap off!
+            Let's spin & go!
           </motion.p>
 
           {!isAuthenticated && (

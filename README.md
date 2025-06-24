@@ -1,4 +1,4 @@
-# Travel Spinner - Interactive 3D Globe Experience
+# WanderSpin - Interactive 3D Globe Experience
 
 A beautiful travel destination discovery app with an interactive 3D rotating globe powered by Mapbox GL JS.
 
@@ -24,7 +24,7 @@ This application features:
 - **Atmospheric Effects**: Beautiful space-like atmosphere around the globe
 
 ### 🎯 Smart Destination Selection
-- **Traveler Type Filtering**: Destinations tailored to solo, couple, family, friends, or business travel
+- **Traveler Type Filtering**: Destinations tailored to comfort seekers, easy explorers, or wild wanderers
 - **Animated Selection**: Smooth camera transitions to selected destinations
 - **Detailed Information**: Comprehensive destination details with itineraries
 
@@ -205,6 +205,6 @@ This project is built with:
 - **Tailwind CSS** - Styling
 - **Framer Motion** - Animations
 
-For more information, visit the [project repository](https://github.com/your-repo/travel-spinner).
+For more information, visit the [project repository](https://github.com/your-repo/wanderspin).
 
-<!-- Force deploy trigger: Updated with environment variables configuration -->
+<!-- Force deploy trigger: Updated with WanderSpin branding and copy -->

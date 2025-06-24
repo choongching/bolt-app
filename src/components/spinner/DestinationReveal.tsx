@@ -230,7 +230,7 @@ const DestinationReveal: React.FC<DestinationRevealProps> = ({
             transition={{ delay: 1.4, duration: 0.8 }}
             className="text-white/60 text-sm mt-2"
           >
-            Zap Facts Unleashed! Check budget, best times, visa, and epic activities!
+            Adventure unlocked! Check budget, best times, visa, and epic activities!
           </motion.p>
         </motion.div>
 
@@ -364,7 +364,7 @@ const DestinationReveal: React.FC<DestinationRevealProps> = ({
             className="bg-white/10 border-white/30 text-white hover:bg-white/20 font-semibold py-3 px-8 rounded-full shadow-lg transform hover:scale-105 transition-all duration-300 backdrop-blur-sm"
           >
             <Zap className="w-5 h-5 mr-2" />
-            Zap Again
+            Spin Again
           </Button>
         </motion.div>
 

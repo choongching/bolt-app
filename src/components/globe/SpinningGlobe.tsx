@@ -340,7 +340,7 @@ const SpinningGlobe: React.FC<SpinningGlobeProps> = ({ travelStyle, onDestinatio
                 Spinning...
               </h2>
               <p className="text-white/80 text-xl">
-                Finding your perfect {travelStyle.toLowerCase()} destination
+                Finding your perfect adventure destination
               </p>
               <div className="mt-4 flex items-center justify-center space-x-2">
                 <div className="w-2 h-2 bg-yellow-400 rounded-full animate-bounce" style={{ animationDelay: '0ms' }} />
@@ -452,7 +452,7 @@ const SpinningGlobe: React.FC<SpinningGlobeProps> = ({ travelStyle, onDestinatio
               travelStyle === 'Solo' ? 'bg-purple-500' :
               travelStyle === 'Romantic' ? 'bg-pink-500' : 'bg-green-500'
             }`} />
-            <span className="text-white font-medium">{travelStyle} Travel</span>
+            <span className="text-white font-medium">{travelStyle} Adventure</span>
           </div>
         </div>
       </div>

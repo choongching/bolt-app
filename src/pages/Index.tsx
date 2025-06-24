@@ -34,10 +34,10 @@ const Index = () => {
                 </svg>
               </div>
               <h2 className="text-2xl font-bold text-gray-900 mb-2">
-                Spin, Zap, Explore!
+                Welcome to WanderSpin!
               </h2>
               <p className="text-gray-600 text-sm leading-relaxed mb-4">
-                Turns each spin into an epic travel quest—fun and adventurous!
+                Spin the globe, pick your style, and unlock your next adventure.
               </p>
             </div>
             
@@ -58,5 +58,3 @@ const Index = () => {
 
   return <TravelSpinner />;
 };
-
-export default Index;

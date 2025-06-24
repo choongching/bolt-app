@@ -1,7 +1,7 @@
 // Application constants
 export const APP_CONFIG = {
-  name: 'GlobeWander Zap',
-  description: 'Spin the globe and discover your next adventure',
+  name: 'WanderSpin',
+  description: 'Spin the globe, pick your style, and unlock your next adventure',
   version: '1.0.0'
 } as const;
 
