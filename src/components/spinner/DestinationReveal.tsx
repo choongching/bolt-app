@@ -47,7 +47,7 @@ interface DestinationRevealProps {
   isSaved?: boolean;
 }
 
-// Destination-specific high-quality images with special focus on Leptis Magna
+// Destination-specific high-quality images with special focus on Bamyan and Leptis Magna
 const getDestinationImage = (destination: Destination): string => {
   const imageMap: { [key: string]: string } = {
     // Casual Adventure Destinations
@@ -57,8 +57,8 @@ const getDestinationImage = (destination: Destination): string => {
     'Moshi': 'https://images.pexels.com/photos/631317/pexels-photo-631317.jpeg', // Kilimanjaro
     'Cusco': 'https://images.pexels.com/photos/259967/pexels-photo-259967.jpeg', // Machu Picchu
     
-    // Offbeat Journey Destinations - Updated with Leptis Magna specific images
-    'Bamyan': 'https://images.pexels.com/photos/3408744/pexels-photo-3408744.jpeg', // Mountain landscape (Afghanistan)
+    // Offbeat Journey Destinations - Updated with Bamyan and Leptis Magna specific images
+    'Bamyan': 'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c1/Buddhas_of_Bamiyan4.jpg/1200px-Buddhas_of_Bamiyan4.jpg', // Bamyan Buddha niches
     'Mogadishu': 'https://images.pexels.com/photos/4825715/pexels-photo-4825715.jpeg', // Coastal landscape
     'Al Khums': 'https://upload.wikimedia.org/wikipedia/commons/thumb/8/8a/Leptis_Magna_Arch_of_Septimius_Severus.jpg/1200px-Leptis_Magna_Arch_of_Septimius_Severus.jpg', // Leptis Magna - Arch of Septimius Severus
     'Leptis Magna': 'https://upload.wikimedia.org/wikipedia/commons/thumb/8/8a/Leptis_Magna_Arch_of_Septimius_Severus.jpg/1200px-Leptis_Magna_Arch_of_Septimius_Severus.jpg', // Direct reference
@@ -73,12 +73,28 @@ const getDestinationImage = (destination: Destination): string => {
     'Queenstown': 'https://images.pexels.com/photos/552779/pexels-photo-552779.jpeg', // New Zealand landscape
   };
 
+  // Special handling for Bamyan, Afghanistan
+  if (destination.country === 'Afghanistan' || destination.name === 'Bamyan' || destination.city === 'Bamyan') {
+    return 'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c1/Buddhas_of_Bamiyan4.jpg/1200px-Buddhas_of_Bamiyan4.jpg';
+  }
+
   // Special handling for Libya/Leptis Magna
   if (destination.country === 'Libya' || destination.name === 'Leptis Magna' || destination.city === 'Al Khums') {
     return 'https://upload.wikimedia.org/wikipedia/commons/thumb/8/8a/Leptis_Magna_Arch_of_Septimius_Severus.jpg/1200px-Leptis_Magna_Arch_of_Septimius_Severus.jpg';
   }
 
   return imageMap[destination.city || destination.name] || destination.image_url || 'https://images.pexels.com/photos/1591373/pexels-photo-1591373.jpeg';
+};
+
+// Additional Bamyan gallery images for future use
+const getBamyanGalleryImages = (): string[] => {
+  return [
+    'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c1/Buddhas_of_Bamiyan4.jpg/1200px-Buddhas_of_Bamiyan4.jpg', // Buddha niches main view
+    'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2e/Bamiyan_valley_and_cliffs_2009.jpg/1200px-Bamiyan_valley_and_cliffs_2009.jpg', // Bamyan valley and cliffs
+    'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f1/Band-e-Amir_lakes.jpg/1200px-Band-e-Amir_lakes.jpg', // Band-e-Amir lakes
+    'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a8/Bamyan_Buddha_niche.jpg/1200px-Bamyan_Buddha_niche.jpg', // Close-up of Buddha niche
+    'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d5/Shahr-e_Gholghola_ruins.jpg/1200px-Shahr-e_Gholghola_ruins.jpg', // Shahr-e Gholghola ruins
+  ];
 };
 
 // Additional Leptis Magna gallery images for future use
@@ -257,8 +273,11 @@ const DestinationReveal: React.FC<DestinationRevealProps> = ({
 
   const destinationImage = getDestinationImage(destination);
 
-  // Special description for Leptis Magna
+  // Special descriptions for historical sites
   const getDestinationDescription = (dest: Destination): string => {
+    if (dest.country === 'Afghanistan' || dest.name === 'Bamyan' || dest.city === 'Bamyan') {
+      return 'Home to the destroyed 6th and 7th-century Buddha statues, a UNESCO World Heritage site with profound historical significance along the ancient Silk Road. The dramatic cliff faces and surrounding valleys showcase Afghanistan\'s rich Buddhist heritage.';
+    }
     if (dest.country === 'Libya' || dest.name === 'Leptis Magna' || dest.city === 'Al Khums') {
       return 'One of the most spectacular and well-preserved Roman archaeological sites in the world, featuring the magnificent Arch of Septimius Severus, ancient theatre, basilica, and market ruins that showcase the grandeur of Roman Africa.';
     }
@@ -336,7 +355,7 @@ const DestinationReveal: React.FC<DestinationRevealProps> = ({
           transition={{ delay: 1.2, duration: 0.8 }}
           className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 mb-8"
         >
-          {/* Single Cover Image - Large Card with enhanced Leptis Magna display */}
+          {/* Single Cover Image - Large Card with enhanced historical site display */}
           <Card className="lg:col-span-2 lg:row-span-2 bg-white/10 backdrop-blur-sm border-white/20 overflow-hidden group hover:bg-white/15 transition-all duration-300">
             <div className="relative h-64 md:h-80 lg:h-full">
               <img
@@ -362,11 +381,23 @@ const DestinationReveal: React.FC<DestinationRevealProps> = ({
                 <Camera className="w-6 h-6 text-white/80" />
               </div>
               
-              {/* Special badge for UNESCO World Heritage sites like Leptis Magna */}
-              {(destination.country === 'Libya' || destination.name === 'Leptis Magna') && (
+              {/* Special badges for UNESCO World Heritage sites */}
+              {(destination.country === 'Afghanistan' || destination.name === 'Bamyan' || 
+                destination.country === 'Libya' || destination.name === 'Leptis Magna') && (
                 <div className="absolute top-4 left-4">
                   <Badge className="bg-yellow-600 text-white text-xs">
                     UNESCO World Heritage
+                  </Badge>
+                </div>
+              )}
+
+              {/* Special warning badge for dangerous destinations */}
+              {(destination.country === 'Afghanistan' || destination.country === 'Libya' || 
+                destination.country === 'Somalia') && (
+                <div className="absolute top-12 left-4">
+                  <Badge className="bg-red-600 text-white text-xs flex items-center">
+                    <AlertCircle className="w-3 h-3 mr-1" />
+                    Travel Advisory
                   </Badge>
                 </div>
               )}
