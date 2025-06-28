@@ -396,7 +396,7 @@ const SpinningGlobe: React.FC<SpinningGlobeProps> = ({ travelerType, onDestinati
         }
       `}</style>
       
-      {/* Overlay Content */}
+      {/* Overlay Content - Updated with Modal Container Design */}
       <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-10">
         <div className="text-center">
           {/* Zoom in phase */}
@@ -406,22 +406,25 @@ const SpinningGlobe: React.FC<SpinningGlobeProps> = ({ travelerType, onDestinati
               animate={{ opacity: 1, scale: 1 }}
               className="mb-8"
             >
-              <div className="relative">
-                <motion.div
-                  animate={{ rotate: 360 }}
-                  transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
-                  className="w-16 h-16 border-4 border-yellow-400 border-t-transparent rounded-full mx-auto mb-4"
-                />
-                <div className="absolute inset-0 flex items-center justify-center">
-                  <div className="w-8 h-8 bg-yellow-400 rounded-full animate-pulse" />
+              {/* Modal Container Design */}
+              <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-8 border border-white/20 shadow-2xl max-w-md mx-auto">
+                <div className="relative">
+                  <motion.div
+                    animate={{ rotate: 360 }}
+                    transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
+                    className="w-16 h-16 border-4 border-yellow-400 border-t-transparent rounded-full mx-auto mb-4"
+                  />
+                  <div className="absolute inset-0 flex items-center justify-center">
+                    <div className="w-8 h-8 bg-yellow-400 rounded-full animate-pulse" />
+                  </div>
                 </div>
+                <h2 className="text-3xl md:text-4xl font-bold text-white mb-2">
+                  {mapError ? 'Preparing Experience...' : 'Focusing the Globe...'}
+                </h2>
+                <p className="text-white/80 text-lg">
+                  {mapError ? 'Setting up your adventure' : 'Preparing your personalized adventure'}
+                </p>
               </div>
-              <h2 className="text-3xl md:text-4xl font-bold text-white mb-2">
-                {mapError ? 'Preparing Experience...' : 'Focusing the Globe...'}
-              </h2>
-              <p className="text-white/80 text-lg">
-                {mapError ? 'Setting up your adventure' : 'Preparing your personalized adventure'}
-              </p>
             </motion.div>
           )}
 
@@ -432,22 +435,25 @@ const SpinningGlobe: React.FC<SpinningGlobeProps> = ({ travelerType, onDestinati
               animate={{ opacity: 1, scale: 1 }}
               className="mb-8"
             >
-              <div className="relative">
-                <motion.div
-                  animate={{ rotate: 360 }}
-                  transition={{ duration: 1.5, repeat: Infinity, ease: "linear" }}
-                  className="w-20 h-20 border-4 border-yellow-400 border-t-transparent rounded-full mx-auto mb-4"
-                />
-                <div className="absolute inset-0 flex items-center justify-center">
-                  <div className="w-10 h-10 bg-yellow-400 rounded-full animate-pulse" />
+              {/* Modal Container Design */}
+              <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-8 border border-white/20 shadow-2xl max-w-md mx-auto">
+                <div className="relative">
+                  <motion.div
+                    animate={{ rotate: 360 }}
+                    transition={{ duration: 1.5, repeat: Infinity, ease: "linear" }}
+                    className="w-20 h-20 border-4 border-yellow-400 border-t-transparent rounded-full mx-auto mb-4"
+                  />
+                  <div className="absolute inset-0 flex items-center justify-center">
+                    <div className="w-10 h-10 bg-yellow-400 rounded-full animate-pulse" />
+                  </div>
                 </div>
+                <h2 className="text-4xl md:text-5xl font-bold text-white mb-2">
+                  {mapError ? 'Selecting Destination...' : 'Spinning the Globe...'}
+                </h2>
+                <p className="text-white/80 text-xl">
+                  Finding your perfect {getTravelerTypeDisplay(travelerType)} destination
+                </p>
               </div>
-              <h2 className="text-4xl md:text-5xl font-bold text-white mb-2">
-                {mapError ? 'Selecting Destination...' : 'Spinning the Globe...'}
-              </h2>
-              <p className="text-white/80 text-xl">
-                Finding your perfect {getTravelerTypeDisplay(travelerType)} destination
-              </p>
             </motion.div>
           )}
 
@@ -457,20 +463,23 @@ const SpinningGlobe: React.FC<SpinningGlobeProps> = ({ travelerType, onDestinati
               initial={{ opacity: 0, y: 50 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 1 }}
-              className="text-center bg-black/30 backdrop-blur-sm rounded-2xl p-8 border border-white/20"
+              className="text-center"
             >
-              <h2 className="text-4xl md:text-5xl font-bold text-white mb-4">
-                Destination Found!
-              </h2>
-              <h3 className="text-2xl md:text-3xl font-semibold text-yellow-400 mb-2">
-                {selectedDestination.name}
-              </h3>
-              <p className="text-white/80 text-xl mb-4">
-                {selectedDestination.country}
-              </p>
-              <p className="text-white/70">
-                Preparing your adventure details...
-              </p>
+              {/* Modal Container Design */}
+              <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-8 border border-white/20 shadow-2xl max-w-lg mx-auto">
+                <h2 className="text-4xl md:text-5xl font-bold text-white mb-4">
+                  Destination Found!
+                </h2>
+                <h3 className="text-2xl md:text-3xl font-semibold text-yellow-400 mb-2">
+                  {selectedDestination.name}
+                </h3>
+                <p className="text-white/80 text-xl mb-4">
+                  {selectedDestination.country}
+                </p>
+                <p className="text-white/70">
+                  Preparing your adventure details...
+                </p>
+              </div>
             </motion.div>
           )}
         </div>
@@ -478,7 +487,7 @@ const SpinningGlobe: React.FC<SpinningGlobeProps> = ({ travelerType, onDestinati
 
       {/* Status indicator */}
       <div className="absolute bottom-8 left-8 text-white/60 text-sm z-10">
-        <div className="bg-black/30 backdrop-blur-sm rounded-lg p-4 border border-white/20">
+        <div className="bg-white/10 backdrop-blur-sm rounded-lg p-4 border border-white/20 shadow-lg">
           <div className="flex items-center space-x-2 mb-2">
             <div className={`w-2 h-2 rounded-full animate-pulse ${
               mapError ? 'bg-red-400' : 
