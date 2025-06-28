@@ -35,7 +35,7 @@ import {
   ChevronRight
 } from 'lucide-react';
 import { Destination } from '@/types/destination';
-import { numbeoService } from '@/services/numbeoApi';
+import { numbeoService } from '@/services/numbeoService';
 import { openMeteoService } from '@/services/openMeteoService';
 import { getVisaRequirementByDestination } from '@/data/visaRequirements';
 
@@ -47,192 +47,32 @@ interface DestinationRevealProps {
   isSaved?: boolean;
 }
 
-// Mini Gallery Component
-const MiniGallery: React.FC<{ destination: Destination }> = ({ destination }) => {
-  const [selectedImage, setSelectedImage] = useState<number>(0);
-  const [showLightbox, setShowLightbox] = useState(false);
-
-  // Sample gallery images - in a real app, these would come from an API
-  const galleryImages = [
-    {
-      id: 1,
-      url: destination.image_url || 'https://images.pexels.com/photos/1591373/pexels-photo-1591373.jpeg',
-      alt: `${destination.name} - Main view`,
-      thumbnail: destination.image_url || 'https://images.pexels.com/photos/1591373/pexels-photo-1591373.jpeg'
-    },
-    {
-      id: 2,
-      url: 'https://images.pexels.com/photos/2070033/pexels-photo-2070033.jpeg',
-      alt: `${destination.name} - Architecture`,
-      thumbnail: 'https://images.pexels.com/photos/2070033/pexels-photo-2070033.jpeg'
-    },
-    {
-      id: 3,
-      url: 'https://images.pexels.com/photos/259967/pexels-photo-259967.jpeg',
-      alt: `${destination.name} - Landscape`,
-      thumbnail: 'https://images.pexels.com/photos/259967/pexels-photo-259967.jpeg'
-    },
-    {
-      id: 4,
-      url: 'https://images.pexels.com/photos/2474690/pexels-photo-2474690.jpeg',
-      alt: `${destination.name} - Culture`,
-      thumbnail: 'https://images.pexels.com/photos/2474690/pexels-photo-2474690.jpeg'
-    },
-    {
-      id: 5,
-      url: 'https://images.pexels.com/photos/1433052/pexels-photo-1433052.jpeg',
-      alt: `${destination.name} - Nature`,
-      thumbnail: 'https://images.pexels.com/photos/1433052/pexels-photo-1433052.jpeg'
-    }
-  ];
-
-  const openLightbox = (index: number) => {
-    setSelectedImage(index);
-    setShowLightbox(true);
+// Destination-specific high-quality images
+const getDestinationImage = (destination: Destination): string => {
+  const imageMap: { [key: string]: string } = {
+    // Casual Adventure Destinations
+    'Kathmandu': 'https://images.pexels.com/photos/3408744/pexels-photo-3408744.jpeg', // Nepal mountains and temples
+    'Petra': 'https://images.pexels.com/photos/1583582/pexels-photo-1583582.jpeg', // Petra Treasury
+    'San Pedro de Atacama': 'https://images.pexels.com/photos/1287460/pexels-photo-1287460.jpeg', // Atacama Desert
+    'Moshi': 'https://images.pexels.com/photos/631317/pexels-photo-631317.jpeg', // Kilimanjaro
+    'Cusco': 'https://images.pexels.com/photos/259967/pexels-photo-259967.jpeg', // Machu Picchu
+    
+    // Offbeat Journey Destinations
+    'Bamyan': 'https://images.pexels.com/photos/3408744/pexels-photo-3408744.jpeg', // Mountain landscape (Afghanistan)
+    'Mogadishu': 'https://images.pexels.com/photos/4825715/pexels-photo-4825715.jpeg', // Coastal landscape
+    'Al Khums': 'https://images.pexels.com/photos/2549018/pexels-photo-2549018.jpeg', // Ancient ruins
+    'Pyongyang': 'https://images.pexels.com/photos/2070033/pexels-photo-2070033.jpeg', // Urban architecture
+    'Ashgabat': 'https://images.pexels.com/photos/1287460/pexels-photo-1287460.jpeg', // Desert landscape
+    
+    // Chill Trip Destinations
+    'Lisbon': 'https://images.pexels.com/photos/2549018/pexels-photo-2549018.jpeg', // European coastal city
+    'Bled': 'https://images.pexels.com/photos/3408744/pexels-photo-3408744.jpeg', // Lake and mountains
+    'Montevideo': 'https://images.pexels.com/photos/4825715/pexels-photo-4825715.jpeg', // South American coast
+    'Valletta': 'https://images.pexels.com/photos/2549018/pexels-photo-2549018.jpeg', // Mediterranean architecture
+    'Queenstown': 'https://images.pexels.com/photos/552779/pexels-photo-552779.jpeg', // New Zealand landscape
   };
 
-  const navigateImage = (direction: 'prev' | 'next') => {
-    if (direction === 'prev') {
-      setSelectedImage((prev) => (prev - 1 + galleryImages.length) % galleryImages.length);
-    } else {
-      setSelectedImage((prev) => (prev + 1) % galleryImages.length);
-    }
-  };
-
-  return (
-    <>
-      {/* Mini Gallery Grid */}
-      <div className="grid grid-cols-4 gap-2 h-full">
-        {/* Main large image */}
-        <div 
-          className="col-span-2 row-span-2 relative overflow-hidden rounded-lg cursor-pointer group"
-          onClick={() => openLightbox(0)}
-        >
-          <img
-            src={galleryImages[0].url}
-            alt={galleryImages[0].alt}
-            className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
-          />
-          <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-all duration-300" />
-        </div>
-
-        {/* Top right images */}
-        <div 
-          className="relative overflow-hidden rounded-lg cursor-pointer group"
-          onClick={() => openLightbox(1)}
-        >
-          <img
-            src={galleryImages[1].thumbnail}
-            alt={galleryImages[1].alt}
-            className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
-          />
-          <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-all duration-300" />
-        </div>
-
-        <div 
-          className="relative overflow-hidden rounded-lg cursor-pointer group"
-          onClick={() => openLightbox(2)}
-        >
-          <img
-            src={galleryImages[2].thumbnail}
-            alt={galleryImages[2].alt}
-            className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
-          />
-          <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-all duration-300" />
-        </div>
-
-        {/* Bottom right images */}
-        <div 
-          className="relative overflow-hidden rounded-lg cursor-pointer group"
-          onClick={() => openLightbox(3)}
-        >
-          <img
-            src={galleryImages[3].thumbnail}
-            alt={galleryImages[3].alt}
-            className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
-          />
-          <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-all duration-300" />
-        </div>
-
-        <div 
-          className="relative overflow-hidden rounded-lg cursor-pointer group"
-          onClick={() => openLightbox(4)}
-        >
-          <img
-            src={galleryImages[4].thumbnail}
-            alt={galleryImages[4].alt}
-            className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
-          />
-          <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-all duration-300 flex items-center justify-center" />
-          
-          {/* "Show all photos" overlay */}
-          <div className="absolute inset-0 bg-black/40 flex items-center justify-center">
-            <div className="text-white text-center">
-              <Grid className="w-6 h-6 mx-auto mb-1" />
-              <span className="text-sm font-medium">Show all</span>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Lightbox Modal */}
-      {showLightbox && (
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          className="fixed inset-0 z-50 bg-black/90 backdrop-blur-sm flex items-center justify-center p-4"
-          onClick={() => setShowLightbox(false)}
-        >
-          <div className="relative max-w-4xl max-h-full" onClick={(e) => e.stopPropagation()}>
-            {/* Close Button */}
-            <Button
-              variant="outline"
-              size="icon"
-              className="absolute top-4 right-4 z-10 bg-black/50 border-white/30 text-white hover:bg-black/70"
-              onClick={() => setShowLightbox(false)}
-            >
-              <X className="w-4 h-4" />
-            </Button>
-
-            {/* Navigation Buttons */}
-            <Button
-              variant="outline"
-              size="icon"
-              className="absolute left-4 top-1/2 -translate-y-1/2 z-10 bg-black/50 border-white/30 text-white hover:bg-black/70"
-              onClick={() => navigateImage('prev')}
-            >
-              <ChevronLeft className="w-4 h-4" />
-            </Button>
-            <Button
-              variant="outline"
-              size="icon"
-              className="absolute right-4 top-1/2 -translate-y-1/2 z-10 bg-black/50 border-white/30 text-white hover:bg-black/70"
-              onClick={() => navigateImage('next')}
-            >
-              <ChevronRight className="w-4 h-4" />
-            </Button>
-
-            {/* Image */}
-            <motion.img
-              key={selectedImage}
-              initial={{ scale: 0.8, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              transition={{ duration: 0.3 }}
-              src={galleryImages[selectedImage].url}
-              alt={galleryImages[selectedImage].alt}
-              className="max-w-full max-h-full object-contain rounded-lg"
-            />
-
-            {/* Image Counter */}
-            <div className="absolute bottom-4 left-1/2 -translate-x-1/2 bg-black/50 text-white px-3 py-1 rounded-full text-sm">
-              {selectedImage + 1} / {galleryImages.length}
-            </div>
-          </div>
-        </motion.div>
-      )}
-    </>
-  );
+  return imageMap[destination.city || destination.name] || destination.image_url || 'https://images.pexels.com/photos/1591373/pexels-photo-1591373.jpeg';
 };
 
 // Simplified Weather Card Component
@@ -398,6 +238,8 @@ const DestinationReveal: React.FC<DestinationRevealProps> = ({
     );
   };
 
+  const destinationImage = getDestinationImage(destination);
+
   return (
     <div 
       className="min-h-screen bg-gradient-to-br from-purple-900 via-blue-900 to-indigo-900 p-4 md:p-6 lg:p-8" 
@@ -462,17 +304,33 @@ const DestinationReveal: React.FC<DestinationRevealProps> = ({
           </motion.p>
         </motion.div>
 
-        {/* Simplified Grid Layout */}
+        {/* Main Content Grid */}
         <motion.div
           initial={{ opacity: 0, y: 50 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 1.2, duration: 0.8 }}
           className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 mb-8"
         >
-          {/* Photo Gallery - Large Card */}
+          {/* Single Cover Image - Large Card */}
           <Card className="lg:col-span-2 lg:row-span-2 bg-white/10 backdrop-blur-sm border-white/20 overflow-hidden group hover:bg-white/15 transition-all duration-300">
             <div className="relative h-64 md:h-80 lg:h-full">
-              <MiniGallery destination={destination} />
+              <img
+                src={destinationImage}
+                alt={`${destination.name} - ${destination.country}`}
+                className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+                loading="lazy"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
+              <div className="absolute bottom-4 left-4 text-white">
+                <h3 className="text-xl font-semibold mb-1">{destination.name}</h3>
+                <p className="text-sm opacity-90">{destination.country}</p>
+                {destination.description && (
+                  <p className="text-xs opacity-75 mt-2 max-w-md">{destination.description}</p>
+                )}
+              </div>
+              <div className="absolute top-4 right-4">
+                <Camera className="w-6 h-6 text-white/80" />
+              </div>
             </div>
           </Card>
 
