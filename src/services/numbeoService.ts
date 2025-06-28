@@ -65,7 +65,7 @@ export class NumbeoService {
   private getFallbackBudgetEstimate(city: string, country: string): BudgetEstimate {
     // Fallback budget estimates based on destination tier
     const budgetTiers: { [key: string]: BudgetEstimate } = {
-      // Tier 1: Expensive destinations
+      // Casual Adventure Destinations
       'santorini-greece': {
         daily_budget_low: 80,
         daily_budget_mid: 150,
@@ -78,90 +78,152 @@ export class NumbeoService {
           activities: { low: 5, mid: 10, high: 15 }
         }
       },
-      'dubai-uae': {
-        daily_budget_low: 100,
-        daily_budget_mid: 200,
-        daily_budget_high: 400,
-        currency: 'USD',
-        breakdown: {
-          accommodation: { low: 50, mid: 120, high: 250 },
-          meals: { low: 30, mid: 50, high: 100 },
-          transport: { low: 15, mid: 20, high: 35 },
-          activities: { low: 5, mid: 10, high: 15 }
-        }
-      },
-      'reykjavik-iceland': {
-        daily_budget_low: 120,
-        daily_budget_mid: 220,
-        daily_budget_high: 400,
-        currency: 'USD',
-        breakdown: {
-          accommodation: { low: 60, mid: 120, high: 220 },
-          meals: { low: 40, mid: 70, high: 120 },
-          transport: { low: 15, mid: 20, high: 40 },
-          activities: { low: 5, mid: 10, high: 20 }
-        }
-      },
-      // Tier 2: Mid-range destinations
-      'kyoto-japan': {
-        daily_budget_low: 60,
+      'venice-italy': {
+        daily_budget_low: 70,
         daily_budget_mid: 120,
-        daily_budget_high: 220,
+        daily_budget_high: 250,
         currency: 'USD',
         breakdown: {
-          accommodation: { low: 30, mid: 70, high: 130 },
-          meals: { low: 20, mid: 35, high: 60 },
-          transport: { low: 8, mid: 12, high: 20 },
-          activities: { low: 2, mid: 3, high: 10 }
+          accommodation: { low: 35, mid: 70, high: 150 },
+          meals: { low: 20, mid: 35, high: 70 },
+          transport: { low: 10, mid: 10, high: 20 },
+          activities: { low: 5, mid: 5, high: 10 }
         }
       },
-      'queenstown-new zealand': {
+      'paris-france': {
         daily_budget_low: 80,
-        daily_budget_mid: 150,
+        daily_budget_mid: 130,
         daily_budget_high: 280,
         currency: 'USD',
         breakdown: {
-          accommodation: { low: 40, mid: 80, high: 150 },
-          meals: { low: 25, mid: 45, high: 80 },
-          transport: { low: 10, mid: 15, high: 30 },
-          activities: { low: 5, mid: 10, high: 20 }
+          accommodation: { low: 40, mid: 75, high: 170 },
+          meals: { low: 25, mid: 40, high: 80 },
+          transport: { low: 10, mid: 10, high: 20 },
+          activities: { low: 5, mid: 5, high: 10 }
         }
       },
-      // Tier 3: Budget-friendly destinations
-      'ubud-indonesia': {
-        daily_budget_low: 25,
+      'malé-maldives': {
+        daily_budget_low: 150,
+        daily_budget_mid: 300,
+        daily_budget_high: 500,
+        currency: 'USD',
+        breakdown: {
+          accommodation: { low: 100, mid: 200, high: 350 },
+          meals: { low: 30, mid: 60, high: 100 },
+          transport: { low: 15, mid: 30, high: 40 },
+          activities: { low: 5, mid: 10, high: 10 }
+        }
+      },
+
+      // Offbeat Journey Destinations
+      'orlando-united states': {
+        daily_budget_low: 100,
+        daily_budget_mid: 150,
+        daily_budget_high: 300,
+        currency: 'USD',
+        breakdown: {
+          accommodation: { low: 50, mid: 80, high: 180 },
+          meals: { low: 30, mid: 45, high: 80 },
+          transport: { low: 15, mid: 20, high: 30 },
+          activities: { low: 5, mid: 5, high: 10 }
+        }
+      },
+      'sydney-australia': {
+        daily_budget_low: 80,
+        daily_budget_mid: 120,
+        daily_budget_high: 250,
+        currency: 'USD',
+        breakdown: {
+          accommodation: { low: 40, mid: 70, high: 150 },
+          meals: { low: 25, mid: 35, high: 70 },
+          transport: { low: 10, mid: 10, high: 20 },
+          activities: { low: 5, mid: 5, high: 10 }
+        }
+      },
+      'calgary-canada': {
+        daily_budget_low: 70,
+        daily_budget_mid: 100,
+        daily_budget_high: 200,
+        currency: 'USD',
+        breakdown: {
+          accommodation: { low: 35, mid: 55, high: 120 },
+          meals: { low: 20, mid: 30, high: 50 },
+          transport: { low: 10, mid: 10, high: 20 },
+          activities: { low: 5, mid: 5, high: 10 }
+        }
+      },
+      'singapore-singapore': {
+        daily_budget_low: 60,
+        daily_budget_mid: 80,
+        daily_budget_high: 160,
+        currency: 'USD',
+        breakdown: {
+          accommodation: { low: 30, mid: 45, high: 100 },
+          meals: { low: 20, mid: 25, high: 40 },
+          transport: { low: 8, mid: 8, high: 15 },
+          activities: { low: 2, mid: 2, high: 5 }
+        }
+      },
+
+      // Chill Trip Destinations - UPDATED
+      'lisbon-portugal': {
+        daily_budget_low: 40,
         daily_budget_mid: 60,
         daily_budget_high: 120,
         currency: 'USD',
         breakdown: {
-          accommodation: { low: 10, mid: 30, high: 70 },
-          meals: { low: 8, mid: 15, high: 25 },
-          transport: { low: 5, mid: 10, high: 15 },
-          activities: { low: 2, mid: 5, high: 10 }
+          accommodation: { low: 20, mid: 35, high: 70 },
+          meals: { low: 12, mid: 18, high: 35 },
+          transport: { low: 5, mid: 5, high: 10 },
+          activities: { low: 3, mid: 2, high: 5 }
         }
       },
-      'marrakech-morocco': {
+      'bled-slovenia': {
+        daily_budget_low: 35,
+        daily_budget_mid: 50,
+        daily_budget_high: 100,
+        currency: 'USD',
+        breakdown: {
+          accommodation: { low: 18, mid: 28, high: 60 },
+          meals: { low: 10, mid: 15, high: 25 },
+          transport: { low: 5, mid: 5, high: 10 },
+          activities: { low: 2, mid: 2, high: 5 }
+        }
+      },
+      'montevideo-uruguay': {
         daily_budget_low: 30,
+        daily_budget_mid: 40,
+        daily_budget_high: 80,
+        currency: 'USD',
+        breakdown: {
+          accommodation: { low: 15, mid: 22, high: 45 },
+          meals: { low: 10, mid: 12, high: 25 },
+          transport: { low: 3, mid: 4, high: 8 },
+          activities: { low: 2, mid: 2, high: 2 }
+        }
+      },
+      'valletta-malta': {
+        daily_budget_low: 50,
         daily_budget_mid: 70,
         daily_budget_high: 140,
         currency: 'USD',
         breakdown: {
-          accommodation: { low: 15, mid: 35, high: 80 },
-          meals: { low: 10, mid: 20, high: 35 },
-          transport: { low: 3, mid: 10, high: 15 },
-          activities: { low: 2, mid: 5, high: 10 }
+          accommodation: { low: 25, mid: 40, high: 85 },
+          meals: { low: 15, mid: 20, high: 35 },
+          transport: { low: 8, mid: 8, high: 15 },
+          activities: { low: 2, mid: 2, high: 5 }
         }
       },
-      'cusco-peru': {
-        daily_budget_low: 35,
+      'queenstown-new zealand': {
+        daily_budget_low: 60,
         daily_budget_mid: 80,
-        daily_budget_high: 150,
+        daily_budget_high: 160,
         currency: 'USD',
         breakdown: {
-          accommodation: { low: 15, mid: 40, high: 80 },
-          meals: { low: 12, mid: 25, high: 45 },
-          transport: { low: 5, mid: 10, high: 15 },
-          activities: { low: 3, mid: 5, high: 10 }
+          accommodation: { low: 30, mid: 45, high: 95 },
+          meals: { low: 20, mid: 25, high: 45 },
+          transport: { low: 8, mid: 8, high: 15 },
+          activities: { low: 2, mid: 2, high: 5 }
         }
       }
     };

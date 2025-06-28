@@ -150,78 +150,96 @@ export const countries: Country[] = [
     difficulty: 1
   },
 
-  // CHILL TRIP DESTINATIONS (formerly Solo)
+  // CHILL TRIP DESTINATIONS (formerly Solo) - UPDATED LIST
   {
-    id: 'TH',
-    name: 'Thailand',
-    isoCode: 'TH',
-    coordinates: { lat: 13.7563, lng: 100.5018 }, // Bangkok coordinates
-    adventureLevel: 'Adventurous Spirit',
+    id: 'PT',
+    name: 'Portugal',
+    isoCode: 'PT',
+    coordinates: { lat: 38.7223, lng: -9.1393 }, // Lisbon coordinates
+    adventureLevel: 'Casual Explorer',
     travelerType: ['Solo'],
-    popularity: 9,
-    tagline: 'Solo Soul-Searching in the Land of Smiles',
-    region: 'Asia',
-    capital: 'Bangkok',
-    currency: 'THB',
-    languages: ['Thai'],
-    timeZone: 'ICT',
-    bestTimeToVisit: 'November-March',
-    highlights: ['Temples', 'Street food', 'Islands', 'Meditation retreats'],
-    difficulty: 4
-  },
-  {
-    id: 'IS',
-    name: 'Iceland',
-    isoCode: 'IS',
-    coordinates: { lat: 64.1466, lng: -21.9426 }, // Reykjavik coordinates
-    adventureLevel: 'Extreme Wanderer',
-    travelerType: ['Solo'],
-    popularity: 7,
-    tagline: 'Solo Journey Through Fire and Ice',
+    popularity: 8,
+    tagline: 'Slow Pace, Affordable Luxury, Excellent Food and Wine',
     region: 'Europe',
-    capital: 'Reykjavik',
-    currency: 'ISK',
-    languages: ['Icelandic'],
-    timeZone: 'GMT',
-    bestTimeToVisit: 'June-August, September-March',
-    highlights: ['Northern Lights', 'Geysers', 'Glaciers', 'Hot springs'],
-    difficulty: 7
+    capital: 'Lisbon',
+    currency: 'EUR',
+    languages: ['Portuguese'],
+    timeZone: 'WET',
+    bestTimeToVisit: 'April-October',
+    highlights: ['Porto wine cellars', 'Sintra palaces', 'Coastal towns', 'Pastéis de nata'],
+    difficulty: 1
   },
   {
-    id: 'PE',
-    name: 'Peru',
-    isoCode: 'PE',
-    coordinates: { lat: -13.1631, lng: -72.5450 }, // Machu Picchu coordinates
-    adventureLevel: 'Extreme Wanderer',
+    id: 'SI',
+    name: 'Slovenia',
+    isoCode: 'SI',
+    coordinates: { lat: 46.3683, lng: 14.1146 }, // Lake Bled coordinates
+    adventureLevel: 'Casual Explorer',
     travelerType: ['Solo'],
-    popularity: 8,
-    tagline: 'Solo Trek to Ancient Mysteries',
-    region: 'South America',
-    capital: 'Lima',
-    currency: 'PEN',
-    languages: ['Spanish', 'Quechua'],
-    timeZone: 'PET',
+    popularity: 6,
+    tagline: 'Lake Bled, Thermal Spas, Uncrowded European Gem',
+    region: 'Europe',
+    capital: 'Ljubljana',
+    currency: 'EUR',
+    languages: ['Slovenian'],
+    timeZone: 'CET',
     bestTimeToVisit: 'May-September',
-    highlights: ['Machu Picchu', 'Inca Trail', 'Sacred Valley', 'Cusco'],
-    difficulty: 8
+    highlights: ['Lake Bled', 'Ljubljana charm', 'Postojna Cave', 'Thermal spas'],
+    difficulty: 2
   },
   {
-    id: 'JP',
-    name: 'Japan',
-    isoCode: 'JP',
-    coordinates: { lat: 35.0116, lng: 135.7681 }, // Kyoto coordinates
-    adventureLevel: 'Adventurous Spirit',
+    id: 'UY',
+    name: 'Uruguay',
+    isoCode: 'UY',
+    coordinates: { lat: -34.9011, lng: -56.1645 }, // Montevideo coordinates
+    adventureLevel: 'Casual Explorer',
+    travelerType: ['Solo'],
+    popularity: 5,
+    tagline: 'South America\'s Most Peaceful Country, Beach Culture',
+    region: 'South America',
+    capital: 'Montevideo',
+    currency: 'UYU',
+    languages: ['Spanish'],
+    timeZone: 'UYT',
+    bestTimeToVisit: 'December-March',
+    highlights: ['Punta del Este', 'Colonia del Sacramento', 'Wine regions', 'Peaceful beaches'],
+    difficulty: 2
+  },
+  {
+    id: 'MT',
+    name: 'Malta',
+    isoCode: 'MT',
+    coordinates: { lat: 35.8997, lng: 14.5146 }, // Valletta coordinates
+    adventureLevel: 'Casual Explorer',
+    travelerType: ['Solo'],
+    popularity: 6,
+    tagline: 'Mediterranean Calm, Rich History, Compact Size',
+    region: 'Europe',
+    capital: 'Valletta',
+    currency: 'EUR',
+    languages: ['Maltese', 'English'],
+    timeZone: 'CET',
+    bestTimeToVisit: 'April-June, September-November',
+    highlights: ['Valletta architecture', 'Blue Lagoon', 'Ancient temples', 'Coastal walks'],
+    difficulty: 1
+  },
+  {
+    id: 'NZ',
+    name: 'New Zealand',
+    isoCode: 'NZ',
+    coordinates: { lat: -45.0312, lng: 168.6626 }, // Queenstown coordinates
+    adventureLevel: 'Casual Explorer',
     travelerType: ['Solo'],
     popularity: 8,
-    tagline: 'Solo Journey Through Ancient and Modern',
-    region: 'Asia',
-    capital: 'Tokyo',
-    currency: 'JPY',
-    languages: ['Japanese'],
-    timeZone: 'JST',
-    bestTimeToVisit: 'March-May, September-November',
-    highlights: ['Cherry blossoms', 'Traditional ryokans', 'Temple gardens', 'Hot springs'],
-    difficulty: 3
+    tagline: 'Stunning Nature, Friendly Locals, Stress-Free Travel',
+    region: 'Oceania',
+    capital: 'Wellington',
+    currency: 'NZD',
+    languages: ['English', 'Māori'],
+    timeZone: 'NZST',
+    bestTimeToVisit: 'December-February, June-August',
+    highlights: ['Milford Sound', 'Hobbiton', 'Thermal pools', 'Scenic drives'],
+    difficulty: 2
   }
 ];
 

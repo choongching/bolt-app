@@ -2,6 +2,7 @@ import { Destination } from '@/types/destination';
 import { getVisaRequirementByDestination, formatVisaRequirement } from './visaRequirements';
 
 export const destinations: Destination[] = [
+  // Casual Adventure Destinations (Couple)
   {
     id: '1',
     name: 'Santorini',
@@ -19,108 +20,187 @@ export const destinations: Destination[] = [
   },
   {
     id: '2',
-    name: 'Kyoto',
-    country: 'Japan',
-    city: 'Kyoto',
-    latitude: 35.0116,
-    longitude: 135.7681,
-    tagline: 'Experience Ancient Japan in Kyoto',
-    budget_estimate: '$100-200/day',
-    best_time_to_visit: 'March to May, September to November',
-    visa_requirements: 'No visa required for most countries (90 days)',
-    activities: ['Temple visits', 'Cherry blossom viewing', 'Traditional tea ceremony', 'Bamboo forest walk'],
-    image_url: 'https://images.pexels.com/photos/2070033/pexels-photo-2070033.jpeg',
-    description: 'Ancient capital of Japan with thousands of temples and traditional architecture.'
+    name: 'Venice',
+    country: 'Italy',
+    city: 'Venice',
+    latitude: 45.4408,
+    longitude: 12.3155,
+    tagline: 'Romance in the City of Canals',
+    budget_estimate: '$120-250/day',
+    best_time_to_visit: 'April to June, September to October',
+    visa_requirements: 'No visa required for EU/US citizens (90 days)',
+    activities: ['Gondola rides', 'St. Mark\'s Square', 'Murano glass', 'Canal walks'],
+    image_url: 'https://images.pexels.com/photos/208701/pexels-photo-208701.jpeg',
+    description: 'The floating city of romance with its iconic canals and historic architecture.'
   },
   {
     id: '3',
-    name: 'Machu Picchu',
-    country: 'Peru',
-    city: 'Cusco',
-    latitude: -13.1631,
-    longitude: -72.5450,
-    tagline: 'Uncover the Mysteries of Machu Picchu',
-    budget_estimate: '$80-150/day',
-    best_time_to_visit: 'May to September',
-    visa_requirements: 'No visa required for most countries (90 days)',
-    activities: ['Inca Trail hiking', 'Archaeological exploration', 'Llama spotting', 'Photography'],
-    image_url: 'https://images.pexels.com/photos/259967/pexels-photo-259967.jpeg',
-    description: 'Ancient Incan citadel set high in the Andes Mountains.'
+    name: 'Paris',
+    country: 'France',
+    city: 'Paris',
+    latitude: 48.8566,
+    longitude: 2.3522,
+    tagline: 'City of Love and Lights',
+    budget_estimate: '$130-280/day',
+    best_time_to_visit: 'April to June, September to October',
+    visa_requirements: 'No visa required for EU/US citizens (90 days)',
+    activities: ['Eiffel Tower', 'Seine cruises', 'Louvre Museum', 'Café culture'],
+    image_url: 'https://images.pexels.com/photos/338515/pexels-photo-338515.jpeg',
+    description: 'The eternal city of romance with iconic landmarks and charming boulevards.'
   },
   {
     id: '4',
-    name: 'Bali',
-    country: 'Indonesia',
-    city: 'Ubud',
-    latitude: -8.3405,
-    longitude: 115.0920,
-    tagline: 'Find Paradise in Bali',
-    budget_estimate: '$50-120/day',
-    best_time_to_visit: 'April to October',
-    visa_requirements: 'Visa on arrival required ($35 USD, 30 days)',
-    activities: ['Surfing', 'Temple visits', 'Rice terrace tours', 'Spa treatments'],
-    image_url: 'https://images.pexels.com/photos/2474690/pexels-photo-2474690.jpeg',
-    description: 'Tropical paradise known for its beaches, temples, and vibrant culture.'
+    name: 'Malé',
+    country: 'Maldives',
+    city: 'Malé',
+    latitude: 3.2028,
+    longitude: 73.2207,
+    tagline: 'Tropical Paradise for Two',
+    budget_estimate: '$200-500/day',
+    best_time_to_visit: 'November to April',
+    visa_requirements: 'Free visa on arrival (30 days)',
+    activities: ['Overwater bungalows', 'Snorkeling', 'Spa treatments', 'Sunset cruises'],
+    image_url: 'https://images.pexels.com/photos/1287460/pexels-photo-1287460.jpeg',
+    description: 'Crystal clear waters and overwater villas in this tropical paradise.'
   },
+
+  // Offbeat Journey Destinations (Family)
   {
     id: '5',
-    name: 'Iceland',
-    country: 'Iceland',
-    city: 'Reykjavik',
-    latitude: 64.1466,
-    longitude: -21.9426,
-    tagline: 'Explore the Land of Fire and Ice',
-    budget_estimate: '$200-400/day',
-    best_time_to_visit: 'June to August, September to March (Northern Lights)',
-    visa_requirements: 'No visa required for EU/US citizens (90 days)',
-    activities: ['Northern Lights viewing', 'Glacier hiking', 'Hot springs', 'Waterfall tours'],
-    image_url: 'https://images.pexels.com/photos/1433052/pexels-photo-1433052.jpeg',
-    description: 'Nordic island nation known for dramatic landscapes and natural phenomena.'
+    name: 'Orlando',
+    country: 'United States',
+    city: 'Orlando',
+    latitude: 28.3772,
+    longitude: -81.5707,
+    tagline: 'Magical Adventures for All Ages',
+    budget_estimate: '$150-300/day',
+    best_time_to_visit: 'March to May, September to November',
+    visa_requirements: 'ESTA or visa required for most countries',
+    activities: ['Disney World', 'Universal Studios', 'Theme parks', 'Family attractions'],
+    image_url: 'https://images.pexels.com/photos/1796730/pexels-photo-1796730.jpeg',
+    description: 'The ultimate family destination with world-famous theme parks and attractions.'
   },
   {
     id: '6',
-    name: 'Dubai',
-    country: 'UAE',
-    city: 'Dubai',
-    latitude: 25.2048,
-    longitude: 55.2708,
-    tagline: 'Experience Luxury in Dubai',
-    budget_estimate: '$150-350/day',
-    best_time_to_visit: 'November to March',
-    visa_requirements: 'Free visa on arrival for most countries (30 days)',
-    activities: ['Skyscraper tours', 'Desert safari', 'Shopping', 'Fine dining'],
-    image_url: 'https://images.pexels.com/photos/1470502/pexels-photo-1470502.jpeg',
-    description: 'Modern metropolis known for luxury shopping, ultramodern architecture, and nightlife.'
+    name: 'Sydney',
+    country: 'Australia',
+    city: 'Sydney',
+    latitude: -33.8688,
+    longitude: 151.2093,
+    tagline: 'Wildlife Wonders Down Under',
+    budget_estimate: '$120-250/day',
+    best_time_to_visit: 'March to May, September to November',
+    visa_requirements: 'ETA or visa required for most countries',
+    activities: ['Sydney Opera House', 'Harbour Bridge', 'Bondi Beach', 'Wildlife parks'],
+    image_url: 'https://images.pexels.com/photos/995765/pexels-photo-995765.jpeg',
+    description: 'Iconic harbor city with stunning architecture and unique wildlife experiences.'
   },
   {
     id: '7',
-    name: 'New Zealand',
+    name: 'Calgary',
+    country: 'Canada',
+    city: 'Calgary',
+    latitude: 51.0447,
+    longitude: -114.0719,
+    tagline: 'Natural Wonders and Friendly Faces',
+    budget_estimate: '$100-200/day',
+    best_time_to_visit: 'May to September',
+    visa_requirements: 'eTA or visa required for most countries',
+    activities: ['Banff National Park', 'Rocky Mountains', 'Lake Louise', 'Wildlife viewing'],
+    image_url: 'https://images.pexels.com/photos/417074/pexels-photo-417074.jpeg',
+    description: 'Gateway to the Canadian Rockies with breathtaking natural landscapes.'
+  },
+  {
+    id: '8',
+    name: 'Singapore',
+    country: 'Singapore',
+    city: 'Singapore',
+    latitude: 1.3521,
+    longitude: 103.8198,
+    tagline: 'Family Fun in the Garden City',
+    budget_estimate: '$80-160/day',
+    best_time_to_visit: 'February to April',
+    visa_requirements: 'Visa-free for most countries (30-90 days)',
+    activities: ['Gardens by the Bay', 'Universal Studios', 'Night Safari', 'Marina Bay'],
+    image_url: 'https://images.pexels.com/photos/2265876/pexels-photo-2265876.jpeg',
+    description: 'Modern city-state with incredible attractions and family-friendly experiences.'
+  },
+
+  // Chill Trip Destinations (Solo) - UPDATED LIST
+  {
+    id: '9',
+    name: 'Lisbon',
+    country: 'Portugal',
+    city: 'Lisbon',
+    latitude: 38.7223,
+    longitude: -9.1393,
+    tagline: 'Slow Pace, Affordable Luxury, Excellent Food and Wine',
+    budget_estimate: '$60-120/day',
+    best_time_to_visit: 'April to October',
+    visa_requirements: 'No visa required for EU/US citizens (90 days)',
+    activities: ['Tram rides', 'Port wine tasting', 'Coastal towns', 'Historic neighborhoods'],
+    image_url: 'https://images.pexels.com/photos/2549018/pexels-photo-2549018.jpeg',
+    description: 'Charming European capital with affordable luxury and incredible cuisine.'
+  },
+  {
+    id: '10',
+    name: 'Lake Bled',
+    country: 'Slovenia',
+    city: 'Bled',
+    latitude: 46.3683,
+    longitude: 14.1146,
+    tagline: 'Lake Bled, Thermal Spas, Uncrowded European Gem',
+    budget_estimate: '$50-100/day',
+    best_time_to_visit: 'May to September',
+    visa_requirements: 'No visa required for EU/US citizens (90 days)',
+    activities: ['Lake Bled island', 'Bled Castle', 'Thermal spas', 'Ljubljana day trips'],
+    image_url: 'https://images.pexels.com/photos/3408744/pexels-photo-3408744.jpeg',
+    description: 'Fairy-tale lake setting with thermal spas and peaceful Alpine atmosphere.'
+  },
+  {
+    id: '11',
+    name: 'Montevideo',
+    country: 'Uruguay',
+    city: 'Montevideo',
+    latitude: -34.9011,
+    longitude: -56.1645,
+    tagline: 'South America\'s Most Peaceful Country, Beach Culture',
+    budget_estimate: '$40-80/day',
+    best_time_to_visit: 'December to March',
+    visa_requirements: 'No visa required for most countries (90 days)',
+    activities: ['Punta del Este beaches', 'Colonial towns', 'Wine regions', 'Tango culture'],
+    image_url: 'https://images.pexels.com/photos/4825715/pexels-photo-4825715.jpeg',
+    description: 'Peaceful South American gem with beautiful beaches and laid-back culture.'
+  },
+  {
+    id: '12',
+    name: 'Valletta',
+    country: 'Malta',
+    city: 'Valletta',
+    latitude: 35.8997,
+    longitude: 14.5146,
+    tagline: 'Mediterranean Calm, Rich History, Compact Size',
+    budget_estimate: '$70-140/day',
+    best_time_to_visit: 'April to June, September to November',
+    visa_requirements: 'No visa required for EU/US citizens (90 days)',
+    activities: ['Historic Valletta', 'Blue Lagoon', 'Ancient temples', 'Coastal walks'],
+    image_url: 'https://images.pexels.com/photos/2549018/pexels-photo-2549018.jpeg',
+    description: 'Compact Mediterranean island with rich history and crystal-clear waters.'
+  },
+  {
+    id: '13',
+    name: 'Queenstown',
     country: 'New Zealand',
     city: 'Queenstown',
     latitude: -45.0312,
     longitude: 168.6626,
-    tagline: 'Adventure Awaits in New Zealand',
-    budget_estimate: '$120-250/day',
+    tagline: 'Stunning Nature, Friendly Locals, Stress-Free Travel',
+    budget_estimate: '$80-160/day',
     best_time_to_visit: 'December to February, June to August',
     visa_requirements: 'NZeTA required for most countries (90 days)',
-    activities: ['Bungee jumping', 'Hiking', 'Wine tasting', 'Scenic flights'],
+    activities: ['Milford Sound', 'Scenic drives', 'Thermal pools', 'Wine regions'],
     image_url: 'https://images.pexels.com/photos/552779/pexels-photo-552779.jpeg',
-    description: 'Adventure capital known for stunning landscapes and extreme sports.'
-  },
-  {
-    id: '8',
-    name: 'Morocco',
-    country: 'Morocco',
-    city: 'Marrakech',
-    latitude: 31.6295,
-    longitude: -7.9811,
-    tagline: 'Get Lost in the Magic of Morocco',
-    budget_estimate: '$60-120/day',
-    best_time_to_visit: 'March to May, September to November',
-    visa_requirements: 'No visa required for most countries (90 days)',
-    activities: ['Medina exploration', 'Camel trekking', 'Cooking classes', 'Hammam spa'],
-    image_url: 'https://images.pexels.com/photos/739407/pexels-photo-739407.jpeg',
-    description: 'Vibrant North African country known for its markets, palaces, and desert landscapes.'
+    description: 'Breathtaking landscapes with friendly locals and stress-free travel experience.'
   }
 ];
 
@@ -148,23 +228,23 @@ export const getDestinationsByTravelerType = (travelerType: string): Destination
   switch (travelerType) {
     case 'family':
       return destinations.filter(d => 
-        ['Bali', 'Dubai', 'New Zealand'].includes(d.name)
+        ['Orlando', 'Sydney', 'Calgary', 'Singapore'].includes(d.city || d.name)
       );
     case 'couple':
       return destinations.filter(d => 
-        ['Santorini', 'Bali', 'Morocco', 'Kyoto'].includes(d.name)
+        ['Santorini', 'Venice', 'Paris', 'Malé'].includes(d.city || d.name)
       );
     case 'solo':
       return destinations.filter(d => 
-        ['Kyoto', 'Iceland', 'Machu Picchu', 'Morocco'].includes(d.name)
+        ['Lisbon', 'Lake Bled', 'Montevideo', 'Valletta', 'Queenstown'].includes(d.city || d.name)
       );
     case 'friends':
       return destinations.filter(d => 
-        ['Dubai', 'New Zealand', 'Bali', 'Iceland'].includes(d.name)
+        ['Queenstown', 'Lisbon', 'Paris', 'Sydney'].includes(d.city || d.name)
       );
     case 'business':
       return destinations.filter(d => 
-        ['Dubai', 'Kyoto', 'New Zealand'].includes(d.name)
+        ['Singapore', 'Paris', 'Queenstown'].includes(d.city || d.name)
       );
     default:
       return destinations;

@@ -20,6 +20,7 @@ export interface VisaRequirement {
 }
 
 export const visaRequirements: VisaRequirement[] = [
+  // Casual Adventure Destinations
   {
     country: 'Greece',
     city: 'Santorini',
@@ -45,81 +46,8 @@ export const visaRequirements: VisaRequirement[] = [
     ]
   },
   {
-    country: 'Japan',
-    city: 'Kyoto',
-    requirements: {
-      us_citizens: 'No visa required for stays up to 90 days',
-      eu_citizens: 'No visa required for stays up to 90 days (most EU countries)',
-      uk_citizens: 'No visa required for stays up to 90 days',
-      canadian_citizens: 'No visa required for stays up to 90 days',
-      australian_citizens: 'No visa required for stays up to 90 days',
-      general: 'Tourist visa waiver for most developed countries up to 90 days'
-    },
-    duration_allowed: '90 days',
-    notes: [
-      'Passport must be valid for duration of stay',
-      'Return or onward ticket required',
-      'Sufficient funds proof may be requested',
-      'No work permitted on tourist status'
-    ],
-    last_updated: '2024-12-23',
-    sources: [
-      'Japan National Tourism Organization',
-      'Ministry of Foreign Affairs of Japan'
-    ]
-  },
-  {
-    country: 'Peru',
-    city: 'Cusco',
-    requirements: {
-      us_citizens: 'No visa required for stays up to 90 days',
-      eu_citizens: 'No visa required for stays up to 90 days',
-      uk_citizens: 'No visa required for stays up to 90 days',
-      canadian_citizens: 'No visa required for stays up to 90 days',
-      australian_citizens: 'No visa required for stays up to 90 days',
-      general: 'Most tourists can visit visa-free for up to 90 days'
-    },
-    duration_allowed: '90 days (extendable to 183 days)',
-    notes: [
-      'Passport must be valid for at least 6 months',
-      'Return or onward ticket required',
-      'Tourist card (TAM) issued on arrival',
-      'Yellow fever vaccination recommended for jungle areas'
-    ],
-    last_updated: '2024-12-23',
-    sources: [
-      'Embassy of Peru',
-      'PROMPERÚ'
-    ]
-  },
-  {
-    country: 'Indonesia',
-    city: 'Ubud',
-    requirements: {
-      us_citizens: 'Visa on arrival (30 days) or e-Visa',
-      eu_citizens: 'Visa on arrival (30 days) or e-Visa for most EU countries',
-      uk_citizens: 'Visa on arrival (30 days) or e-Visa',
-      canadian_citizens: 'Visa on arrival (30 days) or e-Visa',
-      australian_citizens: 'Visa on arrival (30 days) or e-Visa',
-      general: 'Visa on arrival or e-Visa required for most countries'
-    },
-    duration_allowed: '30 days (extendable once for 30 days)',
-    notes: [
-      'Passport must be valid for at least 6 months',
-      'At least 2 blank pages required',
-      'Return or onward ticket required',
-      'Visa fee: $35 USD',
-      'e-Visa available online before travel'
-    ],
-    last_updated: '2024-12-23',
-    sources: [
-      'Indonesian Ministry of Foreign Affairs',
-      'Indonesia.travel'
-    ]
-  },
-  {
-    country: 'Iceland',
-    city: 'Reykjavik',
+    country: 'Italy',
+    city: 'Venice',
     requirements: {
       us_citizens: 'No visa required for stays up to 90 days',
       eu_citizens: 'No visa required (freedom of movement)',
@@ -133,38 +61,257 @@ export const visaRequirements: VisaRequirement[] = [
       'Part of Schengen Area',
       'Passport must be valid for at least 3 months beyond departure',
       'Return ticket may be required',
-      'Travel insurance recommended',
-      'High cost of living - budget accordingly'
+      'Tourist tax may apply in Venice'
     ],
     last_updated: '2024-12-23',
     sources: [
-      'Directorate of Immigration Iceland',
-      'Visit Iceland'
+      'Italian Ministry of Foreign Affairs',
+      'Schengen Visa Info'
     ]
   },
   {
-    country: 'UAE',
-    city: 'Dubai',
+    country: 'France',
+    city: 'Paris',
     requirements: {
-      us_citizens: 'Visa on arrival (30 days) - Free',
-      eu_citizens: 'Visa on arrival (30 days) - Free for most EU countries',
-      uk_citizens: 'Visa on arrival (30 days) - Free',
-      canadian_citizens: 'Visa on arrival (30 days) - Free',
-      australian_citizens: 'Visa on arrival (30 days) - Free',
-      general: 'Free visa on arrival for many countries, others require advance visa'
+      us_citizens: 'No visa required for stays up to 90 days',
+      eu_citizens: 'No visa required (freedom of movement)',
+      uk_citizens: 'No visa required for stays up to 90 days',
+      canadian_citizens: 'No visa required for stays up to 90 days',
+      australian_citizens: 'No visa required for stays up to 90 days',
+      general: 'Most tourists can visit visa-free for 90 days within 180-day period'
     },
-    duration_allowed: '30 days (extendable to 90 days)',
+    duration_allowed: '90 days within 180-day period',
+    notes: [
+      'Part of Schengen Area',
+      'Passport must be valid for at least 3 months beyond departure',
+      'Return ticket may be required',
+      'Sufficient funds proof may be requested'
+    ],
+    last_updated: '2024-12-23',
+    sources: [
+      'French Ministry of Foreign Affairs',
+      'Schengen Visa Info'
+    ]
+  },
+  {
+    country: 'Maldives',
+    city: 'Malé',
+    requirements: {
+      us_citizens: 'Free visa on arrival (30 days)',
+      eu_citizens: 'Free visa on arrival (30 days)',
+      uk_citizens: 'Free visa on arrival (30 days)',
+      canadian_citizens: 'Free visa on arrival (30 days)',
+      australian_citizens: 'Free visa on arrival (30 days)',
+      general: 'Free visa on arrival for most countries'
+    },
+    duration_allowed: '30 days (extendable)',
+    notes: [
+      'Passport must be valid for at least 6 months',
+      'Return or onward ticket required',
+      'Confirmed accommodation booking required',
+      'Sufficient funds proof may be requested',
+      'No alcohol allowed except in resorts'
+    ],
+    last_updated: '2024-12-23',
+    sources: [
+      'Maldives Immigration',
+      'Visit Maldives'
+    ]
+  },
+
+  // Offbeat Journey Destinations
+  {
+    country: 'United States',
+    city: 'Orlando',
+    requirements: {
+      us_citizens: 'No visa required (domestic travel)',
+      eu_citizens: 'ESTA or B-2 visa required',
+      uk_citizens: 'ESTA or B-2 visa required',
+      canadian_citizens: 'No visa required for stays up to 90 days',
+      australian_citizens: 'ESTA or B-2 visa required',
+      general: 'ESTA or tourist visa required for most countries'
+    },
+    duration_allowed: '90 days (ESTA) or as per visa',
+    notes: [
+      'ESTA must be obtained before travel',
+      'ESTA fee: $21 USD',
+      'Passport must be valid for at least 6 months',
+      'Return or onward ticket required'
+    ],
+    last_updated: '2024-12-23',
+    sources: [
+      'U.S. Department of State',
+      'CBP.gov'
+    ]
+  },
+  {
+    country: 'Australia',
+    city: 'Sydney',
+    requirements: {
+      us_citizens: 'ETA or eVisitor required',
+      eu_citizens: 'ETA or eVisitor required',
+      uk_citizens: 'ETA or eVisitor required',
+      canadian_citizens: 'ETA or eVisitor required',
+      australian_citizens: 'No visa required (domestic travel)',
+      general: 'ETA, eVisitor, or tourist visa required'
+    },
+    duration_allowed: '90 days (ETA/eVisitor)',
+    notes: [
+      'ETA fee: AUD $20',
+      'eVisitor is free for eligible EU citizens',
+      'Passport must be valid for at least 6 months',
+      'Return or onward ticket required'
+    ],
+    last_updated: '2024-12-23',
+    sources: [
+      'Australian Department of Home Affairs',
+      'Australia.gov.au'
+    ]
+  },
+  {
+    country: 'Canada',
+    city: 'Calgary',
+    requirements: {
+      us_citizens: 'No visa required for stays up to 180 days',
+      eu_citizens: 'eTA required for air travel',
+      uk_citizens: 'eTA required for air travel',
+      canadian_citizens: 'No visa required (domestic travel)',
+      australian_citizens: 'eTA required for air travel',
+      general: 'eTA or visitor visa required for most countries'
+    },
+    duration_allowed: '180 days (eTA)',
+    notes: [
+      'eTA fee: CAD $7',
+      'eTA must be obtained before travel',
+      'Passport must be valid for duration of stay',
+      'Return or onward ticket may be required'
+    ],
+    last_updated: '2024-12-23',
+    sources: [
+      'Immigration, Refugees and Citizenship Canada',
+      'Canada.ca'
+    ]
+  },
+  {
+    country: 'Singapore',
+    city: 'Singapore',
+    requirements: {
+      us_citizens: 'No visa required for stays up to 90 days',
+      eu_citizens: 'No visa required for stays up to 90 days',
+      uk_citizens: 'No visa required for stays up to 90 days',
+      canadian_citizens: 'No visa required for stays up to 90 days',
+      australian_citizens: 'No visa required for stays up to 90 days',
+      general: 'Visa-free for most countries (30-90 days depending on nationality)'
+    },
+    duration_allowed: '30-90 days depending on nationality',
     notes: [
       'Passport must be valid for at least 6 months',
       'Return or onward ticket required',
       'Sufficient funds proof may be requested',
-      'Alcohol and drug laws are strict',
-      'Dress modestly in public areas'
+      'Very strict drug laws'
     ],
     last_updated: '2024-12-23',
     sources: [
-      'UAE Federal Authority for Identity and Citizenship',
-      'Visit Dubai'
+      'Immigration & Checkpoints Authority Singapore',
+      'VisitSingapore.com'
+    ]
+  },
+
+  // Chill Trip Destinations - UPDATED LIST
+  {
+    country: 'Portugal',
+    city: 'Lisbon',
+    requirements: {
+      us_citizens: 'No visa required for stays up to 90 days',
+      eu_citizens: 'No visa required (freedom of movement)',
+      uk_citizens: 'No visa required for stays up to 90 days',
+      canadian_citizens: 'No visa required for stays up to 90 days',
+      australian_citizens: 'No visa required for stays up to 90 days',
+      general: 'Most tourists can visit visa-free for 90 days within 180-day period'
+    },
+    duration_allowed: '90 days within 180-day period',
+    notes: [
+      'Part of Schengen Area',
+      'Passport must be valid for at least 3 months beyond departure',
+      'Return ticket may be required',
+      'Excellent value for money destination'
+    ],
+    last_updated: '2024-12-23',
+    sources: [
+      'Portuguese Ministry of Foreign Affairs',
+      'Schengen Visa Info'
+    ]
+  },
+  {
+    country: 'Slovenia',
+    city: 'Bled',
+    requirements: {
+      us_citizens: 'No visa required for stays up to 90 days',
+      eu_citizens: 'No visa required (freedom of movement)',
+      uk_citizens: 'No visa required for stays up to 90 days',
+      canadian_citizens: 'No visa required for stays up to 90 days',
+      australian_citizens: 'No visa required for stays up to 90 days',
+      general: 'Most tourists can visit visa-free for 90 days within 180-day period'
+    },
+    duration_allowed: '90 days within 180-day period',
+    notes: [
+      'Part of Schengen Area',
+      'Passport must be valid for at least 3 months beyond departure',
+      'Return ticket may be required',
+      'Hidden gem with fewer crowds than other European destinations'
+    ],
+    last_updated: '2024-12-23',
+    sources: [
+      'Slovenian Ministry of Foreign Affairs',
+      'Schengen Visa Info'
+    ]
+  },
+  {
+    country: 'Uruguay',
+    city: 'Montevideo',
+    requirements: {
+      us_citizens: 'No visa required for stays up to 90 days',
+      eu_citizens: 'No visa required for stays up to 90 days',
+      uk_citizens: 'No visa required for stays up to 90 days',
+      canadian_citizens: 'No visa required for stays up to 90 days',
+      australian_citizens: 'No visa required for stays up to 90 days',
+      general: 'Most tourists can visit visa-free for up to 90 days'
+    },
+    duration_allowed: '90 days (extendable to 180 days)',
+    notes: [
+      'Passport must be valid for at least 6 months',
+      'Return or onward ticket may be required',
+      'One of South America\'s safest countries',
+      'Progressive and peaceful society'
+    ],
+    last_updated: '2024-12-23',
+    sources: [
+      'Uruguay Ministry of Foreign Affairs',
+      'Uruguay Tourism'
+    ]
+  },
+  {
+    country: 'Malta',
+    city: 'Valletta',
+    requirements: {
+      us_citizens: 'No visa required for stays up to 90 days',
+      eu_citizens: 'No visa required (freedom of movement)',
+      uk_citizens: 'No visa required for stays up to 90 days',
+      canadian_citizens: 'No visa required for stays up to 90 days',
+      australian_citizens: 'No visa required for stays up to 90 days',
+      general: 'Most tourists can visit visa-free for 90 days within 180-day period'
+    },
+    duration_allowed: '90 days within 180-day period',
+    notes: [
+      'Part of Schengen Area',
+      'Passport must be valid for at least 3 months beyond departure',
+      'English widely spoken',
+      'Compact size makes it easy to explore'
+    ],
+    last_updated: '2024-12-23',
+    sources: [
+      'Malta Tourism Authority',
+      'Schengen Visa Info'
     ]
   },
   {
@@ -190,31 +337,6 @@ export const visaRequirements: VisaRequirement[] = [
     sources: [
       'Immigration New Zealand',
       'New Zealand Government'
-    ]
-  },
-  {
-    country: 'Morocco',
-    city: 'Marrakech',
-    requirements: {
-      us_citizens: 'No visa required for stays up to 90 days',
-      eu_citizens: 'No visa required for stays up to 90 days',
-      uk_citizens: 'No visa required for stays up to 90 days',
-      canadian_citizens: 'No visa required for stays up to 90 days',
-      australian_citizens: 'No visa required for stays up to 90 days',
-      general: 'Most tourists can visit visa-free for up to 90 days'
-    },
-    duration_allowed: '90 days',
-    notes: [
-      'Passport must be valid for at least 6 months',
-      'Return or onward ticket may be required',
-      'Entry stamp required - ensure passport is stamped',
-      'Respect local customs and dress codes',
-      'Friday is the holy day'
-    ],
-    last_updated: '2024-12-23',
-    sources: [
-      'Moroccan Ministry of Foreign Affairs',
-      'Morocco Tourism Board'
     ]
   }
 ];
