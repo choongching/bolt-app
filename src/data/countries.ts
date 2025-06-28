@@ -2,78 +2,96 @@ import { Country } from '@/types/country';
 
 // Curated database of countries organized by the three travel categories
 export const countries: Country[] = [
-  // CASUAL ADVENTURE DESTINATIONS (formerly Romantic)
+  // CASUAL ADVENTURE DESTINATIONS - UPDATED WITH ADVENTUROUS BUT POPULAR
   {
-    id: 'GR',
-    name: 'Greece',
-    isoCode: 'GR',
-    coordinates: { lat: 36.3932, lng: 25.4615 }, // Santorini coordinates
-    adventureLevel: 'Casual Explorer',
-    travelerType: ['Couple'],
-    popularity: 9,
-    tagline: 'Romantic Sunsets and Island Paradise',
-    region: 'Europe',
-    capital: 'Athens',
-    currency: 'EUR',
-    languages: ['Greek'],
-    timeZone: 'EET',
-    bestTimeToVisit: 'April-October',
-    highlights: ['Santorini sunsets', 'Mykonos beaches', 'Ancient ruins', 'Wine tasting'],
-    difficulty: 2
-  },
-  {
-    id: 'IT',
-    name: 'Italy',
-    isoCode: 'IT',
-    coordinates: { lat: 45.4408, lng: 12.3155 }, // Venice coordinates
-    adventureLevel: 'Casual Explorer',
-    travelerType: ['Couple'],
-    popularity: 10,
-    tagline: 'Romance in Every Corner',
-    region: 'Europe',
-    capital: 'Rome',
-    currency: 'EUR',
-    languages: ['Italian'],
-    timeZone: 'CET',
-    bestTimeToVisit: 'April-June, September-October',
-    highlights: ['Venice canals', 'Tuscan vineyards', 'Amalfi Coast', 'Renaissance art'],
-    difficulty: 2
-  },
-  {
-    id: 'FR',
-    name: 'France',
-    isoCode: 'FR',
-    coordinates: { lat: 48.8566, lng: 2.3522 }, // Paris coordinates
-    adventureLevel: 'Casual Explorer',
-    travelerType: ['Couple'],
-    popularity: 10,
-    tagline: 'City of Love and Lights',
-    region: 'Europe',
-    capital: 'Paris',
-    currency: 'EUR',
-    languages: ['French'],
-    timeZone: 'CET',
-    bestTimeToVisit: 'April-June, September-October',
-    highlights: ['Eiffel Tower', 'Seine River cruises', 'Champagne region', 'Château visits'],
-    difficulty: 2
-  },
-  {
-    id: 'MV',
-    name: 'Maldives',
-    isoCode: 'MV',
-    coordinates: { lat: 3.2028, lng: 73.2207 },
-    adventureLevel: 'Casual Explorer',
+    id: 'NP',
+    name: 'Nepal',
+    isoCode: 'NP',
+    coordinates: { lat: 27.7172, lng: 85.3240 }, // Kathmandu coordinates
+    adventureLevel: 'Adventurous Spirit',
     travelerType: ['Couple'],
     popularity: 8,
-    tagline: 'Tropical Paradise for Two',
+    tagline: 'Everest Base Camp, Well-Established Trekking Routes',
     region: 'Asia',
-    capital: 'Malé',
-    currency: 'MVR',
-    languages: ['Dhivehi'],
-    timeZone: 'MVT',
-    bestTimeToVisit: 'November-April',
-    highlights: ['Overwater bungalows', 'Crystal clear waters', 'Coral reefs', 'Spa treatments'],
-    difficulty: 1
+    capital: 'Kathmandu',
+    currency: 'NPR',
+    languages: ['Nepali'],
+    timeZone: 'NPT',
+    bestTimeToVisit: 'October-November, March-May',
+    highlights: ['Everest Base Camp trek', 'Annapurna Circuit', 'Kathmandu temples', 'Mountain views'],
+    difficulty: 7
+  },
+  {
+    id: 'JO',
+    name: 'Jordan',
+    isoCode: 'JO',
+    coordinates: { lat: 30.3285, lng: 35.4444 }, // Petra coordinates
+    adventureLevel: 'Adventurous Spirit',
+    travelerType: ['Couple'],
+    popularity: 8,
+    tagline: 'Petra, Wadi Rum, Stable and Tourist-Friendly',
+    region: 'Middle East',
+    capital: 'Amman',
+    currency: 'JOD',
+    languages: ['Arabic'],
+    timeZone: 'EET',
+    bestTimeToVisit: 'March-May, September-November',
+    highlights: ['Petra ancient city', 'Wadi Rum desert', 'Dead Sea', 'Jerash ruins'],
+    difficulty: 5
+  },
+  {
+    id: 'CL',
+    name: 'Chile',
+    isoCode: 'CL',
+    coordinates: { lat: -22.9576, lng: -68.1984 }, // Atacama Desert coordinates
+    adventureLevel: 'Adventurous Spirit',
+    travelerType: ['Couple'],
+    popularity: 7,
+    tagline: 'Patagonia, Atacama Desert, Good Infrastructure',
+    region: 'South America',
+    capital: 'Santiago',
+    currency: 'CLP',
+    languages: ['Spanish'],
+    timeZone: 'CLT',
+    bestTimeToVisit: 'December-March (Patagonia), March-May (Atacama)',
+    highlights: ['Torres del Paine', 'Atacama Desert', 'Easter Island', 'Wine valleys'],
+    difficulty: 6
+  },
+  {
+    id: 'TZ',
+    name: 'Tanzania',
+    isoCode: 'TZ',
+    coordinates: { lat: -3.0674, lng: 37.3556 }, // Kilimanjaro coordinates
+    adventureLevel: 'Adventurous Spirit',
+    travelerType: ['Couple'],
+    popularity: 8,
+    tagline: 'Kilimanjaro, Serengeti, Excellent Safari Infrastructure',
+    region: 'Africa',
+    capital: 'Dodoma',
+    currency: 'TZS',
+    languages: ['Swahili', 'English'],
+    timeZone: 'EAT',
+    bestTimeToVisit: 'June-October (dry season)',
+    highlights: ['Mount Kilimanjaro', 'Serengeti National Park', 'Ngorongoro Crater', 'Zanzibar beaches'],
+    difficulty: 6
+  },
+  {
+    id: 'PE',
+    name: 'Peru',
+    isoCode: 'PE',
+    coordinates: { lat: -13.1631, lng: -72.5450 }, // Machu Picchu coordinates
+    adventureLevel: 'Adventurous Spirit',
+    travelerType: ['Couple'],
+    popularity: 9,
+    tagline: 'Machu Picchu, Inca Trail, Excellent Tour Operators',
+    region: 'South America',
+    capital: 'Lima',
+    currency: 'PEN',
+    languages: ['Spanish', 'Quechua'],
+    timeZone: 'PET',
+    bestTimeToVisit: 'May-September (dry season)',
+    highlights: ['Machu Picchu', 'Inca Trail', 'Sacred Valley', 'Amazon rainforest'],
+    difficulty: 7
   },
 
   // OFFBEAT JOURNEY DESTINATIONS (formerly Family)

@@ -2,71 +2,86 @@ import { Destination } from '@/types/destination';
 import { getVisaRequirementByDestination, formatVisaRequirement } from './visaRequirements';
 
 export const destinations: Destination[] = [
-  // Casual Adventure Destinations (Couple)
+  // Casual Adventure Destinations (Couple) - UPDATED WITH ADVENTUROUS BUT POPULAR
   {
     id: '1',
-    name: 'Santorini',
-    country: 'Greece',
-    city: 'Santorini',
-    latitude: 36.3932,
-    longitude: 25.4615,
-    tagline: 'Discover the Magic of Santorini',
-    budget_estimate: '$150-300/day',
-    best_time_to_visit: 'April to October',
-    visa_requirements: 'No visa required for EU/US citizens (90 days)',
-    activities: ['Sunset watching', 'Wine tasting', 'Beach hopping', 'Photography'],
-    image_url: 'https://images.pexels.com/photos/161815/santorini-oia-greece-water-161815.jpeg',
-    description: 'A stunning Greek island known for its white-washed buildings and breathtaking sunsets.'
+    name: 'Kathmandu',
+    country: 'Nepal',
+    city: 'Kathmandu',
+    latitude: 27.7172,
+    longitude: 85.3240,
+    tagline: 'Everest Base Camp, Well-Established Trekking Routes',
+    budget_estimate: '$30-80/day',
+    best_time_to_visit: 'October to November, March to May',
+    visa_requirements: 'Visa on arrival or e-visa required',
+    activities: ['Everest Base Camp trek', 'Annapurna Circuit', 'Temple visits', 'Mountain views'],
+    image_url: 'https://images.pexels.com/photos/3408744/pexels-photo-3408744.jpeg',
+    description: 'Gateway to the world\'s highest peaks with well-established trekking infrastructure and spiritual temples.'
   },
   {
     id: '2',
-    name: 'Venice',
-    country: 'Italy',
-    city: 'Venice',
-    latitude: 45.4408,
-    longitude: 12.3155,
-    tagline: 'Romance in the City of Canals',
-    budget_estimate: '$120-250/day',
-    best_time_to_visit: 'April to June, September to October',
-    visa_requirements: 'No visa required for EU/US citizens (90 days)',
-    activities: ['Gondola rides', 'St. Mark\'s Square', 'Murano glass', 'Canal walks'],
-    image_url: 'https://images.pexels.com/photos/208701/pexels-photo-208701.jpeg',
-    description: 'The floating city of romance with its iconic canals and historic architecture.'
+    name: 'Petra',
+    country: 'Jordan',
+    city: 'Petra',
+    latitude: 30.3285,
+    longitude: 35.4444,
+    tagline: 'Petra, Wadi Rum, Stable and Tourist-Friendly',
+    budget_estimate: '$60-120/day',
+    best_time_to_visit: 'March to May, September to November',
+    visa_requirements: 'Visa on arrival or Jordan Pass available',
+    activities: ['Petra exploration', 'Wadi Rum desert camping', 'Dead Sea floating', 'Jerash ruins'],
+    image_url: 'https://images.pexels.com/photos/1583582/pexels-photo-1583582.jpeg',
+    description: 'Ancient rose-red city carved into rock with stable infrastructure and incredible desert landscapes.'
   },
   {
     id: '3',
-    name: 'Paris',
-    country: 'France',
-    city: 'Paris',
-    latitude: 48.8566,
-    longitude: 2.3522,
-    tagline: 'City of Love and Lights',
-    budget_estimate: '$130-280/day',
-    best_time_to_visit: 'April to June, September to October',
-    visa_requirements: 'No visa required for EU/US citizens (90 days)',
-    activities: ['Eiffel Tower', 'Seine cruises', 'Louvre Museum', 'Café culture'],
-    image_url: 'https://images.pexels.com/photos/338515/pexels-photo-338515.jpeg',
-    description: 'The eternal city of romance with iconic landmarks and charming boulevards.'
+    name: 'Atacama Desert',
+    country: 'Chile',
+    city: 'San Pedro de Atacama',
+    latitude: -22.9576,
+    longitude: -68.1984,
+    tagline: 'Patagonia, Atacama Desert, Good Infrastructure',
+    budget_estimate: '$70-150/day',
+    best_time_to_visit: 'March to May, September to November',
+    visa_requirements: 'No visa required for most countries (90 days)',
+    activities: ['Atacama Desert tours', 'Stargazing', 'Salt flats', 'Geysers'],
+    image_url: 'https://images.pexels.com/photos/1287460/pexels-photo-1287460.jpeg',
+    description: 'World\'s driest desert with otherworldly landscapes and excellent tourism infrastructure.'
   },
   {
     id: '4',
-    name: 'Malé',
-    country: 'Maldives',
-    city: 'Malé',
-    latitude: 3.2028,
-    longitude: 73.2207,
-    tagline: 'Tropical Paradise for Two',
-    budget_estimate: '$200-500/day',
-    best_time_to_visit: 'November to April',
-    visa_requirements: 'Free visa on arrival (30 days)',
-    activities: ['Overwater bungalows', 'Snorkeling', 'Spa treatments', 'Sunset cruises'],
-    image_url: 'https://images.pexels.com/photos/1287460/pexels-photo-1287460.jpeg',
-    description: 'Crystal clear waters and overwater villas in this tropical paradise.'
+    name: 'Kilimanjaro',
+    country: 'Tanzania',
+    city: 'Moshi',
+    latitude: -3.0674,
+    longitude: 37.3556,
+    tagline: 'Kilimanjaro, Serengeti, Excellent Safari Infrastructure',
+    budget_estimate: '$100-250/day',
+    best_time_to_visit: 'June to October (dry season)',
+    visa_requirements: 'Visa on arrival or e-visa required',
+    activities: ['Kilimanjaro climbing', 'Serengeti safari', 'Ngorongoro Crater', 'Cultural tours'],
+    image_url: 'https://images.pexels.com/photos/631317/pexels-photo-631317.jpeg',
+    description: 'Africa\'s highest peak with world-class safari experiences and excellent tour operators.'
+  },
+  {
+    id: '5',
+    name: 'Machu Picchu',
+    country: 'Peru',
+    city: 'Cusco',
+    latitude: -13.1631,
+    longitude: -72.5450,
+    tagline: 'Machu Picchu, Inca Trail, Excellent Tour Operators',
+    budget_estimate: '$50-120/day',
+    best_time_to_visit: 'May to September (dry season)',
+    visa_requirements: 'No visa required for most countries (90 days)',
+    activities: ['Machu Picchu tours', 'Inca Trail hiking', 'Sacred Valley', 'Amazon rainforest'],
+    image_url: 'https://images.pexels.com/photos/259967/pexels-photo-259967.jpeg',
+    description: 'Ancient Incan citadel with well-organized trekking routes and professional tour operators.'
   },
 
   // Offbeat Journey Destinations (Family)
   {
-    id: '5',
+    id: '6',
     name: 'Orlando',
     country: 'United States',
     city: 'Orlando',
@@ -81,7 +96,7 @@ export const destinations: Destination[] = [
     description: 'The ultimate family destination with world-famous theme parks and attractions.'
   },
   {
-    id: '6',
+    id: '7',
     name: 'Sydney',
     country: 'Australia',
     city: 'Sydney',
@@ -96,7 +111,7 @@ export const destinations: Destination[] = [
     description: 'Iconic harbor city with stunning architecture and unique wildlife experiences.'
   },
   {
-    id: '7',
+    id: '8',
     name: 'Calgary',
     country: 'Canada',
     city: 'Calgary',
@@ -111,7 +126,7 @@ export const destinations: Destination[] = [
     description: 'Gateway to the Canadian Rockies with breathtaking natural landscapes.'
   },
   {
-    id: '8',
+    id: '9',
     name: 'Singapore',
     country: 'Singapore',
     city: 'Singapore',
@@ -128,7 +143,7 @@ export const destinations: Destination[] = [
 
   // Chill Trip Destinations (Solo) - UPDATED LIST
   {
-    id: '9',
+    id: '10',
     name: 'Lisbon',
     country: 'Portugal',
     city: 'Lisbon',
@@ -143,7 +158,7 @@ export const destinations: Destination[] = [
     description: 'Charming European capital with affordable luxury and incredible cuisine.'
   },
   {
-    id: '10',
+    id: '11',
     name: 'Lake Bled',
     country: 'Slovenia',
     city: 'Bled',
@@ -158,7 +173,7 @@ export const destinations: Destination[] = [
     description: 'Fairy-tale lake setting with thermal spas and peaceful Alpine atmosphere.'
   },
   {
-    id: '11',
+    id: '12',
     name: 'Montevideo',
     country: 'Uruguay',
     city: 'Montevideo',
@@ -173,7 +188,7 @@ export const destinations: Destination[] = [
     description: 'Peaceful South American gem with beautiful beaches and laid-back culture.'
   },
   {
-    id: '12',
+    id: '13',
     name: 'Valletta',
     country: 'Malta',
     city: 'Valletta',
@@ -188,7 +203,7 @@ export const destinations: Destination[] = [
     description: 'Compact Mediterranean island with rich history and crystal-clear waters.'
   },
   {
-    id: '13',
+    id: '14',
     name: 'Queenstown',
     country: 'New Zealand',
     city: 'Queenstown',
@@ -232,7 +247,7 @@ export const getDestinationsByTravelerType = (travelerType: string): Destination
       );
     case 'couple':
       return destinations.filter(d => 
-        ['Santorini', 'Venice', 'Paris', 'Malé'].includes(d.city || d.name)
+        ['Kathmandu', 'Petra', 'San Pedro de Atacama', 'Moshi', 'Cusco'].includes(d.city || d.name)
       );
     case 'solo':
       return destinations.filter(d => 
@@ -240,11 +255,11 @@ export const getDestinationsByTravelerType = (travelerType: string): Destination
       );
     case 'friends':
       return destinations.filter(d => 
-        ['Queenstown', 'Lisbon', 'Paris', 'Sydney'].includes(d.city || d.name)
+        ['Queenstown', 'Lisbon', 'Petra', 'Sydney'].includes(d.city || d.name)
       );
     case 'business':
       return destinations.filter(d => 
-        ['Singapore', 'Paris', 'Queenstown'].includes(d.city || d.name)
+        ['Singapore', 'Queenstown'].includes(d.city || d.name)
       );
     default:
       return destinations;

@@ -20,102 +20,130 @@ export interface VisaRequirement {
 }
 
 export const visaRequirements: VisaRequirement[] = [
-  // Casual Adventure Destinations
+  // Casual Adventure Destinations - UPDATED WITH ADVENTUROUS BUT POPULAR
   {
-    country: 'Greece',
-    city: 'Santorini',
+    country: 'Nepal',
+    city: 'Kathmandu',
     requirements: {
-      us_citizens: 'No visa required for stays up to 90 days',
-      eu_citizens: 'No visa required (freedom of movement)',
-      uk_citizens: 'No visa required for stays up to 90 days',
-      canadian_citizens: 'No visa required for stays up to 90 days',
-      australian_citizens: 'No visa required for stays up to 90 days',
-      general: 'Most tourists can visit visa-free for 90 days within 180-day period'
+      us_citizens: 'Visa on arrival or e-visa required',
+      eu_citizens: 'Visa on arrival or e-visa required',
+      uk_citizens: 'Visa on arrival or e-visa required',
+      canadian_citizens: 'Visa on arrival or e-visa required',
+      australian_citizens: 'Visa on arrival or e-visa required',
+      general: 'Visa on arrival or e-visa required for most countries'
     },
-    duration_allowed: '90 days within 180-day period',
+    duration_allowed: '15, 30, or 90 days',
     notes: [
-      'Part of Schengen Area',
-      'Passport must be valid for at least 3 months beyond departure',
-      'Return ticket may be required',
-      'Sufficient funds proof may be requested'
+      'Visa fee: $30 (15 days), $50 (30 days), $125 (90 days)',
+      'Passport must be valid for at least 6 months',
+      'Two passport photos required',
+      'e-visa available online before travel',
+      'Trekking permits required for certain areas'
     ],
     last_updated: '2024-12-23',
     sources: [
-      'Greek Ministry of Foreign Affairs',
-      'Schengen Visa Info'
+      'Nepal Department of Immigration',
+      'Nepal Tourism Board'
     ]
   },
   {
-    country: 'Italy',
-    city: 'Venice',
+    country: 'Jordan',
+    city: 'Petra',
     requirements: {
-      us_citizens: 'No visa required for stays up to 90 days',
-      eu_citizens: 'No visa required (freedom of movement)',
-      uk_citizens: 'No visa required for stays up to 90 days',
-      canadian_citizens: 'No visa required for stays up to 90 days',
-      australian_citizens: 'No visa required for stays up to 90 days',
-      general: 'Most tourists can visit visa-free for 90 days within 180-day period'
-    },
-    duration_allowed: '90 days within 180-day period',
-    notes: [
-      'Part of Schengen Area',
-      'Passport must be valid for at least 3 months beyond departure',
-      'Return ticket may be required',
-      'Tourist tax may apply in Venice'
-    ],
-    last_updated: '2024-12-23',
-    sources: [
-      'Italian Ministry of Foreign Affairs',
-      'Schengen Visa Info'
-    ]
-  },
-  {
-    country: 'France',
-    city: 'Paris',
-    requirements: {
-      us_citizens: 'No visa required for stays up to 90 days',
-      eu_citizens: 'No visa required (freedom of movement)',
-      uk_citizens: 'No visa required for stays up to 90 days',
-      canadian_citizens: 'No visa required for stays up to 90 days',
-      australian_citizens: 'No visa required for stays up to 90 days',
-      general: 'Most tourists can visit visa-free for 90 days within 180-day period'
-    },
-    duration_allowed: '90 days within 180-day period',
-    notes: [
-      'Part of Schengen Area',
-      'Passport must be valid for at least 3 months beyond departure',
-      'Return ticket may be required',
-      'Sufficient funds proof may be requested'
-    ],
-    last_updated: '2024-12-23',
-    sources: [
-      'French Ministry of Foreign Affairs',
-      'Schengen Visa Info'
-    ]
-  },
-  {
-    country: 'Maldives',
-    city: 'Malé',
-    requirements: {
-      us_citizens: 'Free visa on arrival (30 days)',
-      eu_citizens: 'Free visa on arrival (30 days)',
-      uk_citizens: 'Free visa on arrival (30 days)',
-      canadian_citizens: 'Free visa on arrival (30 days)',
-      australian_citizens: 'Free visa on arrival (30 days)',
-      general: 'Free visa on arrival for most countries'
+      us_citizens: 'Visa on arrival or Jordan Pass available',
+      eu_citizens: 'Visa on arrival or Jordan Pass available',
+      uk_citizens: 'Visa on arrival or Jordan Pass available',
+      canadian_citizens: 'Visa on arrival or Jordan Pass available',
+      australian_citizens: 'Visa on arrival or Jordan Pass available',
+      general: 'Visa on arrival or Jordan Pass recommended'
     },
     duration_allowed: '30 days (extendable)',
     notes: [
+      'Visa fee: 40 JOD (waived with Jordan Pass)',
+      'Jordan Pass includes visa and major attractions',
       'Passport must be valid for at least 6 months',
       'Return or onward ticket required',
-      'Confirmed accommodation booking required',
-      'Sufficient funds proof may be requested',
-      'No alcohol allowed except in resorts'
+      'Very tourist-friendly and safe'
     ],
     last_updated: '2024-12-23',
     sources: [
-      'Maldives Immigration',
-      'Visit Maldives'
+      'Jordan Ministry of Tourism',
+      'Jordan Pass Official'
+    ]
+  },
+  {
+    country: 'Chile',
+    city: 'San Pedro de Atacama',
+    requirements: {
+      us_citizens: 'No visa required for stays up to 90 days',
+      eu_citizens: 'No visa required for stays up to 90 days',
+      uk_citizens: 'No visa required for stays up to 90 days',
+      canadian_citizens: 'No visa required for stays up to 90 days',
+      australian_citizens: 'No visa required for stays up to 90 days',
+      general: 'Most tourists can visit visa-free for up to 90 days'
+    },
+    duration_allowed: '90 days (extendable to 180 days)',
+    notes: [
+      'Passport must be valid for at least 6 months',
+      'Return or onward ticket required',
+      'Tourist card (PDI) issued on arrival',
+      'Excellent infrastructure for adventure tourism',
+      'High altitude in Atacama - acclimatization needed'
+    ],
+    last_updated: '2024-12-23',
+    sources: [
+      'Chile Ministry of Foreign Affairs',
+      'SERNATUR Chile'
+    ]
+  },
+  {
+    country: 'Tanzania',
+    city: 'Moshi',
+    requirements: {
+      us_citizens: 'Visa on arrival or e-visa required',
+      eu_citizens: 'Visa on arrival or e-visa required',
+      uk_citizens: 'Visa on arrival or e-visa required',
+      canadian_citizens: 'Visa on arrival or e-visa required',
+      australian_citizens: 'Visa on arrival or e-visa required',
+      general: 'Visa required for most countries'
+    },
+    duration_allowed: '90 days',
+    notes: [
+      'Visa fee: $50 USD (single entry)',
+      'e-visa recommended before travel',
+      'Passport must be valid for at least 6 months',
+      'Yellow fever vaccination required',
+      'Excellent safari infrastructure and guides'
+    ],
+    last_updated: '2024-12-23',
+    sources: [
+      'Tanzania Immigration Services',
+      'Tanzania Tourism Board'
+    ]
+  },
+  {
+    country: 'Peru',
+    city: 'Cusco',
+    requirements: {
+      us_citizens: 'No visa required for stays up to 90 days',
+      eu_citizens: 'No visa required for stays up to 90 days',
+      uk_citizens: 'No visa required for stays up to 90 days',
+      canadian_citizens: 'No visa required for stays up to 90 days',
+      australian_citizens: 'No visa required for stays up to 90 days',
+      general: 'Most tourists can visit visa-free for up to 90 days'
+    },
+    duration_allowed: '90 days (extendable to 183 days)',
+    notes: [
+      'Passport must be valid for at least 6 months',
+      'Return or onward ticket required',
+      'Tourist card (TAM) issued on arrival',
+      'Yellow fever vaccination recommended for jungle areas',
+      'Excellent tour operators for Inca Trail'
+    ],
+    last_updated: '2024-12-23',
+    sources: [
+      'Embassy of Peru',
+      'PROMPERÚ'
     ]
   },
 

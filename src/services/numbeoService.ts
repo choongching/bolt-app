@@ -65,53 +65,65 @@ export class NumbeoService {
   private getFallbackBudgetEstimate(city: string, country: string): BudgetEstimate {
     // Fallback budget estimates based on destination tier
     const budgetTiers: { [key: string]: BudgetEstimate } = {
-      // Casual Adventure Destinations
-      'santorini-greece': {
-        daily_budget_low: 80,
-        daily_budget_mid: 150,
-        daily_budget_high: 300,
+      // Casual Adventure Destinations - UPDATED WITH ADVENTUROUS BUT POPULAR
+      'kathmandu-nepal': {
+        daily_budget_low: 20,
+        daily_budget_mid: 30,
+        daily_budget_high: 80,
         currency: 'USD',
         breakdown: {
-          accommodation: { low: 40, mid: 80, high: 180 },
-          meals: { low: 25, mid: 45, high: 80 },
-          transport: { low: 10, mid: 15, high: 25 },
-          activities: { low: 5, mid: 10, high: 15 }
+          accommodation: { low: 8, mid: 15, high: 40 },
+          meals: { low: 5, mid: 8, high: 25 },
+          transport: { low: 5, mid: 5, high: 10 },
+          activities: { low: 2, mid: 2, high: 5 }
         }
       },
-      'venice-italy': {
-        daily_budget_low: 70,
-        daily_budget_mid: 120,
+      'petra-jordan': {
+        daily_budget_low: 40,
+        daily_budget_mid: 60,
+        daily_budget_high: 120,
+        currency: 'USD',
+        breakdown: {
+          accommodation: { low: 20, mid: 35, high: 70 },
+          meals: { low: 12, mid: 18, high: 35 },
+          transport: { low: 5, mid: 5, high: 10 },
+          activities: { low: 3, mid: 2, high: 5 }
+        }
+      },
+      'san pedro de atacama-chile': {
+        daily_budget_low: 50,
+        daily_budget_mid: 70,
+        daily_budget_high: 150,
+        currency: 'USD',
+        breakdown: {
+          accommodation: { low: 25, mid: 40, high: 90 },
+          meals: { low: 15, mid: 20, high: 40 },
+          transport: { low: 8, mid: 8, high: 15 },
+          activities: { low: 2, mid: 2, high: 5 }
+        }
+      },
+      'moshi-tanzania': {
+        daily_budget_low: 60,
+        daily_budget_mid: 100,
         daily_budget_high: 250,
         currency: 'USD',
         breakdown: {
-          accommodation: { low: 35, mid: 70, high: 150 },
-          meals: { low: 20, mid: 35, high: 70 },
-          transport: { low: 10, mid: 10, high: 20 },
+          accommodation: { low: 30, mid: 60, high: 150 },
+          meals: { low: 15, mid: 25, high: 60 },
+          transport: { low: 10, mid: 10, high: 30 },
           activities: { low: 5, mid: 5, high: 10 }
         }
       },
-      'paris-france': {
-        daily_budget_low: 80,
-        daily_budget_mid: 130,
-        daily_budget_high: 280,
+      'cusco-peru': {
+        daily_budget_low: 35,
+        daily_budget_mid: 50,
+        daily_budget_high: 120,
         currency: 'USD',
         breakdown: {
-          accommodation: { low: 40, mid: 75, high: 170 },
-          meals: { low: 25, mid: 40, high: 80 },
-          transport: { low: 10, mid: 10, high: 20 },
-          activities: { low: 5, mid: 5, high: 10 }
-        }
-      },
-      'malé-maldives': {
-        daily_budget_low: 150,
-        daily_budget_mid: 300,
-        daily_budget_high: 500,
-        currency: 'USD',
-        breakdown: {
-          accommodation: { low: 100, mid: 200, high: 350 },
-          meals: { low: 30, mid: 60, high: 100 },
-          transport: { low: 15, mid: 30, high: 40 },
-          activities: { low: 5, mid: 10, high: 10 }
+          accommodation: { low: 15, mid: 25, high: 70 },
+          meals: { low: 12, mid: 15, high: 35 },
+          transport: { low: 5, mid: 8, high: 10 },
+          activities: { low: 3, mid: 2, high: 5 }
         }
       },
 
