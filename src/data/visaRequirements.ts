@@ -147,101 +147,130 @@ export const visaRequirements: VisaRequirement[] = [
     ]
   },
 
-  // Offbeat Journey Destinations
+  // Offbeat Journey Destinations - UPDATED WITH DANGEROUS/OFF-BEATEN COUNTRIES
   {
-    country: 'United States',
-    city: 'Orlando',
+    country: 'Afghanistan',
+    city: 'Bamyan',
     requirements: {
-      us_citizens: 'No visa required (domestic travel)',
-      eu_citizens: 'ESTA or B-2 visa required',
-      uk_citizens: 'ESTA or B-2 visa required',
-      canadian_citizens: 'No visa required for stays up to 90 days',
-      australian_citizens: 'ESTA or B-2 visa required',
-      general: 'ESTA or tourist visa required for most countries'
+      us_citizens: 'Visa required - tourism extremely restricted and dangerous',
+      eu_citizens: 'Visa required - tourism extremely restricted and dangerous',
+      uk_citizens: 'Visa required - tourism extremely restricted and dangerous',
+      canadian_citizens: 'Visa required - tourism extremely restricted and dangerous',
+      australian_citizens: 'Visa required - tourism extremely restricted and dangerous',
+      general: 'Tourism not recommended - extremely dangerous security situation'
     },
-    duration_allowed: '90 days (ESTA) or as per visa',
+    duration_allowed: 'Variable (if permitted)',
     notes: [
-      'ESTA must be obtained before travel',
-      'ESTA fee: $21 USD',
-      'Passport must be valid for at least 6 months',
-      'Return or onward ticket required'
+      'CRITICAL: Travel not recommended by all governments',
+      'Ongoing conflict and terrorism risk',
+      'No tourist infrastructure available',
+      'Embassy services extremely limited',
+      'Evacuation assistance not available'
     ],
     last_updated: '2024-12-23',
     sources: [
-      'U.S. Department of State',
-      'CBP.gov'
+      'US State Department Travel Advisory',
+      'UK Foreign Office'
     ]
   },
   {
-    country: 'Australia',
-    city: 'Sydney',
+    country: 'Somalia',
+    city: 'Mogadishu',
     requirements: {
-      us_citizens: 'ETA or eVisitor required',
-      eu_citizens: 'ETA or eVisitor required',
-      uk_citizens: 'ETA or eVisitor required',
-      canadian_citizens: 'ETA or eVisitor required',
-      australian_citizens: 'No visa required (domestic travel)',
-      general: 'ETA, eVisitor, or tourist visa required'
+      us_citizens: 'Visa required - travel strongly discouraged',
+      eu_citizens: 'Visa required - travel strongly discouraged',
+      uk_citizens: 'Visa required - travel strongly discouraged',
+      canadian_citizens: 'Visa required - travel strongly discouraged',
+      australian_citizens: 'Visa required - travel strongly discouraged',
+      general: 'Tourism not recommended - extremely dangerous'
     },
-    duration_allowed: '90 days (ETA/eVisitor)',
+    duration_allowed: 'Variable (if permitted)',
     notes: [
-      'ETA fee: AUD $20',
-      'eVisitor is free for eligible EU citizens',
-      'Passport must be valid for at least 6 months',
-      'Return or onward ticket required'
+      'CRITICAL: Highest travel risk level',
+      'Ongoing civil war and terrorism',
+      'Kidnapping and piracy risks',
+      'No tourist infrastructure',
+      'Medical facilities inadequate'
     ],
     last_updated: '2024-12-23',
     sources: [
-      'Australian Department of Home Affairs',
-      'Australia.gov.au'
+      'US State Department Travel Advisory',
+      'UN Security Reports'
     ]
   },
   {
-    country: 'Canada',
-    city: 'Calgary',
+    country: 'Libya',
+    city: 'Al Khums',
     requirements: {
-      us_citizens: 'No visa required for stays up to 180 days',
-      eu_citizens: 'eTA required for air travel',
-      uk_citizens: 'eTA required for air travel',
-      canadian_citizens: 'No visa required (domestic travel)',
-      australian_citizens: 'eTA required for air travel',
-      general: 'eTA or visitor visa required for most countries'
+      us_citizens: 'Visa required - travel not recommended',
+      eu_citizens: 'Visa required - travel not recommended',
+      uk_citizens: 'Visa required - travel not recommended',
+      canadian_citizens: 'Visa required - travel not recommended',
+      australian_citizens: 'Visa required - travel not recommended',
+      general: 'Tourism suspended due to civil conflict'
     },
-    duration_allowed: '180 days (eTA)',
+    duration_allowed: 'Variable (if permitted)',
     notes: [
-      'eTA fee: CAD $7',
-      'eTA must be obtained before travel',
-      'Passport must be valid for duration of stay',
-      'Return or onward ticket may be required'
+      'CRITICAL: Ongoing civil war',
+      'Armed conflict throughout country',
+      'Arbitrary detention risks',
+      'No functioning tourist infrastructure',
+      'Embassy services suspended'
     ],
     last_updated: '2024-12-23',
     sources: [
-      'Immigration, Refugees and Citizenship Canada',
-      'Canada.ca'
+      'US State Department Travel Advisory',
+      'EU External Action Service'
     ]
   },
   {
-    country: 'Singapore',
-    city: 'Singapore',
+    country: 'North Korea',
+    city: 'Pyongyang',
     requirements: {
-      us_citizens: 'No visa required for stays up to 90 days',
-      eu_citizens: 'No visa required for stays up to 90 days',
-      uk_citizens: 'No visa required for stays up to 90 days',
-      canadian_citizens: 'No visa required for stays up to 90 days',
-      australian_citizens: 'No visa required for stays up to 90 days',
-      general: 'Visa-free for most countries (30-90 days depending on nationality)'
+      us_citizens: 'Special tourist visa through approved operators only - travel banned',
+      eu_citizens: 'Special tourist visa through approved operators only',
+      uk_citizens: 'Special tourist visa through approved operators only',
+      canadian_citizens: 'Special tourist visa through approved operators only',
+      australian_citizens: 'Special tourist visa through approved operators only',
+      general: 'Highly restricted tourism through approved tour operators only'
     },
-    duration_allowed: '30-90 days depending on nationality',
+    duration_allowed: '3-10 days (tour groups only)',
     notes: [
-      'Passport must be valid for at least 6 months',
-      'Return or onward ticket required',
-      'Sufficient funds proof may be requested',
-      'Very strict drug laws'
+      'US citizens banned from travel since 2017',
+      'Must use approved tour operators',
+      'Constant supervision required',
+      'Photography restrictions strict',
+      'Risk of arbitrary detention'
     ],
     last_updated: '2024-12-23',
     sources: [
-      'Immigration & Checkpoints Authority Singapore',
-      'VisitSingapore.com'
+      'US State Department',
+      'Koryo Tours'
+    ]
+  },
+  {
+    country: 'Turkmenistan',
+    city: 'Ashgabat',
+    requirements: {
+      us_citizens: 'Visa required - letter of invitation needed',
+      eu_citizens: 'Visa required - letter of invitation needed',
+      uk_citizens: 'Visa required - letter of invitation needed',
+      canadian_citizens: 'Visa required - letter of invitation needed',
+      australian_citizens: 'Visa required - letter of invitation needed',
+      general: 'Tourist visa requires letter of invitation from approved tour operator'
+    },
+    duration_allowed: '5-30 days',
+    notes: [
+      'Letter of invitation required from approved operator',
+      'Visa fee: $55-85 USD',
+      'Guided tours mandatory for most areas',
+      'Photography restrictions in many areas',
+      'Limited independent travel allowed'
+    ],
+    last_updated: '2024-12-23',
+    sources: [
+      'Turkmenistan Embassy',
+      'Turkmen Tour Operators'
     ]
   },
 

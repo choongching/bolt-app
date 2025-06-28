@@ -79,71 +79,86 @@ export const destinations: Destination[] = [
     description: 'Ancient Incan citadel with well-organized trekking routes and professional tour operators.'
   },
 
-  // Offbeat Journey Destinations (Family)
+  // Offbeat Journey Destinations (Family) - UPDATED WITH DANGEROUS/OFF-BEATEN COUNTRIES
   {
     id: '6',
-    name: 'Orlando',
-    country: 'United States',
-    city: 'Orlando',
-    latitude: 28.3772,
-    longitude: -81.5707,
-    tagline: 'Magical Adventures for All Ages',
-    budget_estimate: '$150-300/day',
-    best_time_to_visit: 'March to May, September to November',
-    visa_requirements: 'ESTA or visa required for most countries',
-    activities: ['Disney World', 'Universal Studios', 'Theme parks', 'Family attractions'],
-    image_url: 'https://images.pexels.com/photos/1796730/pexels-photo-1796730.jpeg',
-    description: 'The ultimate family destination with world-famous theme parks and attractions.'
+    name: 'Bamyan',
+    country: 'Afghanistan',
+    city: 'Bamyan',
+    latitude: 34.8481,
+    longitude: 67.0230,
+    tagline: 'Ancient Buddha Statues, Silk Road Heritage',
+    budget_estimate: '$40-100/day',
+    best_time_to_visit: 'April to June, September to October',
+    visa_requirements: 'Visa required - extremely restricted tourism',
+    activities: ['Buddha statue niches', 'Band-e-Amir lakes', 'Silk Road history', 'Mountain landscapes'],
+    image_url: 'https://images.pexels.com/photos/3408744/pexels-photo-3408744.jpeg',
+    description: 'Home to the destroyed 6th and 7th-century Buddha statues, a UNESCO World Heritage site with profound historical significance along the ancient Silk Road.'
   },
   {
     id: '7',
-    name: 'Sydney',
-    country: 'Australia',
-    city: 'Sydney',
-    latitude: -33.8688,
-    longitude: 151.2093,
-    tagline: 'Wildlife Wonders Down Under',
-    budget_estimate: '$120-250/day',
-    best_time_to_visit: 'March to May, September to November',
-    visa_requirements: 'ETA or visa required for most countries',
-    activities: ['Sydney Opera House', 'Harbour Bridge', 'Bondi Beach', 'Wildlife parks'],
-    image_url: 'https://images.pexels.com/photos/995765/pexels-photo-995765.jpeg',
-    description: 'Iconic harbor city with stunning architecture and unique wildlife experiences.'
+    name: 'Mogadishu',
+    country: 'Somalia',
+    city: 'Mogadishu',
+    latitude: 2.0469,
+    longitude: 45.3182,
+    tagline: 'Pristine Coastline, Ancient Frankincense Trade',
+    budget_estimate: '$60-150/day',
+    best_time_to_visit: 'December to March',
+    visa_requirements: 'Visa required - extremely dangerous, travel not recommended',
+    activities: ['Coastal exploration', 'Frankincense trees', 'Ancient ports', 'Nomadic culture'],
+    image_url: 'https://images.pexels.com/photos/4825715/pexels-photo-4825715.jpeg',
+    description: 'Boasts one of Africa\'s longest coastlines and was historically a major producer of frankincense, though currently unsafe for tourism due to ongoing conflict.'
   },
   {
     id: '8',
-    name: 'Calgary',
-    country: 'Canada',
-    city: 'Calgary',
-    latitude: 51.0447,
-    longitude: -114.0719,
-    tagline: 'Natural Wonders and Friendly Faces',
-    budget_estimate: '$100-200/day',
-    best_time_to_visit: 'May to September',
-    visa_requirements: 'eTA or visa required for most countries',
-    activities: ['Banff National Park', 'Rocky Mountains', 'Lake Louise', 'Wildlife viewing'],
-    image_url: 'https://images.pexels.com/photos/417074/pexels-photo-417074.jpeg',
-    description: 'Gateway to the Canadian Rockies with breathtaking natural landscapes.'
+    name: 'Leptis Magna',
+    country: 'Libya',
+    city: 'Al Khums',
+    latitude: 32.6396,
+    longitude: 13.1594,
+    tagline: 'Preserved Roman Ruins, Sabratha Amphitheater',
+    budget_estimate: '$50-120/day',
+    best_time_to_visit: 'November to March',
+    visa_requirements: 'Visa required - travel not recommended due to instability',
+    activities: ['Roman ruins exploration', 'Sabratha amphitheater', 'Archaeological sites', 'Desert landscapes'],
+    image_url: 'https://images.pexels.com/photos/2549018/pexels-photo-2549018.jpeg',
+    description: 'Features some of the world\'s best-preserved Roman ruins, particularly in Leptis Magna and Sabratha, showcasing the grandeur of ancient Roman Africa.'
   },
   {
     id: '9',
-    name: 'Singapore',
-    country: 'Singapore',
-    city: 'Singapore',
-    latitude: 1.3521,
-    longitude: 103.8198,
-    tagline: 'Family Fun in the Garden City',
-    budget_estimate: '$80-160/day',
-    best_time_to_visit: 'February to April',
-    visa_requirements: 'Visa-free for most countries (30-90 days)',
-    activities: ['Gardens by the Bay', 'Universal Studios', 'Night Safari', 'Marina Bay'],
-    image_url: 'https://images.pexels.com/photos/2265876/pexels-photo-2265876.jpeg',
-    description: 'Modern city-state with incredible attractions and family-friendly experiences.'
+    name: 'Pyongyang',
+    country: 'North Korea',
+    city: 'Pyongyang',
+    latitude: 39.0392,
+    longitude: 125.7625,
+    tagline: 'Unique Political System, Highly Controlled Tourism',
+    budget_estimate: '$150-300/day',
+    best_time_to_visit: 'April to June, September to October',
+    visa_requirements: 'Special tourist visa required through approved tour operators only',
+    activities: ['Guided city tours', 'DMZ visits', 'Mass games performances', 'Monument viewing'],
+    image_url: 'https://images.pexels.com/photos/2070033/pexels-photo-2070033.jpeg',
+    description: 'Offers a rare glimpse into one of the world\'s most isolated countries with its unique political system and highly controlled, supervised tourism experiences.'
+  },
+  {
+    id: '10',
+    name: 'Ashgabat',
+    country: 'Turkmenistan',
+    city: 'Ashgabat',
+    latitude: 37.9601,
+    longitude: 58.3261,
+    tagline: 'Door to Hell, Marble Capital, Desert Wonders',
+    budget_estimate: '$80-200/day',
+    best_time_to_visit: 'April to June, September to November',
+    visa_requirements: 'Visa required - letter of invitation needed',
+    activities: ['Darvaza Gas Crater', 'Marble city tours', 'Karakum Desert', 'Ancient Merv'],
+    image_url: 'https://images.pexels.com/photos/1287460/pexels-photo-1287460.jpeg',
+    description: 'Famous for the "Door to Hell" natural gas crater that has been burning since 1971, and Ashgabat\'s surreal white marble architecture under an eccentric dictatorship.'
   },
 
   // Chill Trip Destinations (Solo) - UPDATED LIST
   {
-    id: '10',
+    id: '11',
     name: 'Lisbon',
     country: 'Portugal',
     city: 'Lisbon',
@@ -158,7 +173,7 @@ export const destinations: Destination[] = [
     description: 'Charming European capital with affordable luxury and incredible cuisine.'
   },
   {
-    id: '11',
+    id: '12',
     name: 'Lake Bled',
     country: 'Slovenia',
     city: 'Bled',
@@ -173,7 +188,7 @@ export const destinations: Destination[] = [
     description: 'Fairy-tale lake setting with thermal spas and peaceful Alpine atmosphere.'
   },
   {
-    id: '12',
+    id: '13',
     name: 'Montevideo',
     country: 'Uruguay',
     city: 'Montevideo',
@@ -188,7 +203,7 @@ export const destinations: Destination[] = [
     description: 'Peaceful South American gem with beautiful beaches and laid-back culture.'
   },
   {
-    id: '13',
+    id: '14',
     name: 'Valletta',
     country: 'Malta',
     city: 'Valletta',
@@ -203,7 +218,7 @@ export const destinations: Destination[] = [
     description: 'Compact Mediterranean island with rich history and crystal-clear waters.'
   },
   {
-    id: '14',
+    id: '15',
     name: 'Queenstown',
     country: 'New Zealand',
     city: 'Queenstown',
@@ -243,7 +258,7 @@ export const getDestinationsByTravelerType = (travelerType: string): Destination
   switch (travelerType) {
     case 'family':
       return destinations.filter(d => 
-        ['Orlando', 'Sydney', 'Calgary', 'Singapore'].includes(d.city || d.name)
+        ['Bamyan', 'Mogadishu', 'Al Khums', 'Pyongyang', 'Ashgabat'].includes(d.city || d.name)
       );
     case 'couple':
       return destinations.filter(d => 
@@ -255,11 +270,11 @@ export const getDestinationsByTravelerType = (travelerType: string): Destination
       );
     case 'friends':
       return destinations.filter(d => 
-        ['Queenstown', 'Lisbon', 'Petra', 'Sydney'].includes(d.city || d.name)
+        ['Queenstown', 'Lisbon', 'Petra', 'Ashgabat'].includes(d.city || d.name)
       );
     case 'business':
       return destinations.filter(d => 
-        ['Singapore', 'Queenstown'].includes(d.city || d.name)
+        ['Queenstown', 'Lisbon'].includes(d.city || d.name)
       );
     default:
       return destinations;

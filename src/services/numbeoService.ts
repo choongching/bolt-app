@@ -127,8 +127,44 @@ export class NumbeoService {
         }
       },
 
-      // Offbeat Journey Destinations
-      'orlando-united states': {
+      // Offbeat Journey Destinations - UPDATED WITH DANGEROUS/OFF-BEATEN COUNTRIES
+      'bamyan-afghanistan': {
+        daily_budget_low: 30,
+        daily_budget_mid: 40,
+        daily_budget_high: 100,
+        currency: 'USD',
+        breakdown: {
+          accommodation: { low: 15, mid: 20, high: 50 },
+          meals: { low: 8, mid: 12, high: 30 },
+          transport: { low: 5, mid: 6, high: 15 },
+          activities: { low: 2, mid: 2, high: 5 }
+        }
+      },
+      'mogadishu-somalia': {
+        daily_budget_low: 40,
+        daily_budget_mid: 60,
+        daily_budget_high: 150,
+        currency: 'USD',
+        breakdown: {
+          accommodation: { low: 20, mid: 35, high: 90 },
+          meals: { low: 12, mid: 15, high: 40 },
+          transport: { low: 6, mid: 8, high: 15 },
+          activities: { low: 2, mid: 2, high: 5 }
+        }
+      },
+      'al khums-libya': {
+        daily_budget_low: 35,
+        daily_budget_mid: 50,
+        daily_budget_high: 120,
+        currency: 'USD',
+        breakdown: {
+          accommodation: { low: 18, mid: 25, high: 70 },
+          meals: { low: 10, mid: 15, high: 35 },
+          transport: { low: 5, mid: 8, high: 12 },
+          activities: { low: 2, mid: 2, high: 3 }
+        }
+      },
+      'pyongyang-north korea': {
         daily_budget_low: 100,
         daily_budget_mid: 150,
         daily_budget_high: 300,
@@ -140,40 +176,16 @@ export class NumbeoService {
           activities: { low: 5, mid: 5, high: 10 }
         }
       },
-      'sydney-australia': {
-        daily_budget_low: 80,
-        daily_budget_mid: 120,
-        daily_budget_high: 250,
-        currency: 'USD',
-        breakdown: {
-          accommodation: { low: 40, mid: 70, high: 150 },
-          meals: { low: 25, mid: 35, high: 70 },
-          transport: { low: 10, mid: 10, high: 20 },
-          activities: { low: 5, mid: 5, high: 10 }
-        }
-      },
-      'calgary-canada': {
-        daily_budget_low: 70,
-        daily_budget_mid: 100,
+      'ashgabat-turkmenistan': {
+        daily_budget_low: 60,
+        daily_budget_mid: 80,
         daily_budget_high: 200,
         currency: 'USD',
         breakdown: {
-          accommodation: { low: 35, mid: 55, high: 120 },
-          meals: { low: 20, mid: 30, high: 50 },
-          transport: { low: 10, mid: 10, high: 20 },
-          activities: { low: 5, mid: 5, high: 10 }
-        }
-      },
-      'singapore-singapore': {
-        daily_budget_low: 60,
-        daily_budget_mid: 80,
-        daily_budget_high: 160,
-        currency: 'USD',
-        breakdown: {
-          accommodation: { low: 30, mid: 45, high: 100 },
-          meals: { low: 20, mid: 25, high: 40 },
-          transport: { low: 8, mid: 8, high: 15 },
-          activities: { low: 2, mid: 2, high: 5 }
+          accommodation: { low: 30, mid: 45, high: 120 },
+          meals: { low: 20, mid: 25, high: 50 },
+          transport: { low: 8, mid: 8, high: 20 },
+          activities: { low: 2, mid: 2, high: 10 }
         }
       },
 
