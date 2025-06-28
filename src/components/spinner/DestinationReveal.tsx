@@ -47,7 +47,7 @@ interface DestinationRevealProps {
   isSaved?: boolean;
 }
 
-// Destination-specific high-quality images
+// Destination-specific high-quality images with special focus on Leptis Magna
 const getDestinationImage = (destination: Destination): string => {
   const imageMap: { [key: string]: string } = {
     // Casual Adventure Destinations
@@ -57,10 +57,11 @@ const getDestinationImage = (destination: Destination): string => {
     'Moshi': 'https://images.pexels.com/photos/631317/pexels-photo-631317.jpeg', // Kilimanjaro
     'Cusco': 'https://images.pexels.com/photos/259967/pexels-photo-259967.jpeg', // Machu Picchu
     
-    // Offbeat Journey Destinations
+    // Offbeat Journey Destinations - Updated with Leptis Magna specific images
     'Bamyan': 'https://images.pexels.com/photos/3408744/pexels-photo-3408744.jpeg', // Mountain landscape (Afghanistan)
     'Mogadishu': 'https://images.pexels.com/photos/4825715/pexels-photo-4825715.jpeg', // Coastal landscape
-    'Al Khums': 'https://images.pexels.com/photos/2549018/pexels-photo-2549018.jpeg', // Ancient ruins
+    'Al Khums': 'https://upload.wikimedia.org/wikipedia/commons/thumb/8/8a/Leptis_Magna_Arch_of_Septimius_Severus.jpg/1200px-Leptis_Magna_Arch_of_Septimius_Severus.jpg', // Leptis Magna - Arch of Septimius Severus
+    'Leptis Magna': 'https://upload.wikimedia.org/wikipedia/commons/thumb/8/8a/Leptis_Magna_Arch_of_Septimius_Severus.jpg/1200px-Leptis_Magna_Arch_of_Septimius_Severus.jpg', // Direct reference
     'Pyongyang': 'https://images.pexels.com/photos/2070033/pexels-photo-2070033.jpeg', // Urban architecture
     'Ashgabat': 'https://images.pexels.com/photos/1287460/pexels-photo-1287460.jpeg', // Desert landscape
     
@@ -72,7 +73,23 @@ const getDestinationImage = (destination: Destination): string => {
     'Queenstown': 'https://images.pexels.com/photos/552779/pexels-photo-552779.jpeg', // New Zealand landscape
   };
 
+  // Special handling for Libya/Leptis Magna
+  if (destination.country === 'Libya' || destination.name === 'Leptis Magna' || destination.city === 'Al Khums') {
+    return 'https://upload.wikimedia.org/wikipedia/commons/thumb/8/8a/Leptis_Magna_Arch_of_Septimius_Severus.jpg/1200px-Leptis_Magna_Arch_of_Septimius_Severus.jpg';
+  }
+
   return imageMap[destination.city || destination.name] || destination.image_url || 'https://images.pexels.com/photos/1591373/pexels-photo-1591373.jpeg';
+};
+
+// Additional Leptis Magna gallery images for future use
+const getLeptisMagnaGalleryImages = (): string[] => {
+  return [
+    'https://upload.wikimedia.org/wikipedia/commons/thumb/8/8a/Leptis_Magna_Arch_of_Septimius_Severus.jpg/1200px-Leptis_Magna_Arch_of_Septimius_Severus.jpg', // Arch of Septimius Severus
+    'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f1/Leptis_Magna_Theatre.jpg/1200px-Leptis_Magna_Theatre.jpg', // Roman Theatre
+    'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a4/Leptis_Magna_Basilica.jpg/1200px-Leptis_Magna_Basilica.jpg', // Basilica ruins
+    'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2c/Leptis_Magna_Market.jpg/1200px-Leptis_Magna_Market.jpg', // Ancient market
+    'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d5/Leptis_Magna_Hadrianic_Baths.jpg/1200px-Leptis_Magna_Hadrianic_Baths.jpg', // Hadrianic Baths
+  ];
 };
 
 // Simplified Weather Card Component
@@ -240,6 +257,14 @@ const DestinationReveal: React.FC<DestinationRevealProps> = ({
 
   const destinationImage = getDestinationImage(destination);
 
+  // Special description for Leptis Magna
+  const getDestinationDescription = (dest: Destination): string => {
+    if (dest.country === 'Libya' || dest.name === 'Leptis Magna' || dest.city === 'Al Khums') {
+      return 'One of the most spectacular and well-preserved Roman archaeological sites in the world, featuring the magnificent Arch of Septimius Severus, ancient theatre, basilica, and market ruins that showcase the grandeur of Roman Africa.';
+    }
+    return dest.description || `Explore the wonders of ${dest.name} in ${dest.country}`;
+  };
+
   return (
     <div 
       className="min-h-screen bg-gradient-to-br from-purple-900 via-blue-900 to-indigo-900 p-4 md:p-6 lg:p-8" 
@@ -311,7 +336,7 @@ const DestinationReveal: React.FC<DestinationRevealProps> = ({
           transition={{ delay: 1.2, duration: 0.8 }}
           className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 mb-8"
         >
-          {/* Single Cover Image - Large Card */}
+          {/* Single Cover Image - Large Card with enhanced Leptis Magna display */}
           <Card className="lg:col-span-2 lg:row-span-2 bg-white/10 backdrop-blur-sm border-white/20 overflow-hidden group hover:bg-white/15 transition-all duration-300">
             <div className="relative h-64 md:h-80 lg:h-full">
               <img
@@ -319,18 +344,32 @@ const DestinationReveal: React.FC<DestinationRevealProps> = ({
                 alt={`${destination.name} - ${destination.country}`}
                 className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
                 loading="lazy"
+                onError={(e) => {
+                  // Fallback to Pexels image if Wikipedia image fails to load
+                  const target = e.target as HTMLImageElement;
+                  target.src = 'https://images.pexels.com/photos/2549018/pexels-photo-2549018.jpeg';
+                }}
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
               <div className="absolute bottom-4 left-4 text-white">
                 <h3 className="text-xl font-semibold mb-1">{destination.name}</h3>
                 <p className="text-sm opacity-90">{destination.country}</p>
-                {destination.description && (
-                  <p className="text-xs opacity-75 mt-2 max-w-md">{destination.description}</p>
-                )}
+                <p className="text-xs opacity-75 mt-2 max-w-md leading-relaxed">
+                  {getDestinationDescription(destination)}
+                </p>
               </div>
               <div className="absolute top-4 right-4">
                 <Camera className="w-6 h-6 text-white/80" />
               </div>
+              
+              {/* Special badge for UNESCO World Heritage sites like Leptis Magna */}
+              {(destination.country === 'Libya' || destination.name === 'Leptis Magna') && (
+                <div className="absolute top-4 left-4">
+                  <Badge className="bg-yellow-600 text-white text-xs">
+                    UNESCO World Heritage
+                  </Badge>
+                </div>
+              )}
             </div>
           </Card>
 
