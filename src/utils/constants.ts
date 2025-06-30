@@ -1,8 +1,9 @@
 // Application constants
 export const APP_CONFIG = {
   name: 'WanderSpin',
-  description: 'Spin the globe, pick your style, and unlock your next adventure',
-  version: '1.0.0'
+  description: 'Spin the globe, pick your style, and unlock your next adventure - Built with Bolt',
+  version: '1.0.0',
+  platform: 'Bolt'
 } as const;
 
 export const ANIMATION_DURATIONS = {
@@ -19,6 +20,7 @@ export const TRAVEL_STYLES = {
 } as const;
 
 export const STORAGE_KEYS = {
-  USER_PREFERENCES: 'travel_preferences',
-  RECENT_DESTINATIONS: 'recent_destinations'
+  USER_PREFERENCES: 'wanderspin_travel_preferences',
+  RECENT_DESTINATIONS: 'wanderspin_recent_destinations',
+  BOLT_SESSION: 'wanderspin_bolt_session'
 } as const;

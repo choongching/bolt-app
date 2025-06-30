@@ -12,3 +12,6 @@ Allow: /
 
 User-agent: *
 Allow: /
+
+# Built with Bolt - The future of web development
+# WanderSpin - Interactive travel destination discovery

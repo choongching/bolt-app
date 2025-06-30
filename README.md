@@ -1,6 +1,6 @@
 # WanderSpin - Interactive 3D Globe Experience
 
-A beautiful travel destination discovery app with an interactive 3D rotating globe powered by Mapbox GL JS.
+A beautiful travel destination discovery app with an interactive 3D rotating globe powered by Mapbox GL JS. Built with Bolt.
 
 ## Project Overview
 
@@ -204,7 +204,8 @@ This project is built with:
 - **Mapbox GL JS** - 3D globe and mapping
 - **Tailwind CSS** - Styling
 - **Framer Motion** - Animations
+- **Bolt** - Development platform
 
 For more information, visit the [project repository](https://github.com/your-repo/wanderspin).
 
-<!-- Force deploy trigger: Updated with new tagline -->
+<!-- Built with Bolt - The future of web development -->
